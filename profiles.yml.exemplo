@@ -1,0 +1,20 @@
+# Copie para ~/.dbt/profiles.yml (dbt Core) — no dbt Platform a conexao e configurada na UI.
+eleicoes2026:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      catalog: main
+      schema: dbt_pedro
+      host: adb-XXXXXXXX.azuredatabricks.net
+      http_path: /sql/1.0/warehouses/XXXXXXXX
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 4
+    prod:
+      type: databricks
+      catalog: main
+      schema: eleicoes
+      host: adb-XXXXXXXX.azuredatabricks.net
+      http_path: /sql/1.0/warehouses/XXXXXXXX
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 8

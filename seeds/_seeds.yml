@@ -1,0 +1,33 @@
+version: 2
+
+seeds:
+  - name: de_para_instituto
+    description: >
+      DE-PARA de nomes de instituto vindos da Wikipedia (variacoes de grafia, typos e
+      nomes com/sem contratante). Nomes sem linha aqui passam como estao.
+      revisar = true marca mapeamentos que precisam de confirmacao humana.
+    config:
+      column_types:
+        revisar: boolean
+    columns:
+      - name: nm_instituto_origem
+        data_tests: [unique, not_null]
+      - name: nm_instituto_padronizado
+        data_tests: [not_null]
+
+  - name: de_para_candidato
+    description: >
+      DE-PARA de candidatos para comparar 2022 (TSE) com 2026 (Wikipedia) com o mesmo nome.
+      Chave: fonte + nome de origem + partido de origem (o mesmo sobrenome pode ser
+      pessoas diferentes em partidos diferentes, ex. "Eduardo PL" x "Leite PSD").
+    config:
+      column_types:
+        sg_partido_origem: string
+        revisar: boolean
+    columns:
+      - name: nm_candidato_padronizado
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [fonte, nm_candidato_origem, sg_partido_origem]

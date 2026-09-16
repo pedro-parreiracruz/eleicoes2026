@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: tse
+    description: >
+      Dados abertos do TSE carregados sem transformacao pelo notebook
+      ingestion/01_carga_raw_databricks.py (todas as colunas como string,
+      exatamente como vem nos CSVs ; / latin-1).
+    database: "{{ target.catalog }}"
+    schema: "{{ var('raw_schema') }}"
+    config:
+      loaded_at_field: _ingerido_em
+      freshness:
+        warn_after: {count: 7, period: day}
+    tables:
+      - name: pesquisa_eleitoral_2026
+        description: >
+          PesqEle - pesquisas eleitorais registradas para 2026 (todas as UEs).
+          Origem: https://cdn.tse.jus.br/estatistica/sead/odsele/pesquisa_eleitoral/pesquisa_eleitoral_2026.zip
+          No Power BI a query filtrava NM_UE = 'BRASIL' ja na carga; aqui mantemos todas
+          as UEs e o filtro vira a coluna fl_abrangencia_nacional.
+        columns:
+          - name: NR_PROTOCOLO_REGISTRO
+            data_tests: [not_null]
+
+      - name: totalizacao_presidente_2022
+        description: >
+          Historico de totalizacao para Presidente 2022 (1T e 2T), formato largo:
+          uma coluna <CANDIDATO>_PE_VOTOS_TOT_ACUMULADO por candidato.
+          Origem: https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2022/Historico_Totalizacao_Presidente_BR_{1T|2T}_2022.zip
+          A coluna TURNO ('1T'/'2T') e adicionada pela carga.

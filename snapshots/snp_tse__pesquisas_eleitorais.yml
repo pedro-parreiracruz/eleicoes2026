@@ -1,0 +1,11 @@
+snapshots:
+  - name: snp_tse__pesquisas_eleitorais
+    description: >
+      Historico de alteracoes dos registros no PesqEle. O TSE regera o arquivo e um
+      registro pode mudar (datas, valor, amostra) ou sumir (impugnacao/cancelamento).
+    relation: ref('stg_tse__pesquisas_eleitorais')
+    config:
+      unique_key: nr_protocolo_registro
+      strategy: check
+      check_cols: [dt_inicio_campo, dt_fim_campo, dt_divulgacao, qt_entrevistados, vr_pesquisa, ds_metodologia_pesquisa, nm_empresa_fantasia]
+      hard_deletes: new_record

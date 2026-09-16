@@ -1,0 +1,45 @@
+fonte,nm_candidato_origem,sg_partido_origem,nm_candidato_padronizado,revisar
+wikipedia,Lula,PT,Lula,false
+wikipedia,Flávio,PL,Flávio Bolsonaro,false
+wikipedia,Bolsonaro,PL,Jair Bolsonaro,false
+wikipedia,Michelle,PL,Michelle Bolsonaro,false
+wikipedia,Eduardo,PL,Eduardo Bolsonaro,false
+wikipedia,Tarcísio,Republicanos,Tarcísio de Freitas,false
+wikipedia,Zema,NOVO,Romeu Zema,false
+wikipedia,Ratinho,PSD,Ratinho Júnior,false
+wikipedia,Caiado,PSD,Ronaldo Caiado,false
+wikipedia,Caiado,UNIÃO,Ronaldo Caiado,false
+wikipedia,Leite,PSD,Eduardo Leite,false
+wikipedia,Leite,PSDB,Eduardo Leite,false
+wikipedia,Ciro,PDT,Ciro Gomes,false
+wikipedia,Gomes,PDT,Ciro Gomes,false
+wikipedia,Gomes,PSDB,Ciro Gomes,true
+wikipedia,Haddad,PT,Fernando Haddad,false
+wikipedia,Camilo,PT,Camilo Santana,false
+wikipedia,Hoffmann,PT,Gleisi Hoffmann,false
+wikipedia,Marçal,PRTB,Pablo Marçal,false
+wikipedia,Tebet,MDB,Simone Tebet,false
+wikipedia,Barbalho,MDB,Helder Barbalho,false
+wikipedia,Silva,REDE,Marina Silva,false
+wikipedia,Moro,UNIÃO,Sergio Moro,false
+wikipedia,Tereza,PP,Tereza Cristina,false
+wikipedia,Tereza C.,PP,Tereza Cristina,false
+wikipedia,Nogueira,PP,Ciro Nogueira,true
+wikipedia,Neves,PSDB,Aécio Neves,false
+wikipedia,Marinho,PL,Rogério Marinho,true
+wikipedia,Renan,MISSÃO,Renan Santos,true
+wikipedia,Rebelo,DC,Aldo Rebelo,true
+wikipedia,Barbosa,DC,Barbosa (DC),true
+wikipedia,Cury,Avante,Cury (Avante),true
+wikipedia,Lima,Sem partido,Lima (Sem partido),true
+tse_2022,Lula,,Lula,false
+tse_2022,Jair Bolsonaro,,Jair Bolsonaro,false
+tse_2022,Ciro Gomes,,Ciro Gomes,false
+tse_2022,Simone Tebet,,Simone Tebet,false
+tse_2022,Soraya Thronicke,,Soraya Thronicke,false
+tse_2022,Felipe Davila,,Felipe d'Avila,false
+tse_2022,Padre Kelmon,,Padre Kelmon,false
+tse_2022,Leo Pericles,,Léo Péricles,false
+tse_2022,Sofia Manzano,,Sofia Manzano,false
+tse_2022,Vera,,Vera Lúcia,false
+tse_2022,Constituinte Eymael,,Constituinte Eymael,false

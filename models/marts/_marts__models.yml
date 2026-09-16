@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: fct_pesquisas_registradas
+    description: >
+      Pesquisas eleitorais registradas no TSE (PesqEle) com classificacoes e flags de
+      qualidade. Consumida pelo Power BI no lugar de '2026_Pesquisas'.
+    columns:
+      - name: nr_protocolo_registro
+        description: Protocolo de registro no PesqEle (chave).
+        data_tests: [unique, not_null]
+      - name: nr_cnpj_empresa
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_instituto')
+                field: nr_cnpj_empresa
+      - name: nm_instituto
+        description: Nome fantasia; se ausente ("#NULO#"), razao social.
+        data_tests: [not_null]
+      - name: tp_contratacao
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Própria', 'Contratada']
+      - name: tp_metodo_coleta
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Telefônica automatizada (URA)', 'Telefônica com entrevistador', 'Web / painel online', 'Presencial', 'Não classificada']
+      - name: fl_dq_divulgacao_antes_fim_campo
+        description: Data de divulgacao informada anterior ao fim do campo (inconsistencia do registro).
+      - name: fl_dq_registro_fora_prazo_legal
+        description: Registro com menos de 5 dias de antecedencia da divulgacao (Lei 9.504/97, art. 33).
+      - name: pc_margem_erro_teorica
+        description: 0,98 / raiz(n) — proxy comparavel entre institutos (p = 0,5; 95%).
+
+  - name: dim_instituto
+    description: Institutos de pesquisa por CNPJ.
+    columns:
+      - name: nr_cnpj_empresa
+        data_tests: [unique, not_null]
+
+  - name: fct_intencao_voto
+    description: >
+      Intencao de voto 2026 extraida da Wikipedia, com instituto e candidato padronizados
+      e chaves estaveis de pesquisa/cenario. Consumida pelo Power BI no lugar de 'f2026_IntencaoVoto'.
+    columns:
+      - name: id_cenario
+        data_tests: [not_null]
+      - name: pc_intencao_voto
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: fl_candidato_revisar
+        description: true quando o candidato nao esta no DE-PARA ou o mapeamento esta marcado para revisao.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [false]
+                quote: false
+              config:
+                severity: warn
+                where: "tp_resposta = 'Candidato'"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [id_cenario, nm_candidato]
+
+  - name: fct_resultado_oficial_2022
+    description: Evolucao da totalizacao Presidente 2022 e resultado final por turno.
+    columns:
+      - name: dt_totalizacao
+        description: Data (sem hora) para relacionar com dim_calendario.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_calendario')
+                field: dt_data
+      - name: nm_candidato
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [ts_totalizacao, nr_turno, nm_candidato]
+
+  - name: dim_calendario
+    columns:
+      - name: dt_data
+        data_tests: [unique, not_null]
+
+exposures:
+  - name: pbi_pesquisas_eleitorais
+    label: Power BI - pesquisas eleitorais
+    type: dashboard
+    maturity: medium
+    description: >
+      Painel Power BI "pesquisas eleitorais" (2022 oficial x 2026 pesquisas).
+      As colunas calculadas DAX de limpeza foram movidas para este projeto; as medidas
+      DAX (volume, financeiro, amostra, transparencia) continuam no semantic model.
+    owner:
+      name: Pedro
+      email: pedroparreiracruz@gmail.com
+    depends_on:
+      - ref('fct_pesquisas_registradas')
+      - ref('dim_instituto')
+      - ref('fct_intencao_voto')
+      - ref('fct_resultado_oficial_2022')
+      - ref('dim_calendario')

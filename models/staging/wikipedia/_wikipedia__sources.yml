@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: wikipedia
+    description: >
+      Tabelas "wikitable" da pagina "Pesquisas de opiniao para a eleicao presidencial
+      no Brasil em 2026", despivotadas pela carga (uma linha por celula de candidato).
+      Fonte nao oficial e editavel por qualquer pessoa: tratar como dado de baixa
+      confiabilidade estrutural (colunas mudam de nome, celulas mescladas, rodapes).
+    database: "{{ target.catalog }}"
+    schema: "{{ var('raw_schema') }}"
+    config:
+      loaded_at_field: _ingerido_em
+      freshness:
+        warn_after: {count: 7, period: day}
+    tables:
+      - name: intencao_voto_2026
+        columns:
+          - name: tabela_idx
+            description: Posicao da wikitable na pagina no momento da carga (0-based).
+          - name: instituto_texto
+          - name: periodo_texto
+            description: Periodo de campo como texto, sem ano (ex. "27 Mar - 29 Mar").
+          - name: amostra_texto
+          - name: margem_texto
+          - name: coluna_candidato
+            description: Cabecalho da coluna na wikitable (ex. "Lula PT", "Indecisos e Absentos").
+          - name: valor_texto
+          - name: _ingerido_em
