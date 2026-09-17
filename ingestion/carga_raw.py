@@ -265,8 +265,8 @@ def gravar_tabela(db: Databricks, catalog: str, schema: str, volume: str, tabela
     db.sql(f"""
         CREATE OR REPLACE TABLE `{catalog}`.`{schema}`.`{tabela}`
         COMMENT 'Carga bruta via GitHub Actions (ingestion/carga_raw.py). Não editar manualmente.'
-        AS SELECT * EXCEPT (_rescued_data), current_timestamp() AS _ingerido_em
-        FROM read_files('{caminho}', format => 'parquet')
+        AS SELECT *, current_timestamp() AS _ingerido_em
+        FROM parquet.`{caminho}`
     """)
     resp = db.sql(f"SELECT count(*) FROM `{catalog}`.`{schema}`.`{tabela}`")
     return int(resp["result"]["data_array"][0][0])
