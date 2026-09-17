@@ -38,6 +38,7 @@ from pathlib import Path
 
 import pandas as pd
 import requests
+from lxml import html as lxml_html
 
 # O CDN do TSE tem proteção anti-bot que recusa (403) o cliente `requests` pela assinatura TLS,
 # mesmo com User-Agent de navegador. `curl_cffi` reproduz a conexão do Chrome e é aceito.
@@ -166,10 +167,40 @@ def normalizar_wikitables(tabelas: list[pd.DataFrame]) -> pd.DataFrame:
     return pd.concat(linhas, ignore_index=True)
 
 
+_XPATH_WIKITABLE = "//table[contains(concat(' ', normalize-space(@class), ' '), ' wikitable ')]"
+
+
+def _ler_wikitables_como_texto(html: str) -> list[pd.DataFrame]:
+    """Lê as wikitables preservando o texto exato das células.
+
+    pd.read_html converte número por conta própria e, em dado brasileiro, destrói o valor:
+    "45,2" vira 452 (thousands=",") e "2.000" vira 2.0 (decimal="."). Com thousands=None e
+    converters=str nada é convertido. converters exige o número exato de colunas, então cada
+    tabela é lida isolada — o pandas continua cuidando de colspan/rowspan.
+    """
+    doc = lxml_html.fromstring(html)
+    tabelas = []
+    for tabela in doc.xpath(_XPATH_WIKITABLE):
+        fragmento = lxml_html.tostring(tabela, encoding="unicode")
+        try:
+            n_colunas = pd.read_html(io.StringIO(fragmento), flavor="lxml")[0].shape[1]
+            tabelas.append(
+                pd.read_html(
+                    io.StringIO(fragmento),
+                    flavor="lxml",
+                    thousands=None,
+                    converters={i: str for i in range(n_colunas)},
+                )[0]
+            )
+        except (ValueError, IndexError):
+            continue
+    return tabelas
+
+
 def extrair_intencao_voto_2026() -> pd.DataFrame:
     log("Wikipedia intenção de voto 2026: baixando")
     html = _get(URL_WIKI, timeout=120).text
-    tabelas = pd.read_html(io.StringIO(html), attrs={"class": "wikitable"}, flavor="lxml")
+    tabelas = _ler_wikitables_como_texto(html)
     log(f"  {len(tabelas)} wikitables encontradas")
     return normalizar_wikitables(tabelas)
 
