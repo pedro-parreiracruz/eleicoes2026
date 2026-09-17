@@ -39,7 +39,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-HEADERS = {"User-Agent": "eleicoes2026-dbt/1.0 (+https://github.com/pedro-parreiracruz/eleicoes2026)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36", "Accept": "*/*", "Accept-Language": "pt-BR,pt;q=0.9"}
 
 URL_PESQELE = "https://cdn.tse.jus.br/estatistica/sead/odsele/pesquisa_eleitoral/pesquisa_eleitoral_2026.zip"
 URL_TOTALIZACAO = "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2022/Historico_Totalizacao_Presidente_BR_{turno}_2022.zip"
