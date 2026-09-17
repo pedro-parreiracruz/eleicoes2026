@@ -29,7 +29,7 @@ tests/                testes singulares (soma de cenários, alertas de qualidade
 | 6 | 2026_Pesquisas | 23 pesquisas com divulgação antes do fim do campo | `fl_dq_divulgacao_antes_fim_campo` (warn) |
 | 7 | 2026_Pesquisas | 2 registros com menos de 5 dias até a divulgação (prazo legal) | `fl_dq_registro_fora_prazo_legal` (warn) |
 | 8 | 2026_Pesquisas | 1 amostra inválida; 1 metodologia não classificada | flags + teste `accepted_values` |
-| 8b | 2026_Pesquisas | `Método de Coleta` (DAX) usa `CONTAINSSTRING("ura")`, que casa com "estrut**ura**do": "Questionário estruturado web" vira URA | regex com palavra inteira (`\\bura\\b`) |
+| 8b | 2026_Pesquisas | `Método de Coleta` (DAX) usa `CONTAINSSTRING("ura")`, que casa com "estrut**ura**do". Nos dados de 17/09/2026, 2.171 de 2.465 metodologias citam "questionário estruturado": **94% das pesquisas viram URA** (real: 11%) | regex com palavra inteira + termos presenciais; distribuição: Presencial 1.469 · Telefone 317 · URA 261 · Web 134 · Não classificada 284 |
 | 9 | 2026_Pesquisas | Instituto identificado por texto, não por CNPJ | `dim_instituto` por CNPJ |
 | 10 | 2026_Pesquisas | Filtro `NM_UE = "BRASIL"` na carga esconde as demais UEs | todas as UEs + `fl_abrangencia_nacional` |
 | 11 | f2026_IntencaoVoto | Colunas-artefato como dado: `Header` classificado como Candidato, `Vantagem` como Não-resposta | `tp_resposta = 'Artefato'` removido |
@@ -108,5 +108,5 @@ dbt Core local: copie `profiles.yml.exemplo` para `~/.dbt/profiles.yml`.
 ## A revisar
 
 - Linhas com `revisar = true` nos seeds (ex. `Gomes PSDB`, `Barbosa DC`, `Cury Avante`, `Lima Sem partido`, `Vox`).
-- Se `*_PE_VOTOS_TOT_ACUMULADO` é % dos votos válidos ou do total (teste `assert_resultado_final_2022_soma_100`).
+- `*_PE_VOTOS_TOT_ACUMULADO` vem como fração ("   0,484307") e é convertido para % no staging; validado: resultado final soma 100,000% dos válidos (1T Lula 48,43%, 2T Lula 50,90%).
 - A Wikipedia não informa o ano do campo. A regra usa o ano da carga e volta 1 ano se a data cair no futuro.
