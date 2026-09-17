@@ -39,6 +39,8 @@ tests/                testes singulares (soma de cenários, alertas de qualidade
 | 14 | f2026_IntencaoVoto | `Cenario` = posição da tabela na página; muda a cada edição da Wikipedia | `id_pesquisa` e `id_cenario` por hash do conteúdo |
 | 15 | f2026_IntencaoVoto | Período sem data ("27 Mar - 29 Mar"), margem como texto | `dt_inicio_campo`, `dt_fim_campo`, `pc_margem_erro` |
 | 16 | f2026_IntencaoVoto | Sem checagem de consistência | teste: soma por cenário entre 90% e 110% |
+| 17 | f2026_IntencaoVoto | Nome da Wikipedia vinha com a nota de rodapé colada: `Quaest[17]` x `Quaest[34][35]` x `Genial/Quaest [190]` — **244 "institutos" distintos**. Os dígitos da nota também entravam nos números (amostra de 138.139.140) | macro `sem_notas()` aplicada a instituto, período, amostra e margem no staging; 244 → 28 institutos |
+| 18 | f2026_IntencaoVoto | A carga usava `pd.read_html` com os padrões do pandas: `thousands=","` virava `45,2` em **452** e `decimal="."` virava `2.000` em **2.0**. Percentual com decimal caía no filtro 0–100 e a margem máxima dava 300 p.p. | `carga_raw.py` lê cada wikitable isolada com `thousands=None` e `converters=str` (texto preservado); margem máxima 3,5 p.p., 1.182 linhas com decimal recuperadas |
 
 ## De → para (Power BI → dbt)
 
