@@ -16,11 +16,7 @@ models:
               arguments:
                 values: ['S', 'N']
       - name: nr_cnpj_empresa
-        data_tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "length(nr_cnpj_empresa) = 14"
+        data_tests: [not_null]
       - name: qt_entrevistados
         description: NULL quando o TSE informa zero, negativo ou texto invalido.
         data_tests:
@@ -34,6 +30,13 @@ models:
                 min_value: 0
               config:
                 severity: warn
+    data_tests:
+      # no nivel do modelo: em teste de coluna o dbt_utils prefixa a expressao com o nome da coluna
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "length(nr_cnpj_empresa) = 14"
+          config:
+            severity: warn
 
   - name: stg_tse__totalizacao_presidente_2022
     description: Totalizacao Presidente 2022 despivotada (instante x turno x candidato).
