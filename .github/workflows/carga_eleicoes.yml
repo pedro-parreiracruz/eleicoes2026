@@ -25,6 +25,7 @@ permissions:
 jobs:
   carga:
     name: Carga bruta no Databricks
+    environment: producao
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -53,6 +54,7 @@ jobs:
 
   dbt:
     name: Disparar job do dbt
+    environment: producao
     needs: carga
     if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true' }}
     runs-on: ubuntu-latest
