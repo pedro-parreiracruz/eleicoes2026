@@ -1,0 +1,15 @@
+# profiles.yml usado pelo GitHub Actions (dbt Core + Databricks).
+# O dbt Platform continua com a conexao configurada na UI; este arquivo so vale para o CI.
+# Variaveis vem do environment "producao" do repositorio.
+eleicoes2026:
+  target: prod
+  outputs:
+    prod:
+      type: databricks
+      catalog: "{{ env_var('DATABRICKS_CATALOG', 'workspace') }}"
+      # schema base: so e usado por modelos sem +schema proprio (todos tem, via dbt_project.yml)
+      schema: eleicoes
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 4
