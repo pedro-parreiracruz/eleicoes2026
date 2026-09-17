@@ -5,7 +5,8 @@ que hoje estão espalhadas em Power Query e em colunas calculadas DAX. O Power B
 tabelas já tratadas e testadas e fica só com as medidas.
 
 ```
-.github/workflows/     carga agendada (GitHub Actions) + disparo do job dbt
+.github/workflows/     carga agendada (GitHub Actions) + dbt build
+ci/profiles.yml       profile do dbt usado pelo GitHub Actions (dbt Core + Databricks)
 ingestion/            carga_raw.py (usado pelo Actions) e notebook alternativo; tudo string
 seeds/                DE-PARA de institutos e candidatos
 macros/limpeza.sql    tse_texto, br_decimal, tse_timestamp, texto_para_decimal, mes_para_numero
@@ -61,8 +62,8 @@ GitHub Actions (todo dia 06h BRT ou manual)
   ingestion/carga_raw.py
     TSE (zips) + Wikipedia  ->  parquet  ->  Volume workspace.raw_eleicoes.landing
                                          ->  tabelas workspace.raw_eleicoes.*   (tudo string)
-  dispara o job do dbt Platform
-    staging -> intermediate -> marts + testes
+  dbt build (dbt Core no runner, profile em ci/profiles.yml)
+    seeds + snapshots + staging -> intermediate -> marts + testes
 Power BI  ->  conector Databricks (SQL Warehouse)  ->  workspace.marts.*
 ```
 
@@ -81,16 +82,20 @@ e pt.wikipedia.org). Conexões de entrada funcionam normalmente. Em um workspace
 | Variable | `DATABRICKS_HOST` | `dbc-f1556444-f00a.cloud.databricks.com` |
 | Variable | `DATABRICKS_WAREHOUSE_ID` | `73dc97c464e41132` |
 | Variable (opcional) | `DATABRICKS_CATALOG` / `DATABRICKS_SCHEMA` | padrão `workspace` / `raw_eleicoes` |
-| Secret (opcional) | `DBT_CLOUD_API_TOKEN` | token de serviço do dbt com permissão de disparar jobs |
-| Variable (opcional) | `DBT_CLOUD_HOST` | host de acesso do dbt (ex.: `us1.dbt.com` ou o subdomínio da conta) |
-| Variable (opcional) | `DBT_CLOUD_ACCOUNT_ID` / `DBT_CLOUD_JOB_ID` | ids numéricos (aparecem na URL do job) |
 
-Sem as variáveis do dbt, o workflow só faz a carga; o job do dbt pode ser agendado no próprio dbt.
+Os três primeiros ficam no **Environment `producao`** (Settings → Environments), que é o que os
+jobs do workflow declaram. O `DATABRICKS_HTTP_PATH` do dbt é montado a partir do warehouse id.
 
-### dbt Platform → Deploy → Jobs → Create job (ambiente Production)
+### Transformação
 
-Comandos: `dbt deps` · `dbt seed` · `dbt snapshot` · `dbt build`. Sem agendamento próprio se for
-disparado pelo GitHub Actions; caso contrário, agende para depois das 06h.
+O job `dbt build (Databricks)` do workflow instala dbt Core + dbt-databricks e roda
+`dbt deps` · `dbt debug` · `dbt build` (build = seeds + snapshots + models + testes) com
+`DBT_PROFILES_DIR=ci` e `--target prod`. Não depende de job configurado no dbt Platform — a UI do
+dbt continua servindo para explorar a linhagem, editar modelos e rodar consultas.
+Os artefatos (`manifest.json`, `run_results.json`) ficam anexados a cada execução do Actions.
+
+Falhas de teste em modo `warn` não quebram o build: elas ficam materializadas em
+`workspace.dq_falhas.*`, uma tabela por teste.
 
 ### Rodar manualmente
 
@@ -103,7 +108,7 @@ Obter dados → Azure Databricks → Server hostname + HTTP path do warehouse �
 schema `marts`. Substituir `2026_Pesquisas`, `f2026_IntencaoVoto`, `f2022_ResultadoOficial` e
 `dCalendario` pelas tabelas do dbt e remover as colunas calculadas de limpeza.
 
-dbt Core local: copie `profiles.yml.exemplo` para `~/.dbt/profiles.yml`.
+dbt Core local: copie `profiles.yml.exemplo` para `~/.dbt/profiles.yml` (o `ci/profiles.yml` é só do CI).
 
 ## A revisar
 
