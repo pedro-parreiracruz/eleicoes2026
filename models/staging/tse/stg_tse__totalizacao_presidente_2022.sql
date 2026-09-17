@@ -56,7 +56,8 @@ select
     coluna_origem,
     -- "CIRO_GOMES_PE_VOTOS_TOT_ACUMULADO" -> "Ciro Gomes" (nome bruto; padronizacao via seed)
     initcap(replace(regexp_replace(coluna_origem, '{{ sufixo }}$', ''), '_', ' ')) as nm_candidato_origem,
-    {{ br_decimal('pct_texto', 'decimal(9,4)') }}                       as pc_votos_validos_acumulado,
+    -- o TSE publica fração com 6 casas e espaços à esquerda ("   0,484307"); convertido para % (0-100)
+    cast({{ br_decimal('pct_texto', 'decimal(12,8)') }} * 100 as decimal(9,4)) as pc_votos_validos_acumulado,
     _ingerido_em
 from despivotado
-where {{ br_decimal('pct_texto', 'decimal(9,4)') }} is not null
+where {{ br_decimal('pct_texto', 'decimal(12,8)') }} is not null
