@@ -193,7 +193,7 @@ def preparar(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     novos, vistos = [], set()
     for c in df.columns:
-        nome = _INVALIDOS.sub("_", str(c).strip()).strip("_") or "coluna"
+        nome = _INVALIDOS.sub("_", str(c).strip()).rstrip("_") or "coluna"  # preserva "_" inicial (_arquivo_origem)
         base, n = nome, 2
         while nome.upper() in vistos:
             nome = f"{base}_{n}"
