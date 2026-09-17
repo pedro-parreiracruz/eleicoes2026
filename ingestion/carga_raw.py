@@ -39,7 +39,16 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36", "Accept": "*/*", "Accept-Language": "pt-BR,pt;q=0.9"}
+# O CDN do TSE tem proteção anti-bot que recusa (403) o cliente `requests` pela assinatura TLS,
+# mesmo com User-Agent de navegador. `curl_cffi` reproduz a conexão do Chrome e é aceito.
+HEADERS = {"Accept": "*/*", "Accept-Language": "pt-BR,pt;q=0.9"}
+
+try:
+    from curl_cffi import requests as http_cliente
+    _KWARGS_CLIENTE = {"impersonate": "chrome"}
+except ImportError:  # fallback (Wikipedia funciona com requests puro)
+    http_cliente = requests
+    _KWARGS_CLIENTE = {}
 
 URL_PESQELE = "https://cdn.tse.jus.br/estatistica/sead/odsele/pesquisa_eleitoral/pesquisa_eleitoral_2026.zip"
 URL_TOTALIZACAO = "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2022/Historico_Totalizacao_Presidente_BR_{turno}_2022.zip"
@@ -54,13 +63,13 @@ def log(msg: str) -> None:
 # Extração
 # --------------------------------------------------------------------------------------
 
-def _get(url: str, timeout: int = 300, tentativas: int = 3) -> requests.Response:
+def _get(url: str, timeout: int = 300, tentativas: int = 3):
     for i in range(1, tentativas + 1):
         try:
-            resp = requests.get(url, headers=HEADERS, timeout=timeout)
+            resp = http_cliente.get(url, headers=HEADERS, timeout=timeout, **_KWARGS_CLIENTE)
             resp.raise_for_status()
             return resp
-        except requests.RequestException as exc:
+        except Exception as exc:
             if i == tentativas:
                 raise
             log(f"  falha ao baixar ({exc}); nova tentativa em {10 * i}s")
