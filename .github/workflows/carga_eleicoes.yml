@@ -136,8 +136,10 @@ jobs:
           FONTES: intencao_voto_2026
         run: python ingestion/carga_raw.py
 
+  # Transformacao. Roda dbt Core contra o mesmo warehouse da carga, com o profile em ci/profiles.yml.
+  # Nao depende de job configurado no dbt Platform (a UI do dbt continua servindo para explorar/editar).
   dbt:
-    name: Disparar job do dbt
+    name: dbt build (Databricks)
     needs: [carga_tse, carga_tse_local, carga_wikipedia]
     # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
     if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true') }}
@@ -145,30 +147,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      DBT_CLOUD_HOST: ${{ vars.DBT_CLOUD_HOST }}
-      DBT_CLOUD_ACCOUNT_ID: ${{ vars.DBT_CLOUD_ACCOUNT_ID }}
-      DBT_CLOUD_JOB_ID: ${{ vars.DBT_CLOUD_JOB_ID }}
-      DBT_CLOUD_API_TOKEN: ${{ secrets.DBT_CLOUD_API_TOKEN }}
+      DBT_PROFILES_DIR: ci
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_HTTP_PATH: /sql/1.0/warehouses/${{ vars.DATABRICKS_WAREHOUSE_ID }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
     steps:
-      - name: Disparar e acompanhar o job
-        run: |
-          if [ -z "$DBT_CLOUD_JOB_ID" ] || [ -z "$DBT_CLOUD_API_TOKEN" ]; then
-            echo "::notice::Job do dbt não configurado (DBT_CLOUD_JOB_ID / DBT_CLOUD_API_TOKEN). Etapa ignorada."
-            exit 0
-          fi
-          base="https://${DBT_CLOUD_HOST}/api/v2/accounts/${DBT_CLOUD_ACCOUNT_ID}"
-          auth="Authorization: Token ${DBT_CLOUD_API_TOKEN}"
-          run_id=$(curl -sfS -X POST "$base/jobs/${DBT_CLOUD_JOB_ID}/run/" -H "$auth" \
-            -H "Content-Type: application/json" \
-            -d "{\"cause\": \"GitHub Actions ${GITHUB_RUN_ID} (carga TSE/Wikipedia)\"}" | jq -r '.data.id')
-          echo "run dbt: $run_id"
-          # status: 1 queued, 2 starting, 3 running, 10 success, 20 error, 30 cancelled
-          for i in $(seq 1 110); do
-            status=$(curl -sfS "$base/runs/${run_id}/" -H "$auth" | jq -r '.data.status')
-            case "$status" in
-              10) echo "dbt concluído com sucesso"; exit 0 ;;
-              20|30) echo "::error::job do dbt terminou com status $status (run $run_id)"; exit 1 ;;
-            esac
-            sleep 30
-          done
-          echo "::error::tempo esgotado aguardando o dbt (run $run_id)"; exit 1
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dbt
+        # 1.12: versao em que o projeto foi validado (sintaxe `arguments:` nos testes exige >= 1.10)
+        run: pip install "dbt-core>=1.12,<1.13" "dbt-databricks>=1.12,<1.13"
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt debug
+        run: dbt debug --target prod
+
+      # build = seeds + snapshots + models + testes, na ordem do DAG
+      - name: dbt build
+        run: dbt build --target prod
+
+      - name: Guardar artefatos (manifest, run_results)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-target
+          path: target/
+          if-no-files-found: ignore
