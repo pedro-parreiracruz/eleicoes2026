@@ -56,3 +56,10 @@
         when 'dez' then 12 when 'dec' then 12
     end
 {%- endmacro %}
+
+{# Remove notas de rodape da Wikipedia ("[12]", "[34][35]", "[nota 1]") e normaliza espacos.
+   Sem isso: "Quaest[17]" e "Quaest[34][35]" viram institutos diferentes, e os digitos da
+   nota entram nos numeros ("2.000[12]" -> 200012 entrevistados). #}
+{% macro sem_notas(col) -%}
+    trim(regexp_replace(regexp_replace(cast({{ col }} as string), '\\[[^\\]]*\\]', ''), ' +', ' '))
+{%- endmacro %}
