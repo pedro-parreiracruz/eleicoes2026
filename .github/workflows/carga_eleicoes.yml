@@ -7,9 +7,14 @@ on:
   workflow_dispatch:
     inputs:
       rodar_tse:
-        description: "Carregar fontes do TSE (runner no computador local)"
+        description: "Carregar fontes do TSE"
         type: boolean
         default: true
+      onde_tse:
+        description: "Onde baixar o TSE: github (padrão) ou local (runner no computador)"
+        type: choice
+        options: [github, local]
+        default: github
       rodar_wikipedia:
         description: "Carregar Wikipedia (runner do GitHub)"
         type: boolean
@@ -27,11 +32,40 @@ permissions:
   contents: read
 
 jobs:
-  # O CDN do TSE (cdn.tse.jus.br) responde 403 para IPs de datacenter do GitHub.
-  # Por isso esta carga roda no runner self-hosted (computador com IP no Brasil).
+  # Carga do TSE. O CDN (cdn.tse.jus.br) tem anti-bot: a carga usa curl_cffi (assinatura Chrome).
+  # Padrão: runner do GitHub. Alternativa: runner self-hosted no computador local, escolhida pela
+  # variável de repositório/environment RUNNER_TSE=local (agendado) ou pelo input onde_tse=local.
   carga_tse:
+    name: Carga TSE (runner GitHub)
+    if: ${{ (github.event_name == 'schedule' && vars.RUNNER_TSE != 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse != 'local') }}
+    environment: producao
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ingestion/requirements.txt
+
+      - name: Instalar dependências
+        run: pip install -r ingestion/requirements.txt
+
+      - name: Carregar TSE
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
+          DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          FONTES: pesquisa_eleitoral_2026,totalizacao_presidente_2022
+        run: python ingestion/carga_raw.py
+
+  carga_tse_local:
     name: Carga TSE (runner local)
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_tse == 'true' }}
+    if: ${{ (github.event_name == 'schedule' && vars.RUNNER_TSE == 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse == 'local') }}
     environment: producao
     runs-on: [self-hosted, Windows]
     timeout-minutes: 45
@@ -104,7 +138,7 @@ jobs:
 
   dbt:
     name: Disparar job do dbt
-    needs: [carga_tse, carga_wikipedia]
+    needs: [carga_tse, carga_tse_local, carga_wikipedia]
     # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
     if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true') }}
     environment: producao
