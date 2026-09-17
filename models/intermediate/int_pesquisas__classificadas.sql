@@ -19,17 +19,18 @@ select
         when 'N' then 'Contratada'
     end                                                                     as tp_contratacao,
 
-    -- Mesma ordem de precedencia do SWITCH(TRUE()) do Power BI, com uma correcao:
-    -- no DAX, CONTAINSSTRING(_m, "ura") casava com "estruturADO" ("Questionario estruturado web"
-    -- virava URA). Aqui "ura", "cati" e "web" exigem palavra inteira (\b).
+    -- Mesma precedencia do SWITCH(TRUE()) do Power BI, com correcoes validadas nos dados reais (17/09/2026):
+    -- no DAX, CONTAINSSTRING(_m, "ura") casava com "estruturADO" e 2.171 de 2.465 metodologias citam
+    -- "questionario estruturado" -> 94% das pesquisas viravam URA. Aqui "ura", "cati" e "web" exigem
+    -- palavra inteira (\b) e foram incluidos termos presenciais frequentes ("pontos de fluxo", "face-a-face").
     case
-        when lower(p.ds_metodologia_pesquisa) rlike '\\bura\\b|automatizad|resposta aud'
+        when lower(p.ds_metodologia_pesquisa) rlike '\\bura\\b|\\bivr\\b|automatizad|resposta aud'
             then 'Telefônica automatizada (URA)'
         when lower(p.ds_metodologia_pesquisa) rlike '\\bcati\\b|telef'
             then 'Telefônica com entrevistador'
-        when lower(p.ds_metodologia_pesquisa) rlike '\\bweb\\b|painel|online|internet'
+        when lower(p.ds_metodologia_pesquisa) rlike '\\bweb\\b|online|on-line|internet|whatsapp|\\bsms\\b|link'
             then 'Web / painel online'
-        when lower(p.ds_metodologia_pesquisa) rlike 'pessoa|domicili|face a face|presencia'
+        when lower(p.ds_metodologia_pesquisa) rlike 'pessoa|domicil|residenc|residência|face a face|face-a-face|presencia|pontos? de fluxo|porta a porta|in loco'
             then 'Presencial'
         else 'Não classificada'
     end                                                                     as tp_metodo_coleta,
