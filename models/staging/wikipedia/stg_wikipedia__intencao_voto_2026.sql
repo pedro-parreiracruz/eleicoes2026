@@ -17,12 +17,13 @@ limpo as (
 
     select
         cast(tabela_idx as int)                                         as tabela_idx,
-        regexp_replace(trim(instituto_texto), ' +', ' ')                as nm_instituto_origem,
-        regexp_replace(trim(periodo_texto), ' +', ' ')                  as periodo_texto,
-        -- remove notas de rodape tipo [12]
-        regexp_replace(regexp_replace(trim(coluna_candidato), '\\[[^\\]]*\\]', ''), ' +', ' ') as coluna_candidato,
-        try_cast(regexp_replace(amostra_texto, '[^0-9]', '') as int)    as qt_amostra,
-        {{ texto_para_decimal('margem_texto', 'decimal(5,2)') }}         as pc_margem_erro,
+        -- notas de rodape saem de TODOS os campos de texto: elas grudam no nome
+        -- ("Quaest[17]" x "Quaest[34][35]") e os digitos entram nos numeros
+        {{ sem_notas('instituto_texto') }}                              as nm_instituto_origem,
+        {{ sem_notas('periodo_texto') }}                                as periodo_texto,
+        {{ sem_notas('coluna_candidato') }}                             as coluna_candidato,
+        try_cast(regexp_replace({{ sem_notas('amostra_texto') }}, '[^0-9]', '') as int) as qt_amostra,
+        {{ texto_para_decimal(sem_notas('margem_texto'), 'decimal(5,2)') }} as pc_margem_erro,
         {{ texto_para_decimal('valor_texto', 'decimal(9,2)') }}          as pc_valor,
         _ingerido_em
     from fonte
