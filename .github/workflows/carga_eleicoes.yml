@@ -6,10 +6,14 @@ on:
     - cron: "0 9 * * *"
   workflow_dispatch:
     inputs:
-      fontes:
-        description: "Fontes a carregar (separadas por vírgula). Vazio = todas"
-        required: false
-        default: ""
+      rodar_tse:
+        description: "Carregar fontes do TSE (runner no computador local)"
+        type: boolean
+        default: true
+      rodar_wikipedia:
+        description: "Carregar Wikipedia (runner do GitHub)"
+        type: boolean
+        default: true
       rodar_dbt:
         description: "Disparar o job do dbt após a carga"
         type: boolean
@@ -23,11 +27,59 @@ permissions:
   contents: read
 
 jobs:
-  carga:
-    name: Carga bruta no Databricks
+  # O CDN do TSE (cdn.tse.jus.br) responde 403 para IPs de datacenter do GitHub.
+  # Por isso esta carga roda no runner self-hosted (computador com IP no Brasil).
+  carga_tse:
+    name: Carga TSE (runner local)
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_tse == 'true' }}
+    environment: producao
+    runs-on: [self-hosted, Windows]
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Python (venv)
+        run: |
+          $ErrorActionPreference = "Stop"
+          $candidatos = @(
+            (Get-Command py -ErrorAction SilentlyContinue).Source,
+            (Get-Command python -ErrorAction SilentlyContinue).Source,
+            "$env:USERPROFILE\anaconda3\python.exe",
+            "$env:USERPROFILE\miniconda3\python.exe",
+            "$env:ProgramData\anaconda3\python.exe"
+          ) | Where-Object { $_ -and (Test-Path $_) -and ($_ -notlike "*WindowsApps*") }
+          if (-not $candidatos) { throw "Python não encontrado no computador do runner" }
+          $py = $candidatos[0]
+          Write-Host "Python base: $py"
+          & $py -m venv .venv
+          if ($LASTEXITCODE -ne 0) { throw "falha ao criar venv" }
+          & .\.venv\Scripts\python.exe -m pip install --upgrade pip --quiet
+          & .\.venv\Scripts\python.exe -m pip install -r ingestion\requirements.txt --quiet
+          if ($LASTEXITCODE -ne 0) { throw "falha ao instalar dependências" }
+
+      - name: Carregar TSE
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
+          DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          FONTES: pesquisa_eleitoral_2026,totalizacao_presidente_2022
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: "1"
+        run: |
+          & .\.venv\Scripts\python.exe ingestion\carga_raw.py
+          exit $LASTEXITCODE
+
+  carga_wikipedia:
+    name: Carga Wikipedia (runner GitHub)
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_wikipedia == 'true' }}
     environment: producao
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -40,23 +92,22 @@ jobs:
       - name: Instalar dependências
         run: pip install -r ingestion/requirements.txt
 
-      - name: Carregar fontes
+      - name: Carregar Wikipedia
         env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
           DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
           DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          FONTES: ${{ github.event.inputs.fontes }}
-        run: |
-          if [ -z "$FONTES" ]; then unset FONTES; fi
-          python ingestion/carga_raw.py
+          FONTES: intencao_voto_2026
+        run: python ingestion/carga_raw.py
 
   dbt:
     name: Disparar job do dbt
+    needs: [carga_tse, carga_wikipedia]
+    # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true') }}
     environment: producao
-    needs: carga
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
