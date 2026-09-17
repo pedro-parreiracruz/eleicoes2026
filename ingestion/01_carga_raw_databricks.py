@@ -1,5 +1,8 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC > **Alternativa.** Só funciona em workspaces com acesso de saída à internet (não é o caso da Free Edition).
+# MAGIC > A carga oficial do projeto roda pelo GitHub Actions: `ingestion/carga_raw.py`.
+# MAGIC
 # MAGIC # Carga raw - eleicoes2026
 # MAGIC Extract/Load das 3 fontes usadas no Power BI "pesquisas eleitorais", **sem transformacao**
 # MAGIC (tudo como string). A limpeza e as regras de qualidade ficam no projeto dbt.
@@ -14,7 +17,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("catalog", "main")
+dbutils.widgets.text("catalog", "workspace")
 dbutils.widgets.text("schema", "raw_eleicoes")
 CATALOG = dbutils.widgets.get("catalog")
 SCHEMA = dbutils.widgets.get("schema")

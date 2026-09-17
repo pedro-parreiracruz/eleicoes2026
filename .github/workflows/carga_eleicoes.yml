@@ -1,0 +1,87 @@
+name: Carga eleicoes2026 (TSE + Wikipedia -> Databricks -> dbt)
+
+on:
+  schedule:
+    # 09:00 UTC = 06:00 em Brasília, todos os dias
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      fontes:
+        description: "Fontes a carregar (separadas por vírgula). Vazio = todas"
+        required: false
+        default: ""
+      rodar_dbt:
+        description: "Disparar o job do dbt após a carga"
+        type: boolean
+        default: true
+
+concurrency:
+  group: carga-eleicoes2026
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  carga:
+    name: Carga bruta no Databricks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ingestion/requirements.txt
+
+      - name: Instalar dependências
+        run: pip install -r ingestion/requirements.txt
+
+      - name: Carregar fontes
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
+          DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          FONTES: ${{ github.event.inputs.fontes }}
+        run: |
+          if [ -z "$FONTES" ]; then unset FONTES; fi
+          python ingestion/carga_raw.py
+
+  dbt:
+    name: Disparar job do dbt
+    needs: carga
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DBT_CLOUD_HOST: ${{ vars.DBT_CLOUD_HOST }}
+      DBT_CLOUD_ACCOUNT_ID: ${{ vars.DBT_CLOUD_ACCOUNT_ID }}
+      DBT_CLOUD_JOB_ID: ${{ vars.DBT_CLOUD_JOB_ID }}
+      DBT_CLOUD_API_TOKEN: ${{ secrets.DBT_CLOUD_API_TOKEN }}
+    steps:
+      - name: Disparar e acompanhar o job
+        run: |
+          if [ -z "$DBT_CLOUD_JOB_ID" ] || [ -z "$DBT_CLOUD_API_TOKEN" ]; then
+            echo "::notice::Job do dbt não configurado (DBT_CLOUD_JOB_ID / DBT_CLOUD_API_TOKEN). Etapa ignorada."
+            exit 0
+          fi
+          base="https://${DBT_CLOUD_HOST}/api/v2/accounts/${DBT_CLOUD_ACCOUNT_ID}"
+          auth="Authorization: Token ${DBT_CLOUD_API_TOKEN}"
+          run_id=$(curl -sfS -X POST "$base/jobs/${DBT_CLOUD_JOB_ID}/run/" -H "$auth" \
+            -H "Content-Type: application/json" \
+            -d "{\"cause\": \"GitHub Actions ${GITHUB_RUN_ID} (carga TSE/Wikipedia)\"}" | jq -r '.data.id')
+          echo "run dbt: $run_id"
+          # status: 1 queued, 2 starting, 3 running, 10 success, 20 error, 30 cancelled
+          for i in $(seq 1 110); do
+            status=$(curl -sfS "$base/runs/${run_id}/" -H "$auth" | jq -r '.data.status')
+            case "$status" in
+              10) echo "dbt concluído com sucesso"; exit 0 ;;
+              20|30) echo "::error::job do dbt terminou com status $status (run $run_id)"; exit 1 ;;
+            esac
+            sleep 30
+          done
+          echo "::error::tempo esgotado aguardando o dbt (run $run_id)"; exit 1

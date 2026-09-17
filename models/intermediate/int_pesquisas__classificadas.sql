@@ -19,13 +19,15 @@ select
         when 'N' then 'Contratada'
     end                                                                     as tp_contratacao,
 
-    -- Mesma ordem de precedencia do SWITCH(TRUE()) do Power BI
+    -- Mesma ordem de precedencia do SWITCH(TRUE()) do Power BI, com uma correcao:
+    -- no DAX, CONTAINSSTRING(_m, "ura") casava com "estruturADO" ("Questionario estruturado web"
+    -- virava URA). Aqui "ura", "cati" e "web" exigem palavra inteira (\b).
     case
-        when lower(p.ds_metodologia_pesquisa) rlike 'ura|automatizad|resposta aud'
+        when lower(p.ds_metodologia_pesquisa) rlike '\\bura\\b|automatizad|resposta aud'
             then 'Telefônica automatizada (URA)'
-        when lower(p.ds_metodologia_pesquisa) rlike 'cati|telef'
+        when lower(p.ds_metodologia_pesquisa) rlike '\\bcati\\b|telef'
             then 'Telefônica com entrevistador'
-        when lower(p.ds_metodologia_pesquisa) rlike ' web|questionário estruturado web|painel|online|internet'
+        when lower(p.ds_metodologia_pesquisa) rlike '\\bweb\\b|painel|online|internet'
             then 'Web / painel online'
         when lower(p.ds_metodologia_pesquisa) rlike 'pessoa|domicili|face a face|presencia'
             then 'Presencial'

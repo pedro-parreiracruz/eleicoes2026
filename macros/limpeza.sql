@@ -30,10 +30,11 @@
     )
 {%- endmacro %}
 
-{# Texto livre com numero ("45,2%", "± 2,0 p.p.") -> decimal #}
+{# Texto livre com numero ("45,2%", "± 2,0 p.p.") -> decimal.
+   Extrai o PRIMEIRO numero; remover tudo que nao e digito quebraria "2,0 p.p." (vira "2.0..") #}
 {% macro texto_para_decimal(col, tipo='decimal(9,2)') -%}
     try_cast(
-        nullif(regexp_replace(replace(cast({{ col }} as string), ',', '.'), '[^0-9.]', ''), '')
+        nullif(regexp_extract(replace(cast({{ col }} as string), ',', '.'), '([0-9]+([.][0-9]+)?)', 1), '')
         as {{ tipo }}
     )
 {%- endmacro %}

@@ -5,7 +5,8 @@ que hoje estão espalhadas em Power Query e em colunas calculadas DAX. O Power B
 tabelas já tratadas e testadas e fica só com as medidas.
 
 ```
-ingestion/            notebook Databricks: carga raw (TSE + Wikipedia), tudo string
+.github/workflows/     carga agendada (GitHub Actions) + disparo do job dbt
+ingestion/            carga_raw.py (usado pelo Actions) e notebook alternativo; tudo string
 seeds/                DE-PARA de institutos e candidatos
 macros/limpeza.sql    tse_texto, br_decimal, tse_timestamp, texto_para_decimal, mes_para_numero
 models/staging/       tipagem + sentinelas TSE + remoção de artefatos
@@ -28,6 +29,7 @@ tests/                testes singulares (soma de cenários, alertas de qualidade
 | 6 | 2026_Pesquisas | 23 pesquisas com divulgação antes do fim do campo | `fl_dq_divulgacao_antes_fim_campo` (warn) |
 | 7 | 2026_Pesquisas | 2 registros com menos de 5 dias até a divulgação (prazo legal) | `fl_dq_registro_fora_prazo_legal` (warn) |
 | 8 | 2026_Pesquisas | 1 amostra inválida; 1 metodologia não classificada | flags + teste `accepted_values` |
+| 8b | 2026_Pesquisas | `Método de Coleta` (DAX) usa `CONTAINSSTRING("ura")`, que casa com "estrut**ura**do": "Questionário estruturado web" vira URA | regex com palavra inteira (`\\bura\\b`) |
 | 9 | 2026_Pesquisas | Instituto identificado por texto, não por CNPJ | `dim_instituto` por CNPJ |
 | 10 | 2026_Pesquisas | Filtro `NM_UE = "BRASIL"` na carga esconde as demais UEs | todas as UEs + `fl_abrangencia_nacional` |
 | 11 | f2026_IntencaoVoto | Colunas-artefato como dado: `Header` classificado como Candidato, `Vantagem` como Não-resposta | `tp_resposta = 'Artefato'` removido |
@@ -48,21 +50,58 @@ tests/                testes singulares (soma de cenários, alertas de qualidade
 | `f2026_IntencaoVoto` (Power Query) | `fct_intencao_voto` |
 | `f2022_ResultadoOficial` (Power Query) | `fct_resultado_oficial_2022` |
 | `dCalendario` (tabela calculada) | `dim_calendario` (inclui dias até o 2º turno) |
-| função `fnUnzip` | desnecessária (a carga roda no Databricks) |
+| função `fnUnzip` | desnecessária (a carga roda no GitHub Actions) |
 
 As **medidas DAX continuam no Power BI**; troque apenas as referências de coluna.
 
-## Como colocar para rodar
+## Arquitetura
 
-1. **Git:** `git init` nesta pasta e envie para um repositório (GitHub/Azure DevOps).
-2. **dbt Platform → projeto eleicoes2026:** conecte o repositório e crie a conexão Databricks
-   (host, http_path do SQL Warehouse, catálogo).
-3. **Ambientes:** crie um *Development* (schema `dbt_pedro`) e um *Production*
-   (schema `eleicoes`, com target name `prod`).
-4. **Carga raw:** importe `ingestion/01_carga_raw_databricks.py` como notebook e agende
-   antes do dbt (widgets `catalog` e `schema`).
-5. **Job de produção:** `dbt deps`, `dbt seed`, `dbt snapshot`, `dbt build`, `dbt source freshness`.
-6. **Power BI:** aponte as tabelas para `marts.*` (conector Databricks) e remova as colunas DAX de limpeza.
+```
+GitHub Actions (todo dia 06h BRT ou manual)
+  ingestion/carga_raw.py
+    TSE (zips) + Wikipedia  ->  parquet  ->  Volume workspace.raw_eleicoes.landing
+                                         ->  tabelas workspace.raw_eleicoes.*   (tudo string)
+  dispara o job do dbt Platform
+    staging -> intermediate -> marts + testes
+Power BI  ->  conector Databricks (SQL Warehouse)  ->  workspace.marts.*
+```
+
+A carga roda **fora** do Databricks porque a Free Edition bloqueia acesso de saída à internet
+("serverless network policy" — testado em 17/09/2026 para cdn.tse.jus.br, dadosabertos.tse.jus.br
+e pt.wikipedia.org). Conexões de entrada funcionam normalmente. Em um workspace pago, o notebook
+`ingestion/01_carga_raw_databricks.py` faz a mesma carga de dentro do Databricks.
+
+## Configuração (uma vez)
+
+### GitHub → Settings → Secrets and variables → Actions
+
+| Tipo | Nome | Valor |
+|---|---|---|
+| Secret | `DATABRICKS_TOKEN` | token `dapi...` |
+| Variable | `DATABRICKS_HOST` | `dbc-f1556444-f00a.cloud.databricks.com` |
+| Variable | `DATABRICKS_WAREHOUSE_ID` | `73dc97c464e41132` |
+| Variable (opcional) | `DATABRICKS_CATALOG` / `DATABRICKS_SCHEMA` | padrão `workspace` / `raw_eleicoes` |
+| Secret (opcional) | `DBT_CLOUD_API_TOKEN` | token de serviço do dbt com permissão de disparar jobs |
+| Variable (opcional) | `DBT_CLOUD_HOST` | host de acesso do dbt (ex.: `us1.dbt.com` ou o subdomínio da conta) |
+| Variable (opcional) | `DBT_CLOUD_ACCOUNT_ID` / `DBT_CLOUD_JOB_ID` | ids numéricos (aparecem na URL do job) |
+
+Sem as variáveis do dbt, o workflow só faz a carga; o job do dbt pode ser agendado no próprio dbt.
+
+### dbt Platform → Deploy → Jobs → Create job (ambiente Production)
+
+Comandos: `dbt deps` · `dbt seed` · `dbt snapshot` · `dbt build`. Sem agendamento próprio se for
+disparado pelo GitHub Actions; caso contrário, agende para depois das 06h.
+
+### Rodar manualmente
+
+GitHub → Actions → "Carga eleicoes2026" → **Run workflow** (dá para escolher só algumas fontes).
+Local, sem gravar no Databricks: `DRY_RUN=1 python ingestion/carga_raw.py` (gera `saida/*.parquet`).
+
+### Power BI
+
+Obter dados → Azure Databricks → Server hostname + HTTP path do warehouse → catálogo `workspace`,
+schema `marts`. Substituir `2026_Pesquisas`, `f2026_IntencaoVoto`, `f2022_ResultadoOficial` e
+`dCalendario` pelas tabelas do dbt e remover as colunas calculadas de limpeza.
 
 dbt Core local: copie `profiles.yml.exemplo` para `~/.dbt/profiles.yml`.
 
