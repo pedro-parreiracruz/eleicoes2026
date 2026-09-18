@@ -103,8 +103,7 @@ exposures:
       As colunas calculadas DAX de limpeza foram movidas para este projeto; as medidas
       DAX (volume, financeiro, amostra, transparencia) continuam no semantic model.
     owner:
-      name: Pedro
-      email: pedroparreiracruz@gmail.com
+      name: pedro-parreiracruz (GitHub)
     depends_on:
       - ref('fct_pesquisas_registradas')
       - ref('dim_instituto')
