@@ -4441,15 +4441,14 @@ const CONTADOR_DATA  = '';
   $('carimbo-txt').innerHTML = velho ? `<b>Dado desatualizado</b> — última carga ${idade}`
     : `Dados da carga de <b>${dh}</b> (${idade})`;
 
-  // A previsão sai do INÍCIO de campo, não do fim: é a data em que o instituto foi a
-  // campo, e é o intervalo entre inícios que descreve o ritmo de divulgação.
-  const ini = pd(CAMPO_INICIO), fim = pd(CAMPO_MAIS_RECENTE);
-  const passo = Math.max(1, CADENCIA_DIAS);
-  const prox = new Date(ini.getTime() + passo*864e5);
-  const periodo = +ini === +fim ? dBR(fim) : `${dBR(ini)} a ${dBR(fim)}`;
-  $('proxima').innerHTML = `Campo mais recente <b>${periodo}</b> · próxima prevista <b>${dBR(prox)}</b>`;
-  $('proxima').title = `Entre um início de campo e o seguinte passam ${passo} dia${passo>1?'s':''}, `
-    + 'na mediana dos últimos 120 dias. A previsão é o último início + esse intervalo.';
+  // Pesquisa mais recente: último dia de fim de campo e quem pesquisou nesse dia
+  // (1º turno e duelos de 2º turno; nomes em ordem alfabética, sem repetir)
+  const instRec = [...new Set([...P1, ...D2].filter(x => x.ds === CAMPO_MAIS_RECENTE).map(x => x.i))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR', {sensitivity: 'base'}));
+  $('proxima').innerHTML = `Pesquisa mais recente <b>${dBR(pd(CAMPO_MAIS_RECENTE))}</b>`
+    + (instRec.length ? ` (${instRec.map(i => escapaHTML(MAI(i))).join(', ')})` : '');
+  $('proxima').title = instRec.length
+    ? `Último dia de campo registrado: ${instRec.length} ${instRec.length > 1 ? 'institutos' : 'instituto'}.` : '';
 
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const dias = Math.round((new Date('2026-10-04T00:00:00') - hoje)/864e5);
