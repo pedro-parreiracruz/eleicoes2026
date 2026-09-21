@@ -111,11 +111,20 @@ pessoal sob a LGPD, o que traria obrigação de base legal e de aviso de privaci
 para uma métrica que, além de tudo, é pior: todo mundo no mesmo Wi-Fi compartilha um
 IP e celular troca de IP o tempo todo.
 
-## 3. Atualização diária
+## 3. Atualização automática
 
-Com o `gerar.py` no repositório o painel se atualiza sozinho: o
-`publicar_site.yml` dispara quando a carga termina com sucesso, regenera o
-`docs/index.html` e só faz commit se o conteúdo mudou.
+Tudo roda nos servidores do GitHub (nenhum computador precisa estar ligado), em
+`.github/workflows/carga_eleicoes.yml`, com dois agendamentos (horário de Brasília):
+
+- **05:17, carga completa:** TSE + Wikipédia → dbt build → site.
+- **06:07 a 18:07, de hora em hora, checagem:** baixa só a tabela da Wikipédia e tira uma
+  impressão digital dela (`ingestion/verificar_wikipedia.py`, mesmo leitor da carga). Se for
+  igual à da última carga que foi para o site, para ali — sem ligar o Databricks. Se mudou,
+  carrega a Wikipédia, roda o dbt e republica. A impressão da última carga fica no cache do
+  Actions (`wiki-<hash>`), gravada pelo job "Lembrar tabela carregada" só quando carga, dbt
+  e site deram certo.
+
+O GitHub pode atrasar ou pular agendamentos em horário de pico; o próximo compensa.
 
 A tarefa agendada que republica o artifact continua existindo em paralelo — as duas
 leem os mesmos modelos `painel_*` (com a consulta antiga como reserva). Quando o site do GitHub Pages estiver no ar e
