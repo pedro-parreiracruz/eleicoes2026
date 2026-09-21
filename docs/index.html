@@ -196,6 +196,10 @@
   .busca li[aria-selected="true"] { color: var(--ink); font-weight: 600; }
   .busca li.ativo { background: var(--realce); color: var(--ink); }
   .busca li mark { background: none; color: var(--ink); font-weight: 600; }
+  .busca li { display: flex; align-items: baseline; gap: 8px; }
+  .busca li .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .busca li .ult { flex: none; margin-left: auto; font-family: var(--numero); font-size: 11.5px;
+                   color: var(--muted); text-transform: none; }
   .busca li.vazio { color: var(--muted); cursor: default; font-style: italic; }
   .busca li.todos { border-bottom: 1px solid var(--hair); margin-bottom: var(--e1); padding-bottom: 8px; }
   .atalhos { display: flex; gap: var(--e1); }
@@ -295,6 +299,10 @@
   th.ord::after { content: " \25BC"; font-size: 8px; }
   th.ord.asc::after { content: " \25B2"; }
   .celcand { display: inline-flex; align-items: center; gap: var(--e2); }
+  .celduelo { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; vertical-align: middle; }
+  .celduelo .x { color: var(--muted); }
+  .celduelo .fora { color: var(--warn); text-decoration: underline; text-decoration-color: var(--warn);
+                    text-underline-offset: 3px; }
   /* avatar: foto quando existe, monograma quando não. O anel mantém a cor da série —
      a foto diz quem é, a cor continua ligando a pessoa à linha e à barra do gráfico. */
   .cand-av { display: inline-block; width: 16px; height: 16px; border-radius: 50%; flex: none; }
@@ -2560,7 +2568,7 @@ document.querySelectorAll('.atalhos button').forEach(b => b.onclick = () => {
 // ---------------------------------------------------------------- busca de instituto
 // Combobox de verdade (não um select disfarçado): digita para filtrar, setas para andar,
 // Enter escolhe, Esc desfaz. Sem escolha = "Todos (média)", que é o estado padrão.
-const bInst = {opcoes: [], filtradas: [], aberto: false, ativo: -1};
+const bInst = {opcoes: [], filtradas: [], aberto: false, ativo: -1, ult: new Map()};
 const TODOS = 'Todos (média)';
 const semCaixa = t => semAcento(t).toLowerCase();
 const escapaHTML = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2581,8 +2589,13 @@ function listaInst(termo) {
   // "Todos" só some quando o texto digitado não combina com ele
   if (!t || semCaixa(TODOS).includes(t))
     itens.push(`<li class="todos" role="option" data-v="" aria-selected="${!st.inst}">${TODOS}</li>`);
-  bInst.filtradas.forEach(o => itens.push(
-    `<li role="option" data-v="${escapaHTML(o)}" aria-selected="${o === st.inst}">${realcaTrecho(o, termo.trim())}</li>`));
+  // ao lado do nome, o último dia de campo do instituto nesta aba: mostra quem está em dia
+  bInst.filtradas.forEach(o => {
+    const u = bInst.ult.get(o);
+    const dt = u ? `<span class="ult" title="Última pesquisa: ${dBR(pd(u))}">(${u.slice(8,10)}/${u.slice(5,7)}/${u.slice(2,4)})</span>` : '';
+    itens.push(`<li role="option" data-v="${escapaHTML(o)}" aria-selected="${o === st.inst}">`
+      + `<span class="nm">${realcaTrecho(o, termo.trim())}</span>${dt}</li>`);
+  });
   if (!itens.length) itens.push('<li class="vazio">Nenhum instituto com esse nome</li>');
   ul.innerHTML = itens.join('');
   bInst.ativo = -1;
@@ -3083,9 +3096,13 @@ function desenhaVies(host, tip, dados, anima) {
 }
 
 // ---------------------------------------------------------------- tabela ordenável
+// cols[i].ini = direção da ordenação inicial (-1 decrescente); sem nenhum ini, abre pela
+// coluna "pad". cols[i].oculta = coluna só de apoio (ordenação/rótulo), não é desenhada.
 function tabela(el, cols, linhas, chave) {
   el.classList.add('tabwrap');
-  const ord = st.ord[chave] || {col: cols.findIndex(c => c.pad), dir: -1};
+  const iIni = cols.findIndex(c => c.ini);
+  const ord = st.ord[chave] || (iIni >= 0 ? {col: iIni, dir: cols[iIni].ini}
+                                          : {col: cols.findIndex(c => c.pad), dir: -1});
   st.ord[chave] = ord;
   const dados = linhas.slice().sort((a, b) => {
     const x = a[ord.col], y = b[ord.col];
@@ -3093,10 +3110,10 @@ function tabela(el, cols, linhas, chave) {
     if (nx && ny) return (x - y) * ord.dir;
     return String(x).localeCompare(String(y), 'pt-BR') * ord.dir;
   });
-  el.innerHTML = '<table><thead><tr>' + cols.map((c, i) =>
+  el.innerHTML = '<table><thead><tr>' + cols.map((c, i) => c.oculta ? '' :
       `<th class="${i === ord.col ? 'ord' + (ord.dir === 1 ? ' asc' : '') : ''}" data-c="${i}" title="Ordenar por ${c.t}">${c.t}</th>`).join('') +
     '</tr></thead><tbody>' + dados.map((r, ri) =>
-      `<tr style="animation-delay:${Math.min(ri, 14)*18}ms" class="surge">` + r.map((v, i) =>
+      `<tr style="animation-delay:${Math.min(ri, 14)*18}ms" class="surge">` + r.map((v, i) => cols[i].oculta ? '' :
         `<td class="${i === ord.col ? 'ord' : ''}">${cols[i].f ? cols[i].f(v, r) : (typeof v === 'number' ? nd(v) : v)}</td>`).join('') + '</tr>').join('') +
     '</tbody></table>';
   el.querySelectorAll('th').forEach(th => th.onclick = () => {
@@ -3159,8 +3176,10 @@ function painelT1(anima) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
     $('p-barra').hidden = true; $('tab-barra').hidden = false;
     const dias = [...new Set(Object.values(s).flat().map(p => +p.d))].sort();
-    tabela($('tab-linha'), [{t:'Dia'}, ...topN.map(n => ({t:nx(n)}))],
-      dias.map(t => [dBR(new Date(t)), ...topN.map(n => { const p = s[n].find(q => +q.d === t); return p ? p.v : null; })]), 'linha');
+    // Dia guarda o carimbo numérico (ordena pela data de verdade) e só formata na tela;
+    // abre do dia mais recente para o mais antigo
+    tabela($('tab-linha'), [{t:'Dia', ini: -1, f: v => dBR(new Date(v))}, ...topN.map(n => ({t:nx(n)}))],
+      dias.map(t => [t, ...topN.map(n => { const p = s[n].find(q => +q.d === t); return p ? p.v : null; })]), 'linha');
     tabela($('tab-barra'), [
       {t:'Candidato', f: v => celCand(v)}, {t:'Partido', f: v => MAI(v)}, {t:'Média %'}, {t:'Mín %'}, {t:'Máx %'},
       {t:'Margem p.p.'}, {t:'Pesquisas', pad:true, f: v => ni(v)}],
@@ -3240,10 +3259,15 @@ function painelT2(anima) {
   if (st.tabela) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
     $('p-barra').hidden = true; $('tab-barra').hidden = false;
-    tabela($('tab-linha'), [{t:'Dia'}, {t:nx(series[0].nome)+' %'}, {t:nx(series[1].nome)+' %'}, {t:'Pesquisas', pad:true, f: v=>ni(v)}],
-      dias.map(x => [dBR(x.d), (x.sa/x.n), (x.sb/x.n), x.n].map((v,i) => i===1||i===2 ? (series[0].nome===par[0] ? v : v) : v)), 'linha2');
-    tabela($('tab-barra'), [{t:'Duelo', f: (v,r) => celCand(r[6]) + ' × ' + nx(r[7])},
-      {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Simulações', pad:true, f: v=>ni(v)}, {t:''}, {t:''}, {t:''}],
+    tabela($('tab-linha'), [{t:'Dia', ini: -1, f: v => dBR(new Date(v))}, {t:nx(series[0].nome)+' %'}, {t:nx(series[1].nome)+' %'}, {t:'Pesquisas', pad:true, f: v=>ni(v)}],
+      dias.map(x => [+x.d, (x.sa/x.n), (x.sb/x.n), x.n].map((v,i) => i===1||i===2 ? (series[0].nome===par[0] ? v : v) : v)), 'linha2');
+    // o duelo inteiro num bloco só (foto, nomes e ×) para alinhar pela mesma linha de base;
+    // quem está fora da urna ganha ⚠ e sublinhado, como no gráfico
+    const nomeDuelo = n => foraDaUrna(n) ? `<span class="fora">⚠ ${nx(n)}</span>` : nx(n);
+    tabela($('tab-barra'), [{t:'Duelo', f: (v,r) => `<span class="celduelo">${
+        celCand(r[6]).replace(`>${nx(r[6])}</span>`, `>${nomeDuelo(r[6])}</span>`)}<span class="x">×</span>${nomeDuelo(r[7])}</span>`},
+      {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Simulações', pad:true, f: v=>ni(v)},
+      {t:'', oculta:true}, {t:'', oculta:true}, {t:'', oculta:true}],
       lista.map(c => { const hi = c.va >= c.vb ? c.a : c.b, lo = c.va >= c.vb ? c.b : c.a;
         const vh = Math.max(c.va, c.vb), vl = Math.min(c.va, c.vb);
         return [hi+' × '+lo, vh, vl, vh-vl, c.n, '', hi, lo]; }), 'barra2');
@@ -3492,6 +3516,13 @@ function desenha(soRedesenho) {
   const opcoes = fonte.sort((a,b) => a.localeCompare(b,'pt-BR'));
   if (sel.dataset.aba !== st.aba) {
     bInst.opcoes = opcoes;
+    // último dia de campo (1º e 2º turno) ou último registro no TSE (aba Institutos)
+    const ult = new Map();
+    const guarda = (i, d) => { if (d && (!ult.has(i) || d > ult.get(i))) ult.set(i, d); };
+    if (t2) D2.forEach(r => guarda(r.i, r.ds));
+    else if (st.aba === 'inst') INST.forEach(x => guarda(x.nm, x.d2));
+    else V1.forEach(r => guarda(r.i, r.ds));
+    bInst.ult = ult;
     sel.dataset.aba = st.aba;
     // instituto que não pesquisou nesta aba não pode continuar filtrando
     if (st.inst && !opcoes.includes(st.inst)) st.inst = '';
