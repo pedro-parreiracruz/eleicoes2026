@@ -4129,13 +4129,15 @@ function painelInst(anima) {
   if (meses.length) $('leg-mes').insertAdjacentHTML('beforeend',
     `<span class="nota" style="margin:0; flex-basis:100%; text-align:center">pico: ${ni(maxQt)} ${maxQt === 1 ? 'pesquisa' : 'pesquisas'} · ${moeda(maxVr)}</span>`);
 
-  // fichas: só institutos com perfil pesquisado, ordenados pelo que registraram
+  // fichas: só institutos com perfil pesquisado (o de mais registros vence quando dois nomes caem no mesmo perfil)
   const comInfo = [];
   const vistos = new Set();
   lista.slice().sort((a,b) => b.qt - a.qt).forEach(x => {
     const inf = infoDe(x.nm);
     if (inf && !vistos.has(inf.n)) { vistos.add(inf.n); comInfo.push({inf, d: x}); }
   });
+  // cards em ordem alfabética pelo nome do instituto
+  comInfo.sort((a, b) => a.inf.n.localeCompare(b.inf.n, 'pt-BR', {sensitivity: 'base'}));
   $('fichas').innerHTML = comInfo.map(({inf, d}, i) => `
     <div class="ficha surge" style="animation-delay:${Math.min(i,12)*30}ms">
       <h3>${MAI(inf.n)}</h3>
