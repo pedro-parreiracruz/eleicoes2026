@@ -16,11 +16,6 @@ on:
         description: "Carregar fontes do TSE"
         type: boolean
         default: true
-      onde_tse:
-        description: "Onde baixar o TSE: github (padrão) ou local (runner no computador)"
-        type: choice
-        options: [github, local]
-        default: github
       rodar_wikipedia:
         description: "Carregar Wikipedia (runner do GitHub)"
         type: boolean
@@ -44,15 +39,15 @@ jobs:
   verificar:
     name: Wikipedia mudou?
     if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_wikipedia == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
       hash: ${{ steps.impressao.outputs.hash }}
       mudou: ${{ steps.cache.outputs.cache-hit != 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -67,7 +62,7 @@ jobs:
 
       - name: Já foi carregada?
         id: cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: .wiki_hash
           key: wiki-${{ steps.impressao.outputs.hash }}
@@ -82,19 +77,17 @@ jobs:
           fi
 
   # Carga do TSE. O CDN (cdn.tse.jus.br) tem anti-bot: a carga usa curl_cffi (assinatura Chrome).
-  # Padrão: runner do GitHub. Alternativa: runner self-hosted no computador local, escolhida pela
-  # variável de repositório/environment RUNNER_TSE=local (agendado) ou pelo input onde_tse=local.
   carga_tse:
-    name: Carga TSE (runner GitHub)
+    name: Carga TSE
     # TSE so na carga completa do dia (o registro de pesquisas muda pouco ao longo do dia)
-    if: ${{ (github.event.schedule == '17 8 * * *' && vars.RUNNER_TSE != 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse != 'local') }}
+    if: ${{ github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_tse == 'true' }}
     environment: producao
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -113,63 +106,18 @@ jobs:
           FONTES: pesquisa_eleitoral_2026,totalizacao_presidente_2022
         run: python ingestion/carga_raw.py
 
-  carga_tse_local:
-    name: Carga TSE (runner local)
-    if: ${{ (github.event.schedule == '17 8 * * *' && vars.RUNNER_TSE == 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse == 'local') }}
-    environment: producao
-    runs-on: [self-hosted, Windows]
-    timeout-minutes: 45
-    defaults:
-      run:
-        shell: powershell
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Preparar Python (venv)
-        run: |
-          $ErrorActionPreference = "Stop"
-          $candidatos = @(
-            (Get-Command py -ErrorAction SilentlyContinue).Source,
-            (Get-Command python -ErrorAction SilentlyContinue).Source,
-            "$env:USERPROFILE\anaconda3\python.exe",
-            "$env:USERPROFILE\miniconda3\python.exe",
-            "$env:ProgramData\anaconda3\python.exe"
-          ) | Where-Object { $_ -and (Test-Path $_) -and ($_ -notlike "*WindowsApps*") }
-          if (-not $candidatos) { throw "Python não encontrado no computador do runner" }
-          $py = $candidatos[0]
-          Write-Host "Python base: $py"
-          & $py -m venv .venv
-          if ($LASTEXITCODE -ne 0) { throw "falha ao criar venv" }
-          & .\.venv\Scripts\python.exe -m pip install --upgrade pip --quiet
-          & .\.venv\Scripts\python.exe -m pip install -r ingestion\requirements.txt --quiet
-          if ($LASTEXITCODE -ne 0) { throw "falha ao instalar dependências" }
-
-      - name: Carregar TSE
-        env:
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
-          DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
-          DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          FONTES: pesquisa_eleitoral_2026,totalizacao_presidente_2022
-          PYTHONIOENCODING: utf-8
-          PYTHONUTF8: "1"
-        run: |
-          & .\.venv\Scripts\python.exe ingestion\carga_raw.py
-          exit $LASTEXITCODE
-
   carga_wikipedia:
-    name: Carga Wikipedia (runner GitHub)
+    name: Carga Wikipedia
     needs: [verificar]
     # completa do dia e disparo manual: sempre; checagem de hora em hora: so se mudou
     if: ${{ !cancelled() && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_wikipedia == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.verificar.result == 'success' && needs.verificar.outputs.mudou == 'true')) }}
     environment: producao
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -192,12 +140,12 @@ jobs:
   # Nao depende de job configurado no dbt Platform (a UI do dbt continua servindo para explorar/editar).
   dbt:
     name: dbt build (Databricks)
-    needs: [carga_tse, carga_tse_local, carga_wikipedia]
+    needs: [carga_tse, carga_wikipedia]
     # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
     # completa do dia: sempre; de hora em hora: so se a Wikipedia foi recarregada; manual: se pedido
     if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_dbt == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.carga_wikipedia.result == 'success')) }}
     environment: producao
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
       DBT_PROFILES_DIR: ci
@@ -206,9 +154,9 @@ jobs:
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
       DATABRICKS_CATALOG: ${{ vars.DATABRICKS_CATALOG || 'workspace' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -228,7 +176,7 @@ jobs:
 
       - name: Guardar artefatos (manifest, run_results)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dbt-target
           path: target/
@@ -252,10 +200,10 @@ jobs:
     name: Lembrar tabela carregada
     needs: [verificar, carga_wikipedia, dbt, publicar]
     if: ${{ !cancelled() && needs.verificar.outputs.hash != '' && needs.carga_wikipedia.result == 'success' && needs.dbt.result == 'success' && needs.publicar.result == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - run: echo "${{ needs.verificar.outputs.hash }}" > .wiki_hash
-      - uses: actions/cache/save@v4
+      - uses: actions/cache/save@v6
         with:
           path: .wiki_hash
           key: wiki-${{ needs.verificar.outputs.hash }}

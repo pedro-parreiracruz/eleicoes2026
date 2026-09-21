@@ -4,17 +4,17 @@ eleicoes2026:
   outputs:
     dev:
       type: databricks
-      catalog: main
+      catalog: workspace
       schema: dbt_pedro
-      host: adb-XXXXXXXX.azuredatabricks.net
+      host: dbc-XXXXXXXX-XXXX.cloud.databricks.com
       http_path: /sql/1.0/warehouses/XXXXXXXX
       token: "{{ env_var('DATABRICKS_TOKEN') }}"
       threads: 4
     prod:
       type: databricks
-      catalog: main
+      catalog: workspace
       schema: eleicoes
-      host: adb-XXXXXXXX.azuredatabricks.net
+      host: dbc-XXXXXXXX-XXXX.cloud.databricks.com
       http_path: /sql/1.0/warehouses/XXXXXXXX
       token: "{{ env_var('DATABRICKS_TOKEN') }}"
       threads: 8

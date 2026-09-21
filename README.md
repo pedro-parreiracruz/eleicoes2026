@@ -1,21 +1,30 @@
-# eleicoes2026 — dbt (Databricks)
+# eleicoes2026 — pesquisas eleitorais 2026 (Databricks + dbt + painel público)
 
-Projeto dbt que tira do Power BI **"pesquisas eleitorais"** as regras de limpeza e de qualidade
-que hoje estão espalhadas em Power Query e em colunas calculadas DAX. O Power BI passa a ler
-tabelas já tratadas e testadas e fica só com as medidas.
+Pipeline que coleta as pesquisas da eleição presidencial de 2026 (registro no TSE e resultados
+publicados na Wikipédia), trata e testa tudo com dbt no Databricks e publica um painel público:
+**https://pedro-parreiracruz.github.io/eleicoes2026/**
+
+Começou tirando do Power BI **"pesquisas eleitorais"** as regras de limpeza e de qualidade que
+estavam em Power Query e DAX (histórico mais abaixo); hoje as mesmas tabelas alimentam o painel.
 
 ```
-.github/workflows/     carga agendada (GitHub Actions) + dbt build
-ci/profiles.yml       profile do dbt usado pelo GitHub Actions (dbt Core + Databricks)
-ingestion/            carga_raw.py (usado pelo Actions) e notebook alternativo; tudo string
-seeds/                DE-PARA de institutos e candidatos
-macros/limpeza.sql    tse_texto, br_decimal, tse_timestamp, texto_para_decimal, mes_para_numero
-models/staging/       tipagem + sentinelas TSE + remoção de artefatos
-models/intermediate/  regras de negócio, flags de qualidade, padronização e chaves
-models/marts/         fct_pesquisas_registradas, dim_instituto, fct_intencao_voto,
-                      fct_resultado_oficial_2022, dim_calendario (+ exposure do Power BI)
-snapshots/            histórico de alterações dos registros no PesqEle
-tests/                testes singulares (soma de cenários, alertas de qualidade, resultado 2022)
+.github/workflows/
+  carga_eleicoes.yml     carga diária completa + checagem de hora em hora da Wikipédia + dbt
+  publicar_site.yml      gera docs/index.html a partir dos modelos painel_* e publica no Pages
+ingestion/
+  carga_raw.py           baixa TSE e Wikipédia e grava as tabelas raw (tudo string)
+  verificar_wikipedia.py impressão digital da tabela da Wikipédia (a checagem horária)
+ci/profiles.yml          profile do dbt usado pelo Actions
+seeds/                   DE-PARA de institutos e candidatos, candidatos registrados no TSE
+macros/                  limpeza (tse_texto, br_decimal, sem_notas...) e nome de schema
+models/staging/          tipagem + sentinelas TSE + remoção de artefatos
+models/intermediate/     regras de negócio, flags de qualidade, padronização e chaves
+models/marts/            fatos e dimensões (fct_intencao_voto, fct_pesquisas_registradas...)
+models/marts/painel/     um modelo por bloco do painel público (painel_*)
+snapshots/               histórico de alterações dos registros no PesqEle
+tests/                   testes singulares
+site/                    modelo.html (o painel), gerar.py, LEIA-ME.md e o contador opcional
+docs/index.html          o painel publicado (gerado; não editar à mão)
 ```
 
 ## Problemas de qualidade encontrados no modelo atual (perfil em 15/09/2026)
@@ -60,19 +69,22 @@ As **medidas DAX continuam no Power BI**; troque apenas as referências de colun
 ## Arquitetura
 
 ```
-GitHub Actions (todo dia 06h BRT ou manual)
-  ingestion/carga_raw.py
-    TSE (zips) + Wikipedia  ->  parquet  ->  Volume workspace.raw_eleicoes.landing
-                                         ->  tabelas workspace.raw_eleicoes.*   (tudo string)
-  dbt build (dbt Core no runner, profile em ci/profiles.yml)
-    seeds + snapshots + staging -> intermediate -> marts + testes
+GitHub Actions (servidores do GitHub; horário de Brasília)
+  05:17  carga completa
+         ingestion/carga_raw.py: TSE (zips) + Wikipédia -> parquet -> workspace.raw_eleicoes.*
+         dbt build: seeds + snapshots + staging -> intermediate -> marts -> marts.painel_* + testes
+         site/gerar.py: lê marts.painel_* -> docs/index.html -> GitHub Pages
+  06:07-18:07, de hora em hora  checagem
+         ingestion/verificar_wikipedia.py: a tabela mudou desde a última carga?
+         não -> para (sem Databricks) · sim -> carga da Wikipédia + dbt build + site
 Power BI  ->  conector Databricks (SQL Warehouse)  ->  workspace.marts.*
 ```
 
 A carga roda **fora** do Databricks porque a Free Edition bloqueia acesso de saída à internet
 ("serverless network policy" — testado em 17/09/2026 para cdn.tse.jus.br, dadosabertos.tse.jus.br
-e pt.wikipedia.org). Conexões de entrada funcionam normalmente. Em um workspace pago, o notebook
-`ingestion/01_carga_raw_databricks.py` faz a mesma carga de dentro do Databricks.
+e pt.wikipedia.org). Conexões de entrada funcionam normalmente.
+
+Detalhes do painel, do rollback para a consulta antiga e do contador: `site/LEIA-ME.md`.
 
 ## Configuração (uma vez)
 
@@ -101,7 +113,7 @@ Falhas de teste em modo `warn` não quebram o build: elas ficam materializadas e
 
 ### Rodar manualmente
 
-GitHub → Actions → "Carga eleicoes2026" → **Run workflow** (dá para escolher só algumas fontes).
+GitHub → Actions → "Carga eleicoes2026" → **Run workflow** (dá para escolher só algumas fontes; o disparo manual sempre carrega, sem checar se mudou).
 Local, sem gravar no Databricks: `DRY_RUN=1 python ingestion/carga_raw.py` (gera `saida/*.parquet`).
 
 ### Power BI
