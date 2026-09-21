@@ -1,0 +1,51 @@
+# .github/workflows/publicar_site.yml
+# Regenera o painel público depois da carga diária e publica no GitHub Pages.
+# O HTML é montado por site/gerar.py a partir do warehouse — é o mesmo bloco de
+# dados que a tarefa agendada escreve hoje no artifact.
+
+name: Publicar painel
+
+on:
+  workflow_run:
+    workflows: ["Carga eleicoes2026 (TSE + Wikipedia -> Databricks -> dbt)"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: producao
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependências
+        run: pip install databricks-sql-connector
+
+      - name: Gerar o painel
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          CONTADOR_URL: ${{ vars.CONTADOR_URL }}
+        run: python site/gerar.py --saida docs/index.html
+
+      - name: Publicar se mudou
+        run: |
+          # --porcelain cobre tambem o primeiro commit, quando o arquivo ainda
+          # nem esta rastreado e um "git diff" simples diria que nada mudou
+          if [ -z "$(git status --porcelain docs/index.html)" ]; then
+            echo "nada mudou"; exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          git commit -m "painel: carga de $(date -u +%Y-%m-%d)"
+          git push

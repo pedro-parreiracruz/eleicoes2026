@@ -1,0 +1,13 @@
+name = "contador-corrida-2026"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Troque pelo domínio onde o painel vai ficar. Aceita mais de um, separado por vírgula.
+[vars]
+ORIGEM = "https://pedro-parreiracruz.github.io"
+
+# Crie o namespace com:  npx wrangler kv namespace create ACESSOS
+# e cole o id devolvido aqui.
+[[kv_namespaces]]
+binding = "ACESSOS"
+id = "COLE_AQUI_O_ID_DO_KV"

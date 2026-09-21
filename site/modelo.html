@@ -1,0 +1,1691 @@
+<title>Corrida Presidencial 2026</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ============================================================
+     Escala de espaçamento 4/8/12/16/24/32/48 — nada fora dela.
+     Raio 2px em tudo: campo, cartão, barra. Dado quer canto reto.
+     ============================================================ */
+  :root {
+    color-scheme: light;
+    --texto: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --numero: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --e1: 4px;  --e2: 8px;  --e3: 12px; --e4: 16px; --e5: 24px; --e6: 32px; --e7: 48px;
+    --r: 2px;
+    --alt-campo: 32px;   /* altura única de toda caixa da linha de filtro */
+
+    --plane:    #f4f4f1;
+    --surface:  #fcfcfb;
+    --sunken:   #f7f7f4;
+    --ink:      #0b0b0b;
+    --ink-2:    #52514e;
+    --muted:    #898781;
+    --grid:     #e6e5de;
+    --axis:     #c3c2b7;
+    --hair:     rgba(11,11,11,0.09);
+    --chip:     rgba(11,11,11,0.045);
+    --realce:   rgba(5,89,210,0.07);
+    --realce-op:#ebf1f8; --hover-op:#f1f1f0;
+    --ok:       #0ca30c;
+    --warn:     #b07800;
+    --focus:    #0559d2;
+
+    --c1:#0559d2; --c2:#954d05; --c3:#047745; --c4:#989401; --c5:#aa0588; --c6:#0b9dcb; --c7:#956fff; --c8:#e4275c;
+  }
+  :root[data-paleta="cvd"] {
+    --c1:#a78e11; --c2:#1299de; --c3:#aa0588; --c4:#7334cf; --c5:#07a786; --c6:#9e4502;
+    --focus:#1299de; --realce: rgba(18,153,222,0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema="claro"]) {
+      color-scheme: dark;
+      --plane:#0d0d0d; --surface:#1a1a19; --sunken:#151514;
+      --ink:#ffffff; --ink-2:#cfcec6; --muted:#a5a39b;
+      --grid:#2c2c2a; --axis:#3d3d3a; --hair:rgba(255,255,255,0.10); --chip:rgba(255,255,255,0.06);
+      --realce: rgba(7,102,238,0.14); --realce-op:#172537; --hover-op:#282826;
+      --ok:#25c025; --warn:#fab219; --focus:#0766ee;
+      --c1:#0766ee; --c2:#a95a0d; --c3:#0d8750; --c4:#9b980b; --c5:#bd2099; --c6:#15a0ce; --c7:#9875fd; --c8:#f63d6b;
+    }
+    :root:not([data-tema="claro"])[data-paleta="cvd"] {
+      --c1:#ab9104; --c2:#069ce4; --c3:#bd2099; --c4:#8146e0; --c5:#13aa89; --c6:#b2510c;
+      --focus:#069ce4; --realce: rgba(6,156,228,0.12);
+    }
+  }
+  :root[data-tema="escuro"] {
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19; --sunken:#151514;
+    --ink:#ffffff; --ink-2:#cfcec6; --muted:#a5a39b;
+    --grid:#2c2c2a; --axis:#3d3d3a; --hair:rgba(255,255,255,0.10); --chip:rgba(255,255,255,0.06);
+    --realce: rgba(7,102,238,0.14); --realce-op:#172537; --hover-op:#282826;
+    --ok:#25c025; --warn:#fab219; --focus:#0766ee;
+    --c1:#0766ee; --c2:#a95a0d; --c3:#0d8750; --c4:#9b980b; --c5:#bd2099; --c6:#15a0ce; --c7:#9875fd; --c8:#f63d6b;
+  }
+  :root[data-tema="escuro"][data-paleta="cvd"] {
+    --c1:#ab9104; --c2:#069ce4; --c3:#bd2099; --c4:#8146e0; --c5:#13aa89; --c6:#b2510c;
+    --focus:#069ce4; --realce: rgba(6,156,228,0.12);
+  }
+
+  body { background: var(--plane); color: var(--ink); font-family: var(--texto);
+         font-size: 14.5px; line-height: 1.5; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding-inline: 20px; padding-block: var(--e6) var(--e7); }
+
+  /* ---------- cabeçalho ---------- */
+  .topo { position: relative; display: flex; flex-wrap: wrap; gap: var(--e4); align-items: flex-start; justify-content: space-between; }
+  /* o título encolhe e deixa os chips quebrarem dentro dele; senão a coluna cresce até
+     a largura dos chips numa linha só e empurra os botões de tema para baixo */
+  .topo > :first-child { flex: 1 1 520px; min-width: 0; }
+  .temas { flex: none; }
+  .eyebrow { font-family: var(--numero); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+             color: var(--muted); margin: 0 0 var(--e2); }
+  h1 { font-size: clamp(25px, 4.5vw, 36px); line-height: 1.08; margin: 0; font-weight: 700; letter-spacing: -0.035em; }
+  .lede { color: var(--ink-2); margin: var(--e2) 0 0; }
+  @media (min-width: 760px) { .lede, footer p { white-space: nowrap; } }
+
+  .chips { display: flex; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e3); }
+  .chip { display: inline-flex; align-items: center; gap: var(--e2); font-size: 12.5px; color: var(--ink-2);
+          background: var(--chip); border-radius: var(--r); padding: 5px 10px; }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--ok); }
+  .chip.velho .dot { background: var(--warn); }
+  .chip b { font-family: var(--numero); font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+
+  .temas { display: flex; flex-direction: column; gap: var(--e2); align-items: flex-end; }
+  /* contador de alcance: só aparece quando há serviço de contagem configurado */
+  .contador { display: inline-flex; align-items: baseline; gap: 6px;
+              background: var(--chip); border-radius: var(--r); padding: 4px 9px; }
+  /* No estreito o cabeçalho empilha e os botões de tema descem — o contador, não:
+     ele sai do fluxo e fica grudado no canto superior direito, que é onde se procura
+     por ele. A reserva no olho-de-boi impede que os dois se sobreponham. */
+  @media (max-width: 800px) {
+    .contador { position: absolute; top: 0; right: 0; }
+    .topo.com-contador .eyebrow { padding-right: 112px; }
+  }
+  .contador .n { font-family: var(--numero); font-weight: 600; font-size: 15px;
+                 letter-spacing: -.02em; color: var(--ink); }
+  .contador .rot { font-family: var(--numero); font-size: 10px; letter-spacing: .07em;
+                   text-transform: uppercase; color: var(--muted); }
+  .seg { display: flex; background: var(--chip); border-radius: var(--r); padding: 2px; gap: 2px; align-items: stretch; }
+  .seg button { font: inherit; font-size: 12.5px; border: 0; background: transparent; color: var(--ink-2);
+                padding: 5px 11px; border-radius: var(--r); cursor: pointer; white-space: nowrap; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; }
+
+  /* ---------- ressalva do topo ----------
+     Fechada por padrão: ocupa uma linha e não empurra gráfico nenhum. Aberta, explica. */
+  .ressalva { margin-top: var(--e4); border: 1px solid var(--hair); border-left: 2px solid var(--warn);
+              border-radius: var(--r); background: rgba(176,120,0,.08); }
+  .ressalva summary { display: flex; align-items: flex-start; gap: var(--e2); padding: var(--e2) var(--e3);
+                      cursor: pointer; font-size: 13px; line-height: 1.45; color: var(--ink); list-style: none; }
+  .ressalva summary::-webkit-details-marker { display: none; }
+  .ressalva .sinal { color: var(--warn); flex: none; }
+  .ressalva .mais { margin-left: auto; font-family: var(--numero); font-size: 11px; color: var(--muted);
+                    text-transform: uppercase; letter-spacing: .06em; flex: none; }
+  .ressalva[open] .mais::after { content: ' \25B4'; }
+  .ressalva:not([open]) .mais::after { content: ' \25BE'; }
+  .ressalva > div { padding: 0 var(--e3) var(--e3); font-size: 12.5px; color: var(--ink-2); line-height: 1.55;
+                    max-width: 92ch; }
+  .ressalva h4 { margin: var(--e3) 0 var(--e1); font-size: 11px; letter-spacing: .07em;
+                 text-transform: uppercase; color: var(--ink); font-weight: 700; }
+  .ressalva p { margin: 0; }
+  .ressalva .nomes { margin-top: var(--e2); display: flex; flex-wrap: wrap; gap: var(--e1) var(--e2); }
+  .ressalva .nomes span { font-size: 12px; background: var(--chip); border-radius: var(--r); padding: 2px 7px; }
+
+  /* ---------- abas ---------- */
+  /* rola de lado no celular, mas sem desenhar barra: no Windows ela aparecia sempre
+     e ainda criava uma barra vertical de 1px de sobra */
+  .abas { display: flex; gap: var(--e1); margin: var(--e6) 0 0; border-bottom: 1px solid var(--hair);
+          overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; }
+  .abas::-webkit-scrollbar { display: none; }
+  .abas button { font: inherit; font-size: 14px; font-weight: 500; border: 0; background: none; color: var(--muted);
+                 padding: var(--e3) var(--e4); cursor: pointer; white-space: nowrap;
+                 border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .abas button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--c1); }
+  .abas button:hover { color: var(--ink-2); }
+  @media (max-width: 430px) { .abas button { padding-left: 6px; padding-right: 6px; font-size: 13px; } }
+
+  /* ---------- filtros ---------- */
+  .filtros { display: flex; flex-wrap: wrap; gap: var(--e3) var(--e5); align-items: flex-end;
+             padding: var(--e4) 0 0; }
+  [hidden] { display: none !important; }
+  .campo { display: flex; flex-direction: column; gap: var(--e1); min-width: 0; max-width: 100%; }
+  .campo > label, .rotulo { font-family: var(--numero); font-size: 10.5px; letter-spacing: .08em;
+                            text-transform: uppercase; color: var(--muted); }
+  .datas { display: flex; align-items: center; gap: var(--e2); flex-wrap: wrap; }
+  /* toda caixa da linha de filtro tem a mesma altura — o seletor de data traz altura
+     própria do navegador, então a altura é fixada e não deixada para o padding decidir */
+  input[type="date"], select, .atalhos button, .seg { height: var(--alt-campo); box-sizing: border-box; }
+  input[type="date"], select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
+      border: 1px solid var(--hair); border-radius: var(--r); padding: 0 8px; min-width: 0; max-width: 100%; }
+  select { max-width: min(100%, 244px); text-overflow: ellipsis; }
+  #sel-a, #sel-b { max-width: min(100%, 176px); }
+  .datas span { color: var(--muted); font-size: 13px; }
+
+  /* ---------- campo de busca (instituto) ----------
+     São 220 institutos na aba do TSE: rolar um select nativo até "Veritá" é sofrimento.
+     Aqui o campo é um input que filtra a lista enquanto se digita, com teclado completo. */
+  .busca { position: relative; display: flex; align-items: center; max-width: min(100%, 244px); }
+  .busca input { flex: 1; min-width: 0; padding-right: 26px; }
+  .busca input::placeholder { color: var(--muted); opacity: 1; text-transform: none; }
+  #sel-inst, .busca li { text-transform: uppercase; }
+  #limpa-inst { position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; display: grid; place-items: center; font: inherit; font-size: 15px;
+      line-height: 1; border: 0; border-radius: var(--r); background: transparent; color: var(--muted);
+      cursor: pointer; padding: 0; }
+  #limpa-inst:hover { background: var(--chip); color: var(--ink); }
+  .busca ul { position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 40;
+      margin: 0; padding: var(--e1) 0; list-style: none; max-height: 264px; overflow-y: auto;
+      background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+      box-shadow: 0 8px 24px rgba(0,0,0,.16); }
+  .busca li { padding: 6px 10px; font-size: 13px; color: var(--ink-2); cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .busca li[aria-selected="true"] { color: var(--ink); font-weight: 600; }
+  .busca li.ativo { background: var(--realce); color: var(--ink); }
+  .busca li mark { background: none; color: var(--ink); font-weight: 600; }
+  .busca li.vazio { color: var(--muted); cursor: default; font-style: italic; }
+  .busca li.todos { border-bottom: 1px solid var(--hair); margin-bottom: var(--e1); padding-bottom: 8px; }
+  .atalhos { display: flex; gap: var(--e1); }
+  .atalhos button { font: inherit; font-size: 12px; border: 1px solid var(--hair); background: var(--surface);
+      color: var(--ink-2); padding: 0 10px; border-radius: var(--r); cursor: pointer; }
+  .atalhos button:hover { border-color: var(--axis); color: var(--ink); }
+  :is(button, input, select, a):focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .aviso { display: block; margin-top: var(--e4); padding: var(--e2) var(--e3); line-height: 1.5;
+           background: var(--realce); border-left: 2px solid var(--c1); border-radius: var(--r);
+           font-size: 12.5px; color: var(--ink-2); }
+
+  /* ---------- cartões ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 1px;
+           background: var(--hair); border: 1px solid var(--hair); border-radius: var(--r);
+           overflow: hidden; margin-top: var(--e5); }
+  .tile { background: var(--surface); padding: var(--e4) var(--e4) var(--e3); }
+  .tile .k { font-family: var(--numero); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .tile .v { font-family: var(--numero); font-weight: 600; font-size: 28px; line-height: 1.12; white-space: nowrap;
+             margin-top: var(--e2); letter-spacing: -0.035em; }
+  .tile .s { font-size: 12.5px; color: var(--ink-2); margin-top: var(--e1); }
+
+  .card { background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+          padding: var(--e5) var(--e4) var(--e4); margin-top: var(--e5); }
+  .card h2 { font-size: 13.5px; margin: 0; letter-spacing: .07em; font-weight: 700;
+             text-transform: uppercase; color: var(--ink); }
+  .card .sub { font-size: 12.5px; color: var(--ink-2); margin: var(--e1) 0 0; }
+  .card-topo { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e4); align-items: baseline;
+               justify-content: space-between; margin-bottom: var(--e5); }
+  .card-acoes { display: flex; gap: var(--e2); align-items: center; }
+
+  .legenda { display: flex; flex-wrap: wrap; gap: var(--e1) var(--e4); margin-top: var(--e4); }
+  .legenda button { display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 12.5px;
+      background: none; border: 0; padding: var(--e1) 2px; cursor: pointer; color: var(--ink-2); border-radius: var(--r); }
+  .legenda button[aria-pressed="false"] { opacity: .35; }
+  .sw { width: 10px; height: 10px; border-radius: var(--r); flex: none; }
+  .sw.tr { height: 0; border-top-width: 2.5px; border-top-style: solid; border-radius: 0; }
+
+  .plot { position: relative; background: var(--sunken); border-radius: var(--r); padding: var(--e3) var(--e2) var(--e2); }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .tick { font-family: var(--numero); font-size: 11.5px; fill: var(--muted); }
+  .catlabel { font-family: var(--texto); font-size: 13px; fill: var(--ink-2); }
+  .catlabel.alerta { fill: var(--warn); }
+  .aviso.alerta { background: rgba(176,120,0,.10); border-left-color: var(--warn); margin-bottom: var(--e4); }
+  .vallabel { font-family: var(--numero); font-size: 12px; font-weight: 500; fill: var(--ink); }
+  .endlabel { font-size: 12.5px; }
+  .endlabel .nm { font-family: var(--texto); }
+  .endlabel .vl { font-family: var(--numero); font-weight: 500; }
+  .avatar-txt { font-family: var(--texto); font-size: 10px; font-weight: 700; fill: #fff; }
+
+  .tip { position: absolute; pointer-events: none; z-index: 5; opacity: 0; transition: opacity .12s;
+         background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+         box-shadow: 0 8px 24px rgba(0,0,0,.16); padding: var(--e3); font-size: 12.5px; min-width: 156px; }
+  .tip b { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; letter-spacing: .04em;
+           text-transform: uppercase; margin-bottom: var(--e2); }
+  .tip .row { display: flex; align-items: center; gap: var(--e2); justify-content: space-between; margin-top: 3px; }
+  .tip .row span { display: inline-flex; align-items: center; gap: 6px; }
+  .tip .num { font-family: var(--numero); font-size: 12.5px; }
+  .tip .n { color: var(--muted); font-size: 11.5px; margin-top: var(--e2); padding-top: var(--e2); border-top: 1px solid var(--hair); }
+
+  /* ---------- tabelas ---------- */
+  .tabwrap { overflow: auto; max-height: 560px; margin-top: var(--e3); border: 1px solid var(--hair); border-radius: var(--r); }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 13.5px; font-family: var(--numero); }
+  th, td { text-align: right; padding: var(--e2) var(--e3); border-bottom: 1px solid var(--hair); white-space: nowrap; }
+  thead th { position: sticky; top: 0; z-index: 2; background: var(--sunken); font-family: var(--texto);
+             font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+             font-weight: 600; cursor: pointer; user-select: none; }
+  thead th:hover { color: var(--ink); }
+  th:first-child, td:first-child { text-align: left; font-family: var(--texto);
+      position: sticky; left: 0; z-index: 1; background: var(--surface);
+      max-width: min(230px, 42vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  thead th:first-child { z-index: 3; background: var(--sunken); }
+  tbody tr:hover td { background: var(--chip); }
+  /* a primeira coluna é sticky: fundo translúcido deixaria o conteúdo rolado
+     aparecer por baixo dela. Aqui ela usa sempre cor sólida. */
+  tbody tr:hover td:first-child { background: var(--hover-op); }
+  td.ord, th.ord { background: var(--realce); }
+  tbody tr:hover td.ord { background: var(--realce); }
+  td:first-child.ord, th:first-child.ord { background: var(--realce-op); }
+  tbody tr:hover td:first-child.ord { background: var(--realce-op); }
+  th.ord::after { content: " \25BC"; font-size: 8px; }
+  th.ord.asc::after { content: " \25B2"; }
+  .celcand { display: inline-flex; align-items: center; gap: var(--e2); }
+  /* avatar: foto quando existe, monograma quando não. O anel mantém a cor da série —
+     a foto diz quem é, a cor continua ligando a pessoa à linha e à barra do gráfico. */
+  .cand-av { display: inline-block; width: 16px; height: 16px; border-radius: 50%; flex: none; }
+  img.cand-av { object-fit: cover; box-shadow: 0 0 0 1.5px var(--anel); }
+
+  #tip-inst { position: fixed; max-width: 330px; min-width: 240px; z-index: 60; }
+  #tip-inst .d { color: var(--ink-2); line-height: 1.45; margin-top: var(--e2); }
+  #tip-inst .f { color: var(--muted); font-size: 11.5px; margin-top: var(--e2); }
+  .qinst { cursor: help; border-bottom: 1px dotted var(--axis); }
+  .qinst.sem { border-bottom-style: none; cursor: default; }
+
+  .tema { margin-top: var(--e5); }
+  .tema:first-child { margin-top: var(--e3); }
+  .tema h3 { display: flex; align-items: center; gap: var(--e3); margin: 0 0 var(--e3);
+             font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+             padding-bottom: var(--e2); border-bottom: 1px solid var(--hair); }
+  .tema h3 > span { margin-left: auto; font-family: var(--numero); font-weight: 500;
+                    letter-spacing: 0; color: var(--muted); text-transform: none; }
+  .pitem { display: grid; grid-template-columns: 210px 1fr; gap: var(--e4); align-items: start;
+           padding: var(--e3) 0; border-top: 1px solid var(--hair); }
+  .tema h3 + .pitem, .tema .nota + .pitem { border-top: 0; }
+  .pitem p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+  .pitem .ptema { font-family: var(--numero); font-size: 10.5px; letter-spacing: .06em;
+                  color: var(--muted); padding-top: 2px; }
+  .pchip { display: inline-flex; align-items: center; gap: var(--e2); text-decoration: none; color: inherit;
+           padding: 2px 6px 2px 2px; border-radius: 999px; border: 1px solid transparent; }
+  .pchip:hover { border-color: var(--hair); background: var(--chip); }
+  .pchip .nm { font-size: 13px; font-weight: 600; }
+  .pchip .pt { font-family: var(--numero); font-size: 10px; font-weight: 600; letter-spacing: .04em;
+               color: var(--ink-2); background: var(--chip); border-radius: var(--r); padding: 1px 5px; }
+  @media (max-width: 620px) { .pitem { grid-template-columns: 1fr; gap: var(--e2); } }
+
+  .linhatempo { display: grid; gap: var(--e1); margin-top: var(--e4); }
+  .etapa { display: grid; grid-template-columns: 148px 1fr; gap: var(--e4); align-items: baseline;
+           padding: var(--e3) 0; border-top: 1px solid var(--hair); }
+  .etapa:first-child { border-top: 0; }
+  .etapa.passou { opacity: .55; }
+  .etapa .quando { font-family: var(--numero); font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
+  .etapa .quando b { font-weight: 600; font-size: 13px; }
+  .etapa .quando span { color: var(--muted); font-size: 11px; }
+  .etapa .oque b { font-size: 13.5px; font-weight: 600; }
+  .etapa .oque p { margin: 3px 0 0; font-size: 12.5px; color: var(--ink-2); }
+  @media (max-width: 540px) { .etapa { grid-template-columns: 1fr; gap: var(--e1); } }
+
+  .fichas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--e3); margin-top: var(--e4); }
+  .ficha { border: 1px solid var(--hair); border-radius: var(--r); padding: var(--e3); background: var(--sunken); }
+  .ficha h3 { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+  .ficha p { margin: var(--e2) 0 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .ficha .num { margin-top: var(--e3); font-family: var(--numero); font-size: 11.5px; color: var(--muted);
+                display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .ficha .num b { color: var(--ink); font-weight: 600; }
+
+  /* no celular cada pixel de largura conta para o gráfico: o cartão aperta as bordas */
+  @media (max-width: 480px) {
+    .wrap { padding-inline: 14px; }
+    .card { padding: var(--e4) var(--e3) var(--e3); }
+    .plot { padding: var(--e2) 4px 4px; }
+    th, td { padding-left: 8px; padding-right: 8px; }
+  }
+
+  .nota { font-size: 12.5px; color: var(--muted); margin: var(--e3) 0 0; }
+  footer { margin-top: var(--e6); padding-top: var(--e4); border-top: 1px solid var(--hair);
+           font-size: 12.5px; color: var(--muted); }
+  footer p { margin: 0; overflow: hidden; text-overflow: ellipsis; }
+  footer a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--axis); }
+  footer a:hover { color: var(--c1); border-bottom-color: var(--c1); }
+
+  .vazio { padding: var(--e6) var(--e4); text-align: center; color: var(--ink-2); }
+  .vazio h3 { font-size: 15px; margin: 0 0 var(--e2); color: var(--ink); font-weight: 600; }
+  .vazio p { margin: 0 auto; max-width: 62ch; font-size: 13.5px; }
+  .listacand { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: var(--e2);
+               margin-top: var(--e5); text-align: left; }
+  .cand { display: flex; align-items: center; gap: var(--e3); padding: var(--e3);
+          border: 1px solid var(--hair); border-radius: var(--r); background: var(--sunken); }
+  .cand .av { width: 30px; height: 30px; border-radius: 50%; flex: none; display: grid; place-items: center;
+              color: #fff; font-size: 11px; font-weight: 700; }
+  img.cand .av, .cand img.av { object-fit: cover; box-shadow: 0 0 0 2px var(--anel); }
+  .cand .nm { font-size: 13.5px; font-weight: 500; }
+  .cand .pt { display: inline-block; margin-top: 3px; font-family: var(--numero); font-size: 10.5px;
+              font-weight: 600; letter-spacing: .02em; color: var(--ink-2);
+              background: var(--chip); border-radius: var(--r); padding: 2px 6px; }
+
+  /* ---------- animação ---------- */
+  .anim-sobe { animation: sobe .42s cubic-bezier(.22,.61,.36,1) backwards; }
+  @keyframes sobe { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .linha-anim { stroke-dasharray: var(--dash); stroke-dashoffset: var(--dash); animation: traca .85s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  .surge { animation: surge .3s ease-out backwards; }
+  @keyframes surge { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+                             transition-duration: .01ms !important; }
+    .linha-anim { stroke-dashoffset: 0; }
+  }
+</style>
+
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs><clipPath id="clip-av" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath></defs>
+</svg>
+
+<div class="tip" id="tip-inst" hidden></div>
+
+<div class="wrap">
+  <div class="topo">
+    <div>
+      <p class="eyebrow">Intenção de voto · presidência</p>
+      <h1>Corrida Presidencial 2026</h1>
+      <p class="lede">Como está a disputa pela Presidência, segundo as pesquisas divulgadas.</p>
+      <div class="chips">
+        <span class="chip" id="carimbo"><span class="dot"></span><span id="carimbo-txt"></span></span>
+        <span class="chip" id="proxima"></span>
+        <span class="chip" id="prazo"></span>
+      </div>
+    </div>
+    <div class="temas">
+      <span class="contador" id="contador" hidden
+            title="Aparelhos distintos que abriram este painel">
+        <span class="n" id="contador-n">—</span><span class="rot" id="contador-rot">aparelhos</span>
+      </span>
+      <div class="seg" role="group" aria-label="Modo de cor">
+        <button type="button" data-tema="claro">Claro</button>
+        <button type="button" data-tema="escuro">Escuro</button>
+        <button type="button" data-tema="auto">Auto</button>
+      </div>
+      <div class="seg" role="group" aria-label="Paleta">
+        <button type="button" data-paleta="conv">Padrão</button>
+        <button type="button" data-paleta="cvd">Daltonismo</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="ressalva" id="ressalva">
+    <summary><span class="sinal">&#9888;</span><span id="ressalva-tit"></span><span class="mais">detalhes</span></summary>
+    <div id="ressalva-corpo"></div>
+  </details>
+
+  <nav class="abas" role="tablist">
+    <button type="button" role="tab" data-aba="t1" aria-selected="true">1º turno</button>
+    <button type="button" role="tab" data-aba="t2" aria-selected="false">2º turno</button>
+    <button type="button" role="tab" data-aba="inst" aria-selected="false">Institutos</button>
+    <button type="button" role="tab" data-aba="prop" aria-selected="false">Propostas</button>
+  </nav>
+
+  <div class="filtros" id="filtros">
+    <div class="campo" id="campo-periodo">
+      <label for="dt-ini">Período</label>
+      <div class="datas">
+        <input type="date" id="dt-ini"><span>até</span><input type="date" id="dt-fim">
+      </div>
+    </div>
+    <div class="campo">
+      <span class="rotulo">Atalhos</span>
+      <div class="atalhos" id="atalhos">
+        <button type="button" data-dias="0">Tudo</button>
+        <button type="button" data-dias="90">90 d</button>
+        <button type="button" data-dias="30">30 d</button>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="sel-inst">Instituto</label>
+      <div class="busca" id="busca-inst">
+        <input id="sel-inst" type="text" role="combobox" autocomplete="off" spellcheck="false"
+               aria-expanded="false" aria-controls="lista-inst" aria-autocomplete="list"
+               placeholder="Todos (média)">
+        <button type="button" id="limpa-inst" aria-label="Limpar instituto" hidden>&times;</button>
+        <ul id="lista-inst" role="listbox" aria-label="Institutos" hidden></ul>
+      </div>
+    </div>
+    <div class="campo" id="campo-duelo" hidden>
+      <span class="rotulo">Duelo</span>
+      <div class="datas">
+        <select id="sel-a"></select><span>×</span><select id="sel-b"></select>
+      </div>
+    </div>
+    <div class="campo" id="campo-exibicao">
+      <span class="rotulo">Exibição</span>
+      <div class="seg" role="group" aria-label="Exibição">
+        <button type="button" id="btn-graf" aria-pressed="true">Gráfico</button>
+        <button type="button" id="btn-tab" aria-pressed="false">Tabela</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="aviso" id="aviso"></div>
+
+  <div id="painel"></div>
+
+  <footer>
+    <p>Pesquisas de intenção de voto divulgadas pelos institutos · <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">Metodologia e código do projeto no GitHub</a></p>
+  </footer>
+</div>
+
+<script>
+// ================================================================ DADOS: INICIO
+// Bloco substituído pela atualização automática. Origem: workspace.marts (Databricks) via dbt.
+const CARGA_UTC = '__CARGA__';
+const CAMPO_MAIS_RECENTE = '__CAMPO__';
+const CAMPO_INICIO = '__CAMPO_INI__';      // início de campo da pesquisa mais recente
+const CADENCIA_DIAS = __CADENCIA__;        // mediana de dias entre inícios de campo
+const RAW_P1T = `__P1T__`;
+const RAW_V1T = `__V1T__`;
+const RAW_D2T = `__D2T__`;
+const RAW_INST = `__INST__`;
+const RAW_INSTMES = `__INSTMES__`;
+// ================================================================ DADOS: FIM
+
+// Fotos de registro de candidatura (DivulgaCand/TSE), recortadas em 88px e embutidas
+// como data URI — a página publicada não carrega imagem de domínio externo.
+// Nome sem foto aqui cai no monograma, sem quebrar nada.
+// Situação da candidatura no DivulgaCandContas do TSE (consulta de 18/09/2026).
+// Existe candidato que aparece nas pesquisas e não está na urna — o painel tem que dizer isso.
+const SITUACAO = {
+  'Pablo Marçal': {t: 'Fora da urna',
+    d: 'Candidatura <b>indeferida</b> pelo TSE por ausência de condição de elegibilidade e inelegibilidade infraconstitucional (LC 64/90). Consta como <b>não consta da urna</b>. O número 28 do PRTB está hoje com Leonardo Avalanche, cuja candidatura está pendente de julgamento.'}
+};
+
+// Os 14 registros à Presidência no TSE (consulta de 18/09/2026), na grafia do painel.
+// Quem está nas pesquisas e não está nesta lista não chegou a registrar candidatura.
+// Nome do candidato como o painel escreve. A base traz sobrenome solto ("Pimenta"),
+// sufixo de partido ("Cury (Avante)") e o nome de urna do TSE traz profissão colada
+// ("ESCRITOR AUGUSTO CURY"). Aqui vale o nome da pessoa, e só ele.
+const NOME_CAND = {
+  'Cury (Avante)': 'Augusto Cury', 'Pimenta': 'Rui Costa Pimenta', 'Dias': 'Hertz Dias',
+  'Clariana': 'Clariana Barão', 'Costa': 'Edmilson Costa', 'Grassi': 'Wilson Grassi'
+};
+const _cacheNx = new Map();
+function nx(n) {                              // n = chave do dado; devolve o nome de exibição
+  if (n == null) return '';
+  if (_cacheNx.has(n)) return _cacheNx.get(n);
+  let t = NOME_CAND[n] || String(n).replace(/\s*\([^)]*\)/g, '').trim();
+  t = t.split(/\s+/).map(w => w.length <= 2 && w === w.toLowerCase()
+        ? w                                   // preposições ("de", "da") ficam minúsculas
+        : w.charAt(0).toLocaleUpperCase('pt-BR') + w.slice(1).toLocaleLowerCase('pt-BR')).join(' ');
+  _cacheNx.set(n, t); return t;
+}
+
+const REGISTRADOS = ['Lula','Flávio Bolsonaro','Cury (Avante)','Renan Santos','Ronaldo Caiado',
+  'Pablo Marçal','Romeu Zema','Samara','Pimenta','Dias','Clariana','Costa','Grassi'];
+
+const FOTO = {"Renan Santos":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5Ojf/2wBDAQoKCg0MDRoPDxo3JR8lNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzf/wAARCABYAFgDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAAAAIDBQEEBgcI/8QAMBAAAQMDAwEGBQUBAQAAAAAAAQACAwQFERIhMSIGFEFRcYETMmGRwSNCUqGxJOH/xAAYAQADAQEAAAAAAAAAAAAAAAAAAgMBBP/EAB0RAQEBAQEAAwEBAAAAAAAAAAABAhEhAxIxEyL/2gAMAwEAAhEDEQA/APPgE4CGhOAkUYAWQE+FkBAJhZwkmqIYCBLIGk8BEVTBL8kjffZANhYIUmFghAREJSFKQlIQyoyEJiEIYdoTgIaE4CDgBLJIyJhfIcNHipMLXFM2vvdvoZpCyGWQa8c48VlCvfbLjc6h81DRzzsc7S0sYXDPklq7XXW8FlwpJ4HDjWwgL6JscNNR0sdLSxCKKMYaxuwAW1cKSmrIiyop2yMI3DhlTny9nYp/CS8r5mprhLC7q62Dlp/Cu4pGzRtkjOWuGy6Tt12LpW5qbPGIXj54s7O9PJcbYtQimY79r0+dzc7CbxcXlWBCQhTEJCExURCExCEFOAnAWGhOAg7ICijp5H3m2yx8Nna1xzuMnlT4W5a6hlPU6pWtcwg51eBG4I90uu88bnnfXS1F67Rtn7rb4NDg/AJjGCPDdxz9lf3ysvjLNS9yH/dKP1AcENxytyKvi7qyVrGOkLdicDHuuek7a01TV01JFQ1DJmu0uMgADN/H6LlnbPI7eSX2ufmuF8rM09wBcADrd8Mbe4/K5OzwPiZMXt2c/IOV6n2uuDILfMI9IL2rzyNmmNo52GVX4b3viHz5k571ghIQpSEhCu50RCEzghBTAJwFhqYIN1nCzjII81LHTyyHpYfU7Lbit5Lw12STzj7LZm0l3I3+y9ZHcxHaLg9zTGctGstL9unfy8Vb19mkkLIZaLTDjBlbUHYfRJ2ssRguhmpR8KSENbG5o/aGgD14XOXK4XiOFwknj04wDg5C57J28rszvUk8aXaCuaaqK1wyl0MR0F5dk4zwT/Sxha9VYqqjtPeaqJzJalzS0O+bGc5P1KKGeSaMCRhLhyR4+ytM8jn3vt9TEbpSE/PCwVpeoXBCc8IQxNDTfEiDiSMuwMK1o6FjBq07LXpcAwsON2ggfdW52bgHZWk5EdatpHxgsc0ZGRuQeFt2KCSS40oZGJpTMwAOOAcHO/2UOMtcVfdiodd8g22jY9/9Y/K1ki0moa6dui6lr6prnBsreHsJyB7eH0VJU2AMk73URh8UHUGuGQ9/7W48d9/QL0qeFkjOpocfDPmqw2aSaqbNV1Bka09MYGGhR18P+vs6s/NZn6vOrvNXXH4LLnT6JWEvDiMB7TsNvPlUzbYxtYyRmtgaSXNA6Xnw38F2nbJ4N4+G3HREB7nf/MKhedEbnHbAVXNWjPQwyt1BuCRyFVVVC+LJb1ALoGN0xR5PDRlalc5rY3FzgAOfRZ9ZRNWfjnXDCEge57yXDBe0SAeQPCFK+VWXq0p8d4pSf49J8x5K2d8qEK6CWPdm/mup7AR5uVS/+EAH3d/4hCyfpnd+SDwQOeEITGeXX6p7xeauRu4MpaPQbfhVdcT3fQNjI4MHucf4hCRjMj2l4aFz15qjNNJSxnre4RD6Dlx+yELSqtk3x7jUSMH6YAYz0HCEIUtfq2fx/9k=","Pablo Marçal":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5Ojf/2wBDAQoKCg0MDRoPDxo3JR8lNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzf/wAARCABYAFgDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAAAAcBBgMEBQII/8QANxAAAgEDAgMFBQcDBQAAAAAAAQIDAAQRBSEGEjEHIkFRYRNxgZGhFCMyQmKxwXKi0SQlUqPw/8QAGQEAAgMBAAAAAAAAAAAAAAAAAwQAAQIF/8QAIBEAAgICAwEAAwAAAAAAAAAAAAECEQMhEjEyBDNBUf/aAAwDAQACEQMRAD8AcmKKkCpArRCMUYr1ipA3HvqEE72l6/qWra1LoGkGZoLfuSxW5OZ3I35iPyr0x55qj6vw7rVhbRmfTZgoznlXIwfPFM/s/iDDUL+VQ1zcXbh5MbkZO31rq607ZePB722PShSyUMwwqSEBGJrZQ7JJ3RhSuQVPhT27I+KJeINFmtbyVpbuxZVLv+J0OeUnzIwRmuHpoVb2RJbeNlx0ZQQR6167K7NNP421+C0IFqYVblHQHmH85rcZclYPJj4Ma1GKmitAiKKmioQkCjFTRUKCsV3M1vbSzKnOY1LBfM1mxUOodGU9CCKotVexfW2kS22jS2ltKU/1MrBt+hYnw+lcLTdG1i00u9kvrmVpc4tA0hbBzuSMnbwq5X9zHp0VxGxGY2IFUriXiC7tYIorUqU5gfaShcg+4dc5Pypff7OjGqtFS0KfWm1MzzyzHEgDxk7YJ37tM/s0sUh1XiK6LoZJrhFRAe8sYB3PoWz8qqehzif2krlS6ue8PEHcUy+DtMaxspbidSs9ywZgRjCjOP3JosbsXypKJ36KmoogsRRRRUKPVTigVNUQKK5escQ6Roi51O/hhbwjzlz7lG9L7iHtRe5je34etniDAhrqfZgP0qOnvPyokMU59IpySN/jX2ltqhvYvv8AT3IM/JhuRgcEH0yPgQapPE2qNdXCyiRDCu3Ljun51fOEpba67P7U3BPtbd3hDjrzcxO+eoIOSKrPEnC0FvqkaRW0couO9HyDuN5jHh5mhThxkxnFkbVJlc4TY3OrJFEPZ2BnV55WOFRRuQPrX0LHJHLGssLq8bgMjKchgehB8RSv0nT7HRYNTurzEk1vZu4UDEaLgghR57gZ9a4HAfaMeHNOgsNVjkuNPVfu2i3eHzGD1X06iiwxScbQHJNcqHjUGuRofFGia+gOlajDM5G8RPLIPep3rr1hquzJFFSaKhD3kDrsPE0lOJ+0LVdWnmt9NdrCyRiv3TfeSDzLeAPkKbXEdz9j4f1K5B5THayMD5HlOPrXzoV9mUx0ZOX4jp/70pz48UZNykugOaTWkQRli75ZjuWJyT8a9QsOcjwIrJEBJFmsLgoM+VdF62gCGN2bE6hazaYzhI4bkTkAZL8ygY/tPzq9a1bq8dvFBEhkjyUON1BGDj4UquzK+MPEqRk4EyFfeQc/5pwNIDJdTt+CJCAfcd/2rmZ0lksZg3Qq+0NZrLTGhWQA3bewkYeKrhmHz5RSymhSK2dnzyr0APUmr32iXjT6rBaMc/ZoQzj9bnmP0KiqNqQMrw2oO342Pp4UzjgowsHJ3IxWq8wWRQVI3Ug4Iq78M9oWuaI6x3M7ahZjYxXDZZR+l+o+ORVViVQhxsoFaTXSM+xyAcD1NXKMWqkZTd6Pp7hzXrLiLTvtunl+QMUdHGGRgASD86KpfYdLzaBqKH8t4D67oP8AFFc2ceMmkMxdqyz9o0hj4K1Qj80ap83UUi7qVIo4ywbqDkDNPDtLbHBWo58fZj/sWkJqkqLaMrs4bGwAGaf+N1jkBzbkjetxyOy+ArxdgBTnoaxW9xzWccxB5jHuD1yKi4cu6IfLmNONriBrZtcN3rWev6fcHuhbhA3uJwf3p7c3+w3Ezn8cRY+4kn9jXzhNKYmDITz5DZHgRT1ttTSTgG5nY946fzfMbfUikM6toPB6FPq9z9v1e+vCdpZnYZ/452+mKriSiR5bgjKu2F/pGwrd1ec2unPg4eQ8g/muSCUt41B25aYm6aj/AAwlqzLeXmIHVARt41q2ICrzfKsFwS7LGTuxzv5VsZVeVV3HTPnQeTcjdUh29hOTpmrnO32iP58horJ2EpjQNSk8GuwB8EH+aKTy+2Eh5RY+1EkcFXoBxl4h/eKRd2ojhI5hCPzyHGT8fOiinfk/GwWX0jnaZN3LiEZwjBxnrg10Y17/ADemKKKPj2jEuznXAILbeoq86drHtOA0tOc8zqkRH9DnP0xRRQ2rmi15YvdduBPqPskPch2+PjWtLJ3AB4UUULk22wlaSPFnG1xO7jogra5FUdzfPVz/AB50UVePzZU+x49hikcL3rb4a+bGfRFooopPJ7YaPR//2Q==","Flávio Bolsonaro":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5Ojf/2wBDAQoKCg0MDRoPDxo3JR8lNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzf/wAARCABYAFgDASIAAhEBAxEB/8QAHAAAAgMAAwEAAAAAAAAAAAAAAAUEBgcBAwgC/8QAOxAAAgEDAQUFBwEECwAAAAAAAQIDAAQRBQYSITFBEyJRYXEHMoGRobHBFAgkUtEVFiNCQ2KisuHw8f/EABkBAAMBAQEAAAAAAAAAAAAAAAIDBAUAAf/EACARAAMAAgICAwEAAAAAAAAAAAABAgMRITESQQQiUTL/2gAMAwEAAhEDEQA/ANxrgnFc0i2z2it9mdAudRnILqN2GM/4kh5D8nyFccJdv9s4NEglsbXcmvXjO8DxEYI6jx48q8/XU8iXDGZSUPXnjyppBPfbRanIqsS7v2lxO4zz/NWX+qaSRbocHPRhU95UnyVY8DpbRSpI0eMNCD2fXdOfvxrg3a2yAdmzL45wrfSrTd7H3EYAtHGDzGMik97srrrJuRxxOgPAZH5oVkTGPBa9FfW57SViIynHIU8fkasmym2ut7KXf7vIZrRj37Z23o29Oqnzqt6vpmpaXufrInjJ4A44fMVDS4lRAN8qG4Eqacueiak09M9c7MbQ6ftLpkd9psoZTwkjJ70TdVYeNN68r7E7U3GyusJqFrvSW+N25gHASR9ceY5ivUGn3kGoWMF5ayCSCeMSRsOqkZFGhbWiRRRRXp4FYz+0FdTPJo+nxoSh7SXOPePAAfAZ+dbNWUe26FBc6NcMBlVmUnHTumhroKeyr7G6YLPTkZgO1l77kD5VcLWEHjzpTpERS0h4ckFPLJQx4Gs7I9s2cSSklR2yEd4V1TWagZAHCmMSY4GviZAM+B8aD0FvkreqafFcRGOaNXjbmGGaqB2X0qyneZISxHEK5yo+FXy+JGQMeVIr6MEAMMMaOKYOSU+WZrrVgICJ4O6ofgAOQNbl7Eb97nY0WkjZNlO0SeSHDAfU1kerIwlntpBxUDHnWp+xCMxaVqakY/eVP+gVdjZl5ZRpdFFFNEBWd+2XTmu9GsriP3objcIz0b/wVolUf2o27z6dZOjMBHPlgOo4fyobepDxrdJGaahDrE+pMLC9/TpEAqoxwvAc664dV1qwnRZ9Qtbgg+7HOr+oIp9qOlDU4QsjFk5soOAfIkVxBokaEslvAjEbpI4kj5VC6Xs1FFLoc6Nqzagh3GAZfeXPEUq2h2luLGRoLYI0uPdb71P0y1WC5PZoI8Ju+beppMtjDJqV4s8W+0je+TxGOnpS12NfRX59o9bvyIu0srfPAkyBSfQGuzSnv7eQR3dx28ZPAke6fI1Yb/RY7wh5ILd5Au7vE44eGMV8W2kpp0AjLlgBwB6Uzyn0KUV7EutxLJdROQMvGUPrnhWkex+LsNGu1fIke43wrc9zdAB+hrPNbRBarM3ARNnPh0q3+ytTDqRPeZ5ozvuTzwB+afFaaJcmPap/hqlFFFUkQUl2ut/1GgXQCFmRd8AeX/GadVHv0MljcIvNomA+INeUtrR7L1SaMzsWVo1GeB61Je6gifsokLvjifCk1rI8UDHBIC5AxzqMLtYXVBKDLKN5snBJ8B5VmeO2bfmlKH9nPHJLIzSId0HOTSf9bDFfSzsV7MYyvjxqONMmffa1cwu/E7i8GJ8aWW+hrpspkmVppc7xdgSc+NGpQDt7LwJbeVMoNwjmp6Un1AjePgaWrqEks4y3ZsoyM9fh1ruvmkd1IOAYu0HzH86Dx0w3Sa4Ft/k2V2dzf3huqvjx4VpPs0sjHZTXckYVzuwr6KMnHxP0qi6fp95q0q22nwieVSHdS4XCg8Tk+orYtGsv6O02C1JBZF7xHVutWY529mfnvU+P6TqKKKoIwrgjNc0VxxlGtW50nVJ7V1wqydpFn+9G3/fpUO+s7W+sSjxRuA28uRyNaDtlog1bTmkhX97twXiP8Q6r8fvWZ6bcYl7I+6ehqHLjcvaNP4+bynTPvTra1QlJSiDHgc/Q1B1OySeYpG7AHkI5GH5qxQWkUzMW3VA6mo0lvFBMxBGP8tAqKffRC0zS7HTo1XsUBc5eQ8WPxPGunU79GW4nUY3sRRAfwjnj4/aoms36yzrAr4RT38fall3diVt7ACqMIg5CvVLfLFVfpGk+yK33l1C9fnlYl/3H8VpFee9E1fWrK7EWmXsttbputIFwVZzxPA8+GK3bRb9dS0u3u1xmRO8B0bkR86uhNQmZeV7tk6iiiiACiiiuOOqeWOCJ5ZmCooyxPhWKXVuDNK8BIUSMUbyzwoopGf8AlMq+L2yM+rXEC7ksZbByCppdea1O++VG6WGMk5x6UUVOittihC8khJJyetWHRtnZL5RPPmK2HI44v6fzoop2GVV8k+anEbQ8GmRxDchQBRyq4bB3Jt3l0+Q91/7SP16j7GiitCl9TMnsulFFFIHH/9k=","Dias":"data:image/jpeg;base64,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","Ronaldo Caiado":"data:image/jpeg;base64,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","Samara":"data:image/jpeg;base64,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","Costa":"data:image/jpeg;base64,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","Cury (Avante)":"data:image/jpeg;base64,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","Lula":"data:image/jpeg;base64,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","Romeu Zema":"data:image/jpeg;base64,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","Grassi":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5Ojf/2wBDAQoKCg0MDRoPDxo3JR8lNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzf/wAARCABYAFgDASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAUHAwYBAgQI/8QAMhAAAQQBAgMGAwgDAAAAAAAAAQACAwQRBSEGEjEHE0FRYYEUIpEVIzJCYnGxwUPR4f/EABkBAAMBAQEAAAAAAAAAAAAAAAADBAIBBf/EAB8RAAICAwACAwAAAAAAAAAAAAABAhEDEiEEMSJBYf/aAAwDAQACEQMRAD8AvFERABEUTrev0tGa34p55nAkNCAJUnCZVIcR8e37dt7Y3vZC1+WMG2F4a/GWpxs+W1M0Zzu84CLR2mX8iq/hjtLYZRX1h5dD0E4bu0+vmFZleeKxCyaCRskbxlrmnIIQcMiIiACIiACIiAMdhzmV5HRjLw0lv74VE2JtQ1rVHR2J5HRl5Ly7dXyeip+3UGm8S34Mbd65zNvA79FibqNm4K5GSXhalYjbgcmG4z1yuzOFaD4DFK3G2zvNSlcfKHPfy+hWaTuWjeTAUmzLlGJpuscLMqU3TUgC6MZ33yFsvZXxG57/ALHlY4tdl0ZGcMPiPQLtZLJq0rWSNe0gjLTnCy9l2jiO3c1BzskDkaMeJ6lPxSb4T54pdRY6IieTBERABERAHB6Kp9ZknscSXJJohHMCWYHjjYH6YVsrReO6TYb8N6NpDpGcrj6j/iXkVoZjaUjQJtM1KewQ1kUYbv3nO4u9zlT+taLPZ0mq2KX70ACXnyQ7b0XE1x80Qijw043cfFR1K7flkEE9k8sWQ87bnqFL76XJJGfQ9Mu1T9/3HK3b7phbt/a27gEzR2rMLMGvy8zzjo7OAPooiG66ZvISC8YBx4+q3Xhem2rRc8NAdM7mJ8x0CZiTbsRnpKiZREVRIEREAEREAFDcVUX3tJlEIzLF87B57bj6KZWq9o+vjQeGLc0bw21K0xQDO+T4+wyir4F0Vm5rb0wh5nZYd2g439VkZQja5pd3LmHqGsOcLwwyGWKG9B1kaCcdc+K9NSaVkplDHFwHQnZRtxRdFySJbS+RtyKrX27xwDR1IP8ApW3UhFevHCOjGgKg9XuvpVp7Qfi1LhrS38pz4K5ODdei1/RK9oOHfhvJMzO4cOvseqfhjcXJE+du1ZPIuFymiQiIgAo7Wdb07RK/f6lbjgb+UE/M79h1Kg+0bid/DeitfVLfjbDuSHIzy+bsen9qhNS1K3qNl9i5Ykmmed3vdkpuPFt1nGyxuJ+1mxKHwaBB3DOnxEwBd7N6BVjrWs2bbnPvWJbU7/xOkfnCwvXiniLnEqlwUV8UZ9m48G3WT1hUeeZo2z5eSnpoZo3mFjyQT1wqz0y5PpNtliDfB+Zh6OHkt21TjOpDUjmoME1mZgIYekR/UvIzeNLfn2X4s0dekLxdebHNFC4nlYcuA6rihqtmry2tMtyQSMO7o3YI/da1YMtywZp3F0j3cxK9dVpjc/HivR8eGkdSTLLeVlpaH2tapV5Y9Vgiuxjq9p5H4/gqyOHeN9E18NZXsiGwf8E/yu9vA+y+a3EhpwvRBYLH7HcHZMlhi/wxbPrDKKs+yLiaa82fSrth0r2N7yAyOycD8Tc/Q/VFJOLi6ZpdNS7YdW+O4qdUY7MVKMRgfqO7v5A9loRduAiK2HIpGDnwWM7oicBhkZtnC6NjwURLklYIysZvkrM0YRFtKgDm7Lo9wbJnoiLk/R0m+ENYk0bXK12PfunAlufxDcEfQoiJWql1nD//2Q==","Pimenta":"data:image/jpeg;base64,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","Clariana":"data:image/jpeg;base64,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"};
+
+// Quem é cada instituto. Pesquisado em fonte pública e mantido curto e factual —
+// nada de avaliação de qualidade ou de acerto, só o que a empresa é e como coleta.
+// "k" são trechos de nome usados para casar tanto a grafia da Wikipédia quanto a
+// razão social que aparece no registro do TSE.
+const PROP = {"temas":["Economia/Impostos","Trabalho/Renda","Saúde","Educação","Segurança pública","Infraestrutura/Energia","Meio ambiente","Gestão pública","Justiça/Instituições","Previdência/Direitos"],"cands":[{"n":"Lula","pt":"PT","pg":47,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017016005","tse":true,"obs":"“Programa de Governo — Diretrizes para o Programa de Transformação do Brasil”. A capa não traz o nome; a identificação vem do corpo do texto e do registro no TSE.","i":[{"t":"Economia/Impostos","x":"Consolidar a reforma tributária, substituindo PIS, Cofins, IPI, ICMS e ISS por dois tributos, a CBS e o IBS."},{"t":"Saúde","x":"Ampliar o programa Agora Tem Especialistas para reduzir filas de consultas, exames e cirurgias no SUS."},{"t":"Educação","x":"Expandir o Compromisso Nacional Criança Alfabetizada, a rede de institutos federais e as matrículas em tempo integral."},{"t":"Segurança pública","x":"Aplicar a Lei Antifacção e o programa Brasil Contra o Crime Organizado, com R$ 10 bilhões a estados e municípios."},{"t":"Infraestrutura/Energia","x":"Dar continuidade ao Novo PAC, com investimento em metrôs, trens, VLTs e corredores de BRT."},{"t":"Meio ambiente","x":"Manter a redução do desmatamento, ampliar o Plano de Transformação Ecológica e homologar novas terras indígenas."},{"t":"Trabalho/Renda","x":"Manter o Bolsa Família com benefícios especiais para crianças e adolescentes e políticas de elevação da renda real do trabalho."},{"t":"Gestão pública","x":"Ampliar a plataforma Brasil Participativo e executar o Plano de Integridade e Combate à Corrupção 2025-2027."}]},{"n":"Flávio Bolsonaro","pt":"PL","pg":74,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017104726","tse":true,"obs":"“Diretrizes de Governo 2027-2030”. O nome do candidato não aparece no texto do PDF: o vínculo vem do registro no TSE e do nome do arquivo.","i":[{"t":"Economia/Impostos","x":"Revisar e redimensionar a reforma tributária em curso, reduzindo a carga sobre produção e consumo e a alíquota do IVA."},{"t":"Saúde","x":"Criar prontuário eletrônico único vinculado ao CPF e integrado ao Gov.br, com histórico de consultas, exames e vacinas."},{"t":"Educação","x":"Priorizar o método fônico na alfabetização e oferecer voucher educacional onde faltar vaga na rede pública."},{"t":"Segurança pública","x":"Declarar PCC, CV e milícias organizações narcoterroristas e erguer 5 presídios de segurança máxima no complexo TREVA."},{"t":"Infraestrutura/Energia","x":"Criar Corredores Logísticos Inteligentes para reduzir custo de transporte e reduzir gradualmente a CDE na conta de luz."},{"t":"Meio ambiente","x":"Apoiar a produção nacional de fertilizantes com potássio e fosfato e regular mercado de carbono e serviços ambientais."},{"t":"Trabalho/Renda","x":"Reduzir o custo do trabalho e criar programa de primeiro emprego integrado a um banco nacional de vagas."},{"t":"Gestão pública","x":"Digitalizar 100% dos serviços públicos federais passíveis de digitalização e profissionalizar a gestão do INSS."}]},{"n":"Cury (Avante)","pt":"AVANTE","pg":186,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017125643","tse":true,"obs":"“O Brasil dos Nossos Sonhos”. Há duas versões protocoladas; esta é a mais recente.","i":[{"t":"Economia/Impostos","x":"Buscar déficit público próximo de zero durante o mandato, com simplificação tributária e redução gradual da dívida."},{"t":"Saúde","x":"Implantar telemedicina nacional com meta de 80% das consultas básicas e criar Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Dar prioridade à educação básica, expandir o ensino técnico e implantar a gestão da emoção nas escolas."},{"t":"Segurança pública","x":"Recriar o Ministério da Segurança Pública e criar o programa FATO, Força de Alerta Total, integrando as polícias."},{"t":"Infraestrutura/Energia","x":"Criar cinco Corredores Estratégicos de Exportação com portos, ferrovias e armazenagem, e o plano PENER-BR de renováveis."},{"t":"Meio ambiente","x":"Implantar os programas Floresta Viva-BR e Brasil Oásis no semiárido e fixar prazos legais máximos no licenciamento."},{"t":"Trabalho/Renda","x":"Criar 10 mil Escolas de Empreendedorismo, com meta de 10 milhões de novos empreendedores, e um Banco do Empreendedor."},{"t":"Gestão pública","x":"Reforma administrativa com redução de ministérios, metas anuais públicas e uso de IA contra desperdício e fraude."}]},{"n":"Renan Santos","pt":"MISSÃO","pg":50,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017002789","tse":true,"obs":"“Livro Amarelo — Missão 2026”, resumo do programa do partido.","i":[{"t":"Economia/Impostos","x":"Aprovar a PEC do Equilíbrio Fiscal, com desindexação de benefícios e economia projetada de R$ 1,1 trilhão até 2031."},{"t":"Saúde","x":"Criar o prontuário eletrônico nacional PRONTO e o sistema ENER, trocando fila cronológica por prioridade de risco."},{"t":"Educação","x":"Adotar o sistema fônico de alfabetização e substituir cotas por bolsas de mérito, realocando recursos para STEM."},{"t":"Segurança pública","x":"Declarar Guerra ao Crime, aprovar Lei Antifacção com inversão do ônus da prova no confisco e criar superpresídios."},{"t":"Infraestrutura/Energia","x":"Programa Missão Rondon: elevar investimento em infraestrutura de 2% para ao menos 4% do PIB e malha férrea de 40 mil km."},{"t":"Meio ambiente","x":"Aplicar a Lei Geral do Licenciamento Ambiental com Licença Ambiental Especial e padrões de mineração de baixo carbono."},{"t":"Trabalho/Renda","x":"Substituir o Bolsa Família pelas Frentes Cidadãs, com contrapartida de trabalho, e flexibilizar relações trabalhistas."},{"t":"Gestão pública","x":"Criar o Comissariado Federal de Gestão Pública e a Grande Consolidação Municipal, de 5.570 para cerca de 1.656 municípios."}]},{"n":"Ronaldo Caiado","pt":"PSD","pg":100,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017106566","tse":true,"obs":"“Plano de Governo Ronaldo Caiado Presidente 2027-2030”, com 26 áreas de política pública.","i":[{"t":"Economia/Impostos","x":"Rever subsídios, subvenções e benefícios tributários com prazo e avaliação independente, desacelerando as despesas obrigatórias."},{"t":"Saúde","x":"Reorganizar o SUS com fila transparente, prontuário interoperável e remuneração por qualidade e resultado."},{"t":"Educação","x":"Alfabetizar toda criança na idade certa, com acompanhamento individual da aprendizagem e conexão entre ensino técnico e trabalho."},{"t":"Segurança pública","x":"Criar Ministério da Segurança Pública com comando integrado e institucionalizar a Lei do Terrorismo Doméstico para facções."},{"t":"Infraestrutura/Energia","x":"Priorizar Ferrogrão, Ferrovia Norte-Sul e hidrovias do Centro-Oeste, com plano decenal de bioenergia."},{"t":"Meio ambiente","x":"Combater desmatamento, grilagem e mineração ilegal, remunerar quem conserva e estruturar mercado de carbono."},{"t":"Trabalho/Renda","x":"Combinar benefícios sociais com qualificação, cuidado infantil e inclusão produtiva, e simplificar a formalização de pequenas empresas."},{"t":"Gestão pública","x":"Abolir a reeleição consecutiva no Executivo e adotar metas públicas com painel de indicadores para cada programa."}]},{"n":"Pablo Marçal","pt":"PRTB","pg":28,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017134368","tse":true,"obs":"Protocolado em 18/08/2026, estruturado em 7 missões e mais de 230 itens.","i":[{"t":"Economia/Impostos","x":"Reduzir progressivamente a carga tributária sobre produção, investimento e emprego, e criar um Ministério da Empresarização."},{"t":"Economia/Impostos","x":"Abertura automática de empresa pelo CPF em até 24 horas e renegociação de dívidas para pessoas com nome negativado."},{"t":"Saúde","x":"Reduzir filas com telemedicina nacional integrada ao SUS, IA aplicada ao SUS e Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Garantir a alfabetização plena até o 2º ano, criar a Universidade Federal Digital e bolsas para exatas e TIC."},{"t":"Segurança pública","x":"Plano Nacional de Combate às Facções, fronteiras monitoradas por drones e satélites e presídios como centros de ressocialização."},{"t":"Infraestrutura/Energia","x":"Plano Nacional de Infraestrutura Integrada, com integração ferroviária, segurança energética de longo prazo e 5G em todos os municípios."},{"t":"Meio ambiente","x":"Programa Nacional de Bioeconomia, regulamentação do mercado de carbono e remuneração por serviços ambientais."},{"t":"Trabalho/Renda","x":"Salário mínimo entre os maiores da América do Sul, manutenção do Bolsa Família e isenção progressiva para microempreendedores."}]},{"n":"Romeu Zema","pt":"NOVO","pg":79,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016919931","tse":true,"obs":"","i":[{"t":"Economia/Impostos","x":"Reduzir o imposto de renda das empresas ao nível de países desenvolvidos e fixar metas progressivas de redução da carga tributária."},{"t":"Segurança pública","x":"Classificar facções como organizações terroristas, construir presídios de segurança máxima e reduzir a maioridade penal para 16 anos."},{"t":"Educação","x":"Recuperar a alfabetização, recompor a aprendizagem defasada e ampliar a educação profissional conectada ao mercado."},{"t":"Infraestrutura/Energia","x":"Reestruturar a formação do preço da energia, reduzir encargos da tarifa elétrica e modernizar a malha ferroviária."},{"t":"Trabalho/Renda","x":"Oferecer regime de contratação alternativo à CLT, zerar encargos sobre o equivalente a um salário mínimo e encerrar o monopólio sindical."},{"t":"Meio ambiente","x":"Combater grilagem e desmatamento ilegal e simplificar regras para indústrias ligadas à biodiversidade."},{"t":"Gestão pública","x":"Privatizar todas as empresas estatais e ampliar parcerias público-privadas, inclusive em saúde e educação."},{"t":"Justiça/Instituições","x":"Limitar o foro privilegiado ao Presidente, proibir que um único ministro suspenda leis e criar corregedoria independente para o STF."}]},{"n":"Samara","pt":"UP","pg":1,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016998025","tse":true,"obs":"Programa de uma página, “Unidade Popular e Samara Martins 80”.","i":[{"t":"Trabalho/Renda","x":"Reajuste de 100% do salário mínimo e redução da jornada para 36 horas semanais, com fim da escala 6x1."},{"t":"Economia/Impostos","x":"Taxação das grandes fortunas, fim dos subsídios fiscais aos monopólios e suspensão do pagamento da dívida pública com auditoria."},{"t":"Saúde","x":"Nacionalização dos planos de saúde e aumento do orçamento para o funcionamento pleno do SUS."},{"t":"Educação","x":"Destinar 10% do PIB à educação, com livre acesso à universidade e fim do vestibular."},{"t":"Segurança pública","x":"Desmilitarização das polícias, prisão de agressores e assassinos de mulheres e punição dos torturadores da ditadura."},{"t":"Infraestrutura/Energia","x":"Estatização do transporte público, com passe livre para estudantes e trabalhadores."},{"t":"Meio ambiente","x":"Defesa do meio ambiente e da Amazônia, com fim da exploração estrangeira."},{"t":"Previdência/Direitos","x":"Revogação das reformas trabalhista e previdenciária e criação de frentes emergenciais de trabalho."}]},{"n":"Pimenta","pt":"PCO","pg":5,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113417","tse":true,"obs":"O anexo é o programa partidário “Programa de Luta · Eleições 2026”; não cita o nome do candidato internamente.","i":[{"t":"Trabalho/Renda","x":"Reposição integral das perdas salariais, aumento emergencial de 50% e jornada máxima de 7 horas por dia, 5 dias por semana."},{"t":"Economia/Impostos","x":"Estatização do sistema financeiro, cancelamento das dívidas externa e interna e imposto sobre grandes fortunas."},{"t":"Saúde","x":"Mais verbas para a saúde pública, sem limite de gastos, e abertura de centros de medicina de livre acesso."},{"t":"Educação","x":"Fim dos vestibulares com livre ingresso nas universidades e piso salarial de R$ 8.500 para professores."},{"t":"Segurança pública","x":"Dissolução da polícia militar e de todo o aparato repressivo, com formação de comitês de autodefesa comunitária."},{"t":"Infraestrutura/Energia","x":"Redução imediata de 50% no preço dos combustíveis e uso da riqueza do petróleo em saúde, educação e moradia."},{"t":"Meio ambiente","x":"Rejeição à internacionalização da Amazônia e controle estatal sobre minerais e petróleo."}]},{"n":"Dias","pt":"PSTU","pg":32,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016998007","tse":true,"obs":"Chapa Hertz Dias (presidente) e Vanessa Portugal (vice).","i":[{"t":"Economia/Impostos","x":"Tributação progressiva sobre lucros, imposto sobre fortunas acima de R$ 1 bilhão e suspensão do pagamento da dívida pública."},{"t":"Saúde","x":"SUS público, universal, gratuito e 100% estatal, com fim das OSs e PPPs e produção pública de medicamentos."},{"t":"Educação","x":"Revogação da BNCC e do Novo Ensino Médio, fim de verba pública para empresas de educação e não à militarização das escolas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias em uma instituição civil, fim da Justiça Militar e descriminalização das drogas."},{"t":"Infraestrutura/Energia","x":"Estatização de setores estratégicos, Petrobras 100% estatal e tarifa zero no transporte público."},{"t":"Meio ambiente","x":"Fim dos créditos públicos ao agronegócio, demarcação de terras indígenas e quilombolas e não à exploração da Margem Equatorial."},{"t":"Trabalho/Renda","x":"Fim da escala 6x1, jornada de 36 horas semanais, aumento de 100% no salário mínimo e vínculo para trabalhadores de aplicativos."},{"t":"Gestão pública","x":"Controle dos trabalhadores sobre as empresas estatais e infraestrutura digital pública sob soberania nacional."}]},{"n":"Clariana","pt":"DC","pg":15,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113380","tse":true,"obs":"“Proteger Hoje, Transformar o Amanhã”; o documento não cita nome, partido ou cargo no texto.","i":[{"t":"Economia/Impostos","x":"Simplificação regulatória, digitalização e abertura rápida de empresas, com crédito produtivo e garantias para pequenos negócios."},{"t":"Saúde","x":"Atenção primária resolutiva com equipes completas e acesso territorial, foco em diagnóstico precoce e telemedicina integrada."},{"t":"Educação","x":"Alfabetização na idade adequada, formação técnica ligada a vocações regionais e uso de tecnologia e IA nas escolas."},{"t":"Segurança pública","x":"Fronteiras inteligentes com sensores e drones, policiamento baseado em evidências e combate ao narcotráfico e à lavagem de dinheiro."},{"t":"Infraestrutura/Energia","x":"Rodovias com manutenção baseada em desempenho, investimento em ferrovias, hidrovias e portos e expansão da conectividade."},{"t":"Trabalho/Renda","x":"Autonomia econômica das mulheres por qualificação e reinserção profissional e apoio ao empreendedorismo com acesso a crédito."},{"t":"Gestão pública","x":"Governo digital e simples, gestão por metas com indicadores públicos e federalismo de resultados."}]},{"n":"Costa","pt":"PCB","pg":21,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017107286","tse":true,"obs":"“Programa Político do PCB — Eleições 2026”, chapa de Edmilson Costa.","i":[{"t":"Economia/Impostos","x":"Reforma tributária progressiva, com isenção de imposto de renda até um salário mínimo e reestruturação da dívida pública."},{"t":"Saúde","x":"SUS totalmente público e gratuito, com reversão das privatizações e investimento de 10% do PIB na saúde pública."},{"t":"Educação","x":"Educação 100% pública e gratuita da creche à pós-graduação, fim do vestibular nas federais e ampliação das cotas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias, descriminalização do uso de drogas com legalização da maconha e revogação da lei antiterrorismo."},{"t":"Infraestrutura/Energia","x":"Transporte 100% público com tarifa zero, reestatização da Eletrobras e Petrobras 100% estatal."},{"t":"Meio ambiente","x":"Combate ao desmatamento em todos os ecossistemas, demarcação de terras indígenas e quilombolas e investimento em renováveis."},{"t":"Trabalho/Renda","x":"Jornada de 30 horas semanais sem redução salarial, fim da escala 6x1 e salário mínimo calculado pelo Dieese."},{"t":"Gestão pública","x":"Orçamento popular deliberativo, conselhos populares eleitos em locais de trabalho e moradia e mandatos revogáveis."}]},{"n":"Grassi","pt":"DEMOCRATA","pg":56,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017075366","tse":true,"obs":"“Brasil em Primeiro Lugar”, chapa Wilson Grassi e Suêd Haidar.","i":[{"t":"Economia/Impostos","x":"Imposto Único Federal de 2% sobre movimentação financeira substituindo nove tributos federais e isenção de IRPF até 5 salários mínimos."},{"t":"Trabalho/Renda","x":"Desoneração total da folha de pagamento e envio único das obrigações trabalhistas, com deferimento automático quando o prazo estourar."},{"t":"Saúde","x":"Política de Saúde Única integrando saúde humana, animal e ambiental, e fila cirúrgica nacional única e pública por procedimento."},{"t":"Educação","x":"Alfabetização até o fim do 2º ano com resultados publicados e PEC da Pesquisa para transformar bolsistas em servidores com carreira."},{"t":"Segurança pública","x":"Expansão de presídios federais de segurança máxima, bloqueio de sinal de telefonia nas unidades e plebiscito sobre o modelo penitenciário."},{"t":"Infraestrutura/Energia","x":"Programa Brasil nos Trilhos, com corredores ferroviários de carga com cronograma publicado e integração planejada ferrovia-porto."},{"t":"Meio ambiente","x":"Licenciamento ambiental com prazo definido e responsável nomeado e combate ao desmatamento ilegal com rastreabilidade."},{"t":"Gestão pública","x":"Interoperabilidade obrigatória das bases pelo CPF, painel público de metas e transparência em tempo real do orçamento."}]}]};
+
+const INFO_INST = [{"n":"AtlasIntel","k":["atlasintel"],"d":"Fundada em 2017 por Andrei Roman e Thiago Costa. Coleta online, com entrevistados recrutados por anúncios na internet.","f":"projetodraft.com"},{"n":"Genial/Quaest","k":["quaest"],"d":"A Quaest (Belo Horizonte, 2016, de Felipe Nunes e Renata Salvo) faz o campo presencial; o Banco Genial contrata e divulga.","f":"infomoney.com.br"},{"n":"Datafolha","k":["datafolha"],"d":"Instituto do Grupo Folha, criado em 1983 e autônomo desde 1990. Dirigido por Luciana Chong. Publica na Folha de S.Paulo.","f":"wikipedia.org"},{"n":"Gerp","k":["gerp"],"d":"Instituto eleitoral e de opinião sediado no Rio de Janeiro; informa atuar desde 1983. As pesquisas nacionais de 2026 são custeadas por ele mesmo.","f":"gerp.com.br"},{"n":"Apex/Futura","k":["apex"],"d":"A Futura Inteligência, ligada à Apex Partners (ES), faz o campo por telefone (CATI); os dois divulgam juntos.","f":"exame.com"},{"n":"Futura Inteligência","k":["futura"],"d":"Instituto ligado à Apex Partners (ES), fundado pelo economista José Luiz Orrico. Entrevistas por telefone (CATI).","f":"jornaldocomercio.com.br"},{"n":"Nexus/BTG Pactual","k":["nexus"],"d":"O Nexus, do grupo FSB (criado em 2024, sucedendo o Instituto FSB Pesquisa de 2008), faz o campo; o BTG Pactual contrata e divulga.","f":"nexus.fsb.com.br"},{"n":"CNT/MDA","k":["mda","cnt"],"d":"O Instituto MDA faz o campo presencial nos 27 estados; a Confederação Nacional do Transporte contrata e divulga a série.","f":"conexaoto.com.br"},{"n":"Paraná Pesquisas","k":["parana pesquisas","instituto parana"],"d":"Fundado em 1990 em Curitiba, codirigido por Murilo Hidalgo. Combina entrevistas presenciais, telefônicas (CATI), online e em pontos de fluxo.","f":"correiodoestado.com.br"},{"n":"PoderData/Aya","k":["poderdata"],"d":"O PoderData, braço de pesquisas do Poder360 desde 2017, entrevista por telefone com URA; a Aya Bancah divulga as pesquisas de 2026.","f":"poder360.com.br"},{"n":"Meio/Ideia","k":["ideia","meio"],"d":"O Instituto Ideia, do economista Maurício Moura, faz o campo; o Canal Meio contrata e divulga.","f":"gazetadopovo.com.br"},{"n":"Real Time Big Data","k":["real time big data"],"d":"Empresa de coleta e análise de dados e opinião. Questionário por telefone e online, com entrevistadores e recursos de IA. Divulga com a CNN Brasil.","f":"infomoney.com.br"},{"n":"Veritá","k":["verita"],"d":"Instituto de pesquisa de mercado, governamental e eleitoral fundado em 1995, com sede em Uberlândia (MG).","f":"wikipedia.org"},{"n":"Palver","k":["palver"],"d":"Empresa de tecnologia e inteligência fundada em 2022. A pesquisa eleitoral é online, com amostra não probabilística recrutada em redes sociais.","f":"palver.com.br"},{"n":"Indexa","k":["indexa"],"d":"Criado em 2007 em Curitiba por Arilton Freres e Brisa Anciutti como Opinião Pesquisas; hoje opera principalmente de São Paulo.","f":"indexapesquisas.com.br"},{"n":"Indexa/Broadcast","k":["indexa broadcast","broadcast"],"d":"O Indexa faz o campo; a Agência Estado contrata, e a divulgação sai no Broadcast, serviço de notícias do Estadão.","f":"gazetadopovo.com.br"},{"n":"Alfa Inteligência","k":["alfa"],"d":"Instituto de pesquisa e consultoria para campanhas; informa 19 anos de atuação. Em 2026 divulgou levantamentos nacionais e no Paraná.","f":"poder360.com.br"},{"n":"DataTrends","k":["datatrends"],"d":"Instituto com atuação no Nordeste; divulgou a primeira pesquisa nacional em setembro de 2026. Entrevistas por telefone automatizado, com custeio próprio.","f":"correiobraziliense.com.br"},{"n":"Vox Brasil","k":["vox brasil","vox"],"d":"Instituto sediado em Barretos (SP). Abordagem presencial domiciliar com amostra estratificada; custeia os próprios levantamentos.","f":"poder360.com.br"},{"n":"Neokemp","k":["neokemp"],"d":"Empresa de pesquisa e inteligência de dados sediada em Itapema (SC), registrada como Neobe Gestão e Serviços. Usa CATI, URA e grupos focais.","f":"neokemp.com.br"},{"n":"American Analytics","k":["american analytics"],"d":"Consultoria política e de pesquisa sediada em Washington (EUA), dirigida por Ricardo Regorão. No Brasil divulga com a Times Brasil | CNBC.","f":"timesbrasil.com.br"},{"n":"Vetor/Arrow","k":["vetor"],"d":"Apesar da barra no nome, é uma empresa só: Vetor Arrow Instituto de Pesquisa e Opinião, que registrou pesquisas no Rio de Janeiro em 2026.","f":"agenciasertao.com"},{"n":"Ipespe","k":["ipespe"],"d":"Instituto de Pesquisas Sociais, Políticas e Econômicas, fundado em 1986, sediado no Recife. Faz pesquisas presenciais, por telefone, online e qualitativas.","f":"ipespe.org.br"},{"n":"Ipec","k":["ipec"],"d":"Inteligência em Pesquisa e Consultoria, criada em 2021 em São Paulo por Márcia Cavallari e ex-profissionais do Ibope, sucedendo o Ibope Inteligência.","f":"wikipedia.org"},{"n":"100 Cidades","k":["100 cidades"],"d":"Instituto '100% Cidades'. Faz o campo de pesquisas contratadas pela Futura Pesquisas e divulgadas junto com a Futura Inteligência.","f":"gazetadopovo.com.br"},{"n":"Doxa","k":["doxa"],"d":"Instituto fundado em 1996, com sede em Belo Horizonte e atuação nacional em pesquisas eleitorais, de opinião e de mercado.","f":"doxapesquisa.com.br"},{"n":"Seta","k":["seta"],"d":"Instituto fundado em 2009, sediado em Parnamirim (RN) e dirigido por Daniel Menezes, professor da UFRN. Concentra pesquisas no Rio Grande do Norte.","f":"saibamais.jor.br"}];
+const chaveInst = t => semAcento(String(t)).toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+const _cacheInfo = new Map();
+function infoDe(nome) {
+  if (_cacheInfo.has(nome)) return _cacheInfo.get(nome);
+  const c = ' ' + chaveInst(nome) + ' ';
+  // vence a chave mais longa: evita "vox" ganhar de "vox brasil"
+  let achado = null, tam = -1;
+  for (const e of INFO_INST) for (const k of e.k)
+    if (c.includes(' ' + k) && k.length > tam) { achado = e; tam = k.length; }
+  _cacheInfo.set(nome, achado); return achado;
+}
+
+// ---------------------------------------------------------------- utilitários
+const $ = id => document.getElementById(id);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const svgEl = (t, a) => { const e = document.createElementNS('http://www.w3.org/2000/svg', t);
+  for (const k in a) e.setAttribute(k, a[k]); return e; };
+const nd = (v, c = 1) => (v == null || isNaN(v)) ? '–' : v.toLocaleString('pt-BR', {minimumFractionDigits:c, maximumFractionDigits:c});
+const ni = v => (v == null || isNaN(v)) ? '–' : Math.round(v).toLocaleString('pt-BR');
+const moeda = v => v == null ? '–' : 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+const pd = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const iso = d => d.toISOString().slice(0,10);
+const dBR = d => d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'});
+const dCurto = d => d.toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}).replace('.','');
+const semAcento = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+// instituto e partido aparecem sempre em caixa alta; o dado embaixo continua intacto
+const MAI = t => (t == null ? '' : String(t)).toLocaleUpperCase('pt-BR');
+const iniciais = nome => { const p = nx(nome).replace(/\(.*?\)/g,'').trim().split(/\s+/);
+  return semAcento((p[0][0] + (p.length>1 ? p[p.length-1][0] : '')).toUpperCase()); };
+
+// ---------------------------------------------------------------- parsing
+const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m] = l.split(';');
+  return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null}; });
+const V1 = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v] = l.split(';');
+  const [nome, part] = c.split('|'); return {d: pd(d), ds: d, i, nome, part, v: +v}; });
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m] = l.split(';');
+  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null}; });
+const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
+  return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
+const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
+  return {m, nm, qt:+qt, vr:+vr}; });
+
+const MARGEM = new Map(P1.map(p => [p.ds + '|' + p.i, p.m]));
+const AMOSTRA = new Map(P1.map(p => [p.ds + '|' + p.i, p.n]));
+const PARTIDO = {}; V1.forEach(r => { PARTIDO[r.nome] = r.part; });
+D2.forEach(r => { if (!(r.a in PARTIDO)) PARTIDO[r.a] = ''; if (!(r.b in PARTIDO)) PARTIDO[r.b] = ''; });
+
+// Cor por candidato: lista fixa, escrita à mão. Antes a ordem saía da média das
+// pesquisas, então quem subia ou descia trocava de cor de uma carga para a outra.
+// Aqui o nome manda: o candidato tem a mesma cor em toda a página, em toda aba, hoje
+// e na semana que vem. Nome novo entra depois da lista, em ordem alfabética estável.
+const ORDEM_FIXA = [
+  'Lula', 'Flávio Bolsonaro', 'Cury (Avante)', 'Renan Santos', 'Ronaldo Caiado',
+  'Pablo Marçal', 'Romeu Zema', 'Tarcísio de Freitas', 'Michelle Bolsonaro',
+  'Ratinho Júnior', 'Jair Bolsonaro', 'Eduardo Leite', 'Eduardo Bolsonaro',
+  'Fernando Haddad', 'Ciro Gomes', 'Aldo Rebelo', 'Tereza Cristina', 'Aécio Neves',
+  'Rogério Marinho', 'Ciro Nogueira', 'Barbosa (DC)', 'Lima (Sem partido)',
+  'Samara', 'Pimenta', 'Dias', 'Clariana', 'Costa', 'Grassi'
+];
+const SLOT = {};
+ORDEM_FIXA.forEach((n, i) => { SLOT[n] = i; });
+[...new Set([...V1.map(r => r.nome), ...D2.flatMap(r => [r.a, r.b])])]
+  .filter(n => !(n in SLOT)).sort((a, b) => a.localeCompare(b, 'pt-BR'))
+  .forEach(n => { SLOT[n] = Object.keys(SLOT).length; });
+
+// Quantas cores exclusivas cada paleta comporta. Não é escolha de gosto: acima disso
+// dois candidatos ficam indistinguíveis (ΔE abaixo do piso), e aí vale mais repetir a
+// cor com traço/hachura diferente do que fingir que são cores distintas.
+const N_SLOTS = () => document.documentElement.getAttribute('data-paleta') === 'cvd' ? 6 : 8;
+// o gráfico de linhas continua limitado: 8 séries no mesmo eixo viram espaguete
+const N_LINHAS = () => document.documentElement.getAttribute('data-paleta') === 'cvd' ? 5 : 6;
+const corDe = nome => css('--c' + ((SLOT[nome] % N_SLOTS()) + 1));
+// Há mais candidatos do que matizes seguras — passado o último slot, a cor se repete.
+// O ciclo diz quantas voltas o nome deu: 0 = cor exclusiva, 1+ = cor emprestada, e aí
+// entra a segunda codificação (traço na linha, hachura na barra).
+const ciclo = nome => Math.floor((SLOT[nome] ?? 0) / N_SLOTS());
+const TRACOS = ['', '7 3', '2 3', '10 3 2 3', '4 2', '1 3'];
+const TRACOS_CICLO = ['', '7 3', '2 3', '10 3 2 3'];
+const tracoDe = nome => document.documentElement.getAttribute('data-paleta') === 'cvd'
+  ? TRACOS[SLOT[nome] % TRACOS.length]
+  : TRACOS_CICLO[Math.min(ciclo(nome), TRACOS_CICLO.length - 1)];
+
+const DUELOS = (() => { const m = new Map();
+  D2.forEach(r => { const k = [r.a, r.b].sort().join('||'); const a = m.get(k) || {p:[r.a,r.b].sort(), n:0};
+    a.n++; m.set(k, a); });
+  return [...m.values()].sort((x,y) => y.n - x.n); })();
+
+// Duelo padrão: os dois nomes mais simulados no 2º turno — se eles se enfrentam
+// em algum cenário; senão, o confronto com mais simulações.
+const DUELO_PADRAO = (() => {
+  const c = new Map();
+  D2.forEach(r => { c.set(r.a, (c.get(r.a)||0)+1); c.set(r.b, (c.get(r.b)||0)+1); });
+  const top = [...c.entries()].sort((x,y) => y[1]-x[1]).slice(0, 2).map(x => x[0]);
+  return DUELOS.some(d => d.p.join('||') === top.slice().sort().join('||')) ? top : DUELOS[0].p;
+})();
+
+const LIM = {
+  t1: [V1.reduce((a,r) => r.d < a ? r.d : a, V1[0].d), V1.reduce((a,r) => r.d > a ? r.d : a, V1[0].d)],
+  t2: [D2.reduce((a,r) => r.d < a ? r.d : a, D2[0].d), D2.reduce((a,r) => r.d > a ? r.d : a, D2[0].d)]
+};
+
+// ---------------------------------------------------------------- estado
+const st = { aba: 't1', ini: null, fim: null, inst: '', a: null, b: null, tabela: false,
+             off: new Set(), ord: {}, animou: {} };
+
+function guarda(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function le(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+// ---------------------------------------------------------------- tema
+function aplicaTema(t) {
+  const raiz = document.documentElement;
+  if (t === 'auto') raiz.removeAttribute('data-tema'); else raiz.setAttribute('data-tema', t);
+  guarda('tema', t);
+  document.querySelectorAll('[data-tema]').forEach(b => { if (b.tagName === 'BUTTON')
+    b.setAttribute('aria-pressed', b.dataset.tema === t); });
+  desenha(true);
+}
+function aplicaPaleta(p) {
+  document.documentElement.setAttribute('data-paleta', p);
+  guarda('paleta', p);
+  document.querySelectorAll('[data-paleta]').forEach(b => { if (b.tagName === 'BUTTON')
+    b.setAttribute('aria-pressed', b.dataset.paleta === p); });
+  desenha(true);
+}
+document.querySelectorAll('.temas [data-tema]').forEach(b => b.onclick = () => aplicaTema(b.dataset.tema));
+document.querySelectorAll('.temas [data-paleta]').forEach(b => b.onclick = () => aplicaPaleta(b.dataset.paleta));
+
+// ---------------------------------------------------------------- filtros
+function limites() { return st.aba === 't2' ? LIM.t2 : st.aba === 't1' ? LIM.t1 : LIM.t2; }
+function trocaAba(a) {
+  st.aba = a; st.animou = {};
+  document.querySelectorAll('.abas button').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === a));
+  $('campo-duelo').hidden = a !== 't2';
+  // A aba Institutos mostra o registro do TSE agregado no ano: não há série diária
+  // para recortar, então período e alternância gráfico/tabela saem de cena em vez de
+  // ficarem ali sem efeito nenhum.
+  $('campo-periodo').hidden = a === 'inst';
+  $('atalhos').closest('.campo').hidden = a === 'inst';
+  $('campo-exibicao').hidden = a === 'inst';
+  $('filtros').hidden = a === 'prop';
+  $('aviso').hidden = a === 'prop';
+  const [x, y] = limites();
+  $('dt-ini').min = $('dt-fim').min = iso(x); $('dt-ini').max = $('dt-fim').max = iso(y);
+  st.ini = x; st.fim = y; $('dt-ini').value = iso(x); $('dt-fim').value = iso(y);
+  desenha();
+}
+document.querySelectorAll('.abas button').forEach(b => b.onclick = () => trocaAba(b.dataset.aba));
+$('dt-ini').onchange = e => { st.ini = pd(e.target.value); desenha(); };
+$('dt-fim').onchange = e => { st.fim = pd(e.target.value); desenha(); };
+document.querySelectorAll('.atalhos button').forEach(b => b.onclick = () => {
+  const [x, y] = limites(); const dias = +b.dataset.dias;
+  st.ini = dias ? new Date(Math.max(x, y.getTime() - dias*864e5)) : x; st.fim = y;
+  $('dt-ini').value = iso(st.ini); $('dt-fim').value = iso(st.fim); desenha(); });
+// ---------------------------------------------------------------- busca de instituto
+// Combobox de verdade (não um select disfarçado): digita para filtrar, setas para andar,
+// Enter escolhe, Esc desfaz. Sem escolha = "Todos (média)", que é o estado padrão.
+const bInst = {opcoes: [], filtradas: [], aberto: false, ativo: -1};
+const TODOS = 'Todos (média)';
+const semCaixa = t => semAcento(t).toLowerCase();
+const escapaHTML = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function realcaTrecho(nome, termo) {
+  if (!termo) return escapaHTML(nome);
+  const i = semCaixa(nome).indexOf(semCaixa(termo));
+  if (i < 0) return escapaHTML(nome);
+  return escapaHTML(nome.slice(0, i)) + '<mark>' + escapaHTML(nome.slice(i, i + termo.length))
+       + '</mark>' + escapaHTML(nome.slice(i + termo.length));
+}
+
+function listaInst(termo) {
+  const t = semCaixa(termo.trim());
+  bInst.filtradas = t ? bInst.opcoes.filter(o => semCaixa(o).includes(t)) : bInst.opcoes.slice();
+  const ul = $('lista-inst');
+  const itens = [];
+  // "Todos" só some quando o texto digitado não combina com ele
+  if (!t || semCaixa(TODOS).includes(t))
+    itens.push(`<li class="todos" role="option" data-v="" aria-selected="${!st.inst}">${TODOS}</li>`);
+  bInst.filtradas.forEach(o => itens.push(
+    `<li role="option" data-v="${escapaHTML(o)}" aria-selected="${o === st.inst}">${realcaTrecho(o, termo.trim())}</li>`));
+  if (!itens.length) itens.push('<li class="vazio">Nenhum instituto com esse nome</li>');
+  ul.innerHTML = itens.join('');
+  bInst.ativo = -1;
+}
+
+function abreInst(termo) {
+  listaInst(termo === undefined ? '' : termo);
+  $('lista-inst').hidden = false;
+  $('sel-inst').setAttribute('aria-expanded', 'true');
+  bInst.aberto = true;
+}
+
+function fechaInst() {
+  $('lista-inst').hidden = true;
+  $('sel-inst').setAttribute('aria-expanded', 'false');
+  bInst.aberto = false; bInst.ativo = -1;
+  $('sel-inst').value = st.inst;          // texto solto não vira filtro
+  $('limpa-inst').hidden = !st.inst;
+}
+
+function marcaAtivo(i) {
+  const itens = [...$('lista-inst').querySelectorAll('li:not(.vazio)')];
+  if (!itens.length) return;
+  bInst.ativo = (i + itens.length) % itens.length;
+  itens.forEach((el, k) => el.classList.toggle('ativo', k === bInst.ativo));
+  itens[bInst.ativo].scrollIntoView({block: 'nearest'});
+}
+
+function escolheInst(valor) {
+  st.inst = valor;
+  fechaInst();
+  desenha();
+}
+
+$('sel-inst').addEventListener('input', e => abreInst(e.target.value));
+$('sel-inst').addEventListener('focus', () => { $('sel-inst').select(); abreInst(''); });
+$('sel-inst').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!bInst.aberto) return abreInst($('sel-inst').value);
+    marcaAtivo(bInst.ativo + (e.key === 'ArrowDown' ? 1 : -1));
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const itens = [...$('lista-inst').querySelectorAll('li:not(.vazio)')];
+    // sem item destacado, Enter aceita a única opção que sobrou do filtro
+    const alvo = bInst.ativo >= 0 ? itens[bInst.ativo] : (itens.length === 1 ? itens[0] : null);
+    if (alvo) escolheInst(alvo.dataset.v);
+  } else if (e.key === 'Escape') {
+    if (bInst.aberto) { e.stopPropagation(); fechaInst(); }
+  } else if (e.key === 'Tab') {
+    fechaInst();
+  }
+});
+$('lista-inst').addEventListener('mousedown', e => {   // mousedown: o blur não rouba o clique
+  const li = e.target.closest('li[data-v]');
+  if (li) { e.preventDefault(); escolheInst(li.dataset.v); }
+});
+$('sel-inst').addEventListener('blur', () => setTimeout(fechaInst, 0));
+$('limpa-inst').addEventListener('click', () => { escolheInst(''); $('sel-inst').focus(); });
+$('sel-a').onchange = e => { st.a = e.target.value; desenha(); };
+$('sel-b').onchange = e => { st.b = e.target.value; desenha(); };
+$('btn-graf').onclick = () => { st.tabela = false; sincExib(); };
+$('btn-tab').onclick = () => { st.tabela = true; sincExib(); };
+function sincExib() { $('btn-graf').setAttribute('aria-pressed', !st.tabela);
+  $('btn-tab').setAttribute('aria-pressed', st.tabela); st.animou = {}; desenha(); }
+
+// ---------------------------------------------------------------- recortes
+const noPeriodo = r => r.d >= st.ini && r.d <= st.fim;
+const doInst = r => !st.inst || r.i === st.inst;
+const fat1 = () => V1.filter(r => noPeriodo(r) && doInst(r));
+const fat2 = () => D2.filter(r => noPeriodo(r) && doInst(r));
+
+function resumo1(rows) {
+  const m = new Map();
+  rows.forEach(r => { const a = m.get(r.nome) || {nome:r.nome, s:0, n:0, min:Infinity, max:-Infinity, mg:0, mgn:0};
+    a.s += r.v; a.n++; a.min = Math.min(a.min, r.v); a.max = Math.max(a.max, r.v);
+    const mg = MARGEM.get(r.ds + '|' + r.i); if (mg != null) { a.mg += mg; a.mgn++; }
+    m.set(r.nome, a); });
+  return [...m.values()].map(a => ({...a, media: a.s/a.n, margem: a.mgn ? a.mg/a.mgn : null}))
+    .sort((x,y) => y.media - x.media);
+}
+function serieDiaria(rows, nomes) {
+  const k = new Map();
+  rows.forEach(r => { if (!nomes.includes(r.nome)) return;
+    const key = r.ds + '|' + r.nome; const a = k.get(key) || {d:r.d, nome:r.nome, s:0, n:0};
+    a.s += r.v; a.n++; k.set(key, a); });
+  const out = {}; nomes.forEach(n => out[n] = []);
+  [...k.values()].sort((a,b) => a.d - b.d).forEach(a => out[a.nome].push({d:a.d, v:a.s/a.n, n:a.n}));
+  return out;
+}
+
+// ---------------------------------------------------------------- tooltip
+function dica(tip, host, x, y, html) {
+  tip.innerHTML = html; tip.style.opacity = '1';
+  const w = tip.offsetWidth, hw = host.clientWidth;
+  tip.style.left = Math.max(0, Math.min(x - w/2, hw - w)) + 'px';
+  tip.style.top = Math.max(0, y - tip.offsetHeight - 12) + 'px';
+}
+const semDica = tip => { tip.style.opacity = '0'; };
+// regra fixa: no tooltip o maior percentual vem sempre acima do menor
+const linhasDica = itens => itens.slice().sort((a,b) => b.v - a.v).map(i =>
+  `<div class="row"><span><i class="sw" style="background:${i.cor}"></i>${nx(i.nome)}</span><span class="num">${nd(i.v)}%</span></div>`).join('');
+
+// ---------------------------------------------------------------- avatar
+// hachura para barras que reciclam matiz: a cor sozinha não basta, a textura separa
+let _hxSeq = 0;
+function defsHachura(svg) {
+  const id = 'hx' + (++_hxSeq);
+  const defs = svgEl('defs', {});
+  [[1, 45], [2, -45], [3, 0]].forEach(([k, ang]) => {
+    const pat = svgEl('pattern', {id: `${id}-${k}`, width: 9, height: 9,
+      patternUnits: 'userSpaceOnUse', patternTransform: `rotate(${ang})`});
+    pat.appendChild(svgEl('line', {x1: 0, y1: 0, x2: 0, y2: 9,
+      stroke: css('--surface'), 'stroke-width': 2.2, opacity: 0.8}));
+    defs.appendChild(pat);
+  });
+  svg.appendChild(defs);
+  return id;
+}
+const hachuraDe = (hid, nome) => {
+  const c = ciclo(nome);
+  return c ? `url(#${hid}-${Math.min(c, 3)})` : null;
+};
+
+function avatarSVG(svg, cx, cy, r, nome) {
+  const g = svgEl('g', {transform: `translate(${cx},${cy})`});
+  if (FOTO[nome]) {
+    const im = svgEl('image', {x: -r, y: -r, width: 2*r, height: 2*r,
+      'clip-path': 'url(#clip-av)', preserveAspectRatio: 'xMidYMid slice'});
+    im.setAttribute('href', FOTO[nome]);
+    im.setAttributeNS('http://www.w3.org/1999/xlink', 'href', FOTO[nome]);
+    g.appendChild(im);
+    g.appendChild(svgEl('circle', {cx: 0, cy: 0, r: r - 0.9, fill: 'none',
+      stroke: corDe(nome), 'stroke-width': 1.8}));
+  } else {
+    g.appendChild(svgEl('circle', {cx: 0, cy: 0, r, fill: corDe(nome)}));
+    const t = svgEl('text', {x: 0, y: 3.5, 'text-anchor': 'middle', class: 'avatar-txt'});
+    t.textContent = iniciais(nome); g.appendChild(t);
+  }
+  svg.appendChild(g);
+  return g;
+}
+
+// Só dá para medir texto SVG depois que ele está no documento. Este passe encurta
+// o rótulo até caber e encosta o avatar na primeira letra — nada se sobrepõe.
+function encaixaRotulos(ajustes, padL) {
+  const temAv = ajustes.some(a => a.av);
+  const espaco = padL - 12 - (temAv ? 30 : 4);
+  // 1ª passada: encurta o que não cabe
+  ajustes.forEach(({lb}) => {
+    let txt = lb.textContent;
+    if (lb.getComputedTextLength() > espaco) {
+      while (txt.length > 6 && lb.getComputedTextLength() > espaco) {
+        txt = txt.slice(0, -2); lb.textContent = txt + '…';
+      }
+    }
+  });
+  // 2ª passada: todos os avatares na MESMA coluna. Antes cada um encostava no
+  // próprio texto e a coluna saía serrilhada, como se as linhas estivessem tortas.
+  const maior = Math.max(0, ...ajustes.map(a => a.lb.getComputedTextLength()));
+  const xAv = Math.max(11, padL - 12 - maior - 17);
+  ajustes.forEach(({av, cy}) => { if (av) av.setAttribute('transform', `translate(${xAv},${cy})`); });
+}
+
+// Medir texto antes de desenhar: sem isso a margem da direita é chute e nome grande
+// sai cortado ("Flávio Bolsona…"). O canvas usa a mesma fonte do SVG.
+const _ctx = document.createElement('canvas').getContext('2d');
+function larguraTexto(txt, peso, tam, familia) {
+  _ctx.font = `${peso} ${tam}px ${familia}`;
+  return _ctx.measureText(txt).width;
+}
+
+// ---------------------------------------------------------------- gráfico de linhas
+function desenhaLinhas(host, tip, series, opts) {
+  [...host.children].forEach(c => { if (c !== tip) c.remove(); });
+  const W = Math.max(280, host.clientWidth - 16);
+  const estreito = W < 520;
+  // margem da direita = o maior rótulo de ponta que realmente vai ser escrito,
+  // limitada a 42% da largura para o gráfico não virar um filete
+  const fTexto = css('--texto'), fNum = css('--numero');
+  const padRot = !estreito ? Math.min(W * 0.42, 14 + 14 + Math.max(0, ...series
+        .filter(s => s.on && s.pts.length)
+        .map(s => larguraTexto(s.nome, '400', 12.5, fTexto)
+                + 6 + larguraTexto(nd(s.pts[s.pts.length-1].v) + '%', '500', 12.5, fNum)))) : 12;
+  const padL = 46, padR = Math.ceil(padRot), padT = 12, padB = 34;
+  const H = estreito ? 268 : 336;
+  const ativos = series.filter(s => s.on && s.pts.length);
+  if (!ativos.length) { host.insertAdjacentHTML('beforeend', '<p class="nota">Sem pesquisas no período.</p>'); return; }
+
+  const pts = ativos.flatMap(s => s.pts);
+  const t0 = Math.min(...pts.map(p => +p.d)), t1 = Math.max(...pts.map(p => +p.d));
+  const vmax = Math.max(...pts.map(p => p.v)), vmin = Math.min(...pts.map(p => p.v));
+  const pY = opts.passoY || 5;
+  const yT = Math.min(opts.maxY ?? Infinity, Math.ceil((vmax + 2)/pY)*pY),
+        yB = Math.max(0, Math.floor((vmin - 2)/pY)*pY);
+  const X = t => padL + (t1 === t0 ? 0.5 : (t - t0)/(t1 - t0)) * (W - padL - padR);
+  const Y = v => padT + (1 - (v - yB)/(yT - yB)) * (H - padT - padB);
+
+  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img'});
+  for (let v = yB; v <= yT; v += pY) {
+    svg.appendChild(svgEl('line', {x1: padL, x2: W - padR, y1: Y(v), y2: Y(v), stroke: css('--grid'), 'stroke-width': 1}));
+    const l = svgEl('text', {x: padL - 10, y: Y(v) + 4, 'text-anchor': 'end', class: 'tick'});
+    l.textContent = v + '%'; svg.appendChild(l);
+  }
+  const nT = estreito ? 2 : 6;
+  for (let i = 0; i <= nT; i++) { const t = t0 + (t1 - t0)*i/nT;
+    const l = svgEl('text', {x: X(t), y: H - padB + 20, class: 'tick',
+      'text-anchor': i === 0 ? 'start' : (i === nT ? 'end' : 'middle')});
+    l.textContent = dCurto(new Date(t)); svg.appendChild(l); }
+  svg.appendChild(svgEl('line', {x1: padL, x2: W - padR, y1: Y(yB), y2: Y(yB), stroke: css('--axis'), 'stroke-width': 1}));
+
+  const suave = ativos[0].pts.length > 14;
+  const mm = p => p.map((x, i) => { const a = Math.max(0, i-2), b = Math.min(p.length-1, i+2);
+    let s = 0, n = 0; for (let k = a; k <= b; k++) { s += p[k].v; n++; } return {d:x.d, v:s/n}; });
+  const cam = p => p.map((x,i) => (i?'L':'M') + X(+x.d) + ' ' + Y(x.v)).join(' ');
+
+  if (opts.faixa && ativos.length === 2) {
+    const A = suave ? mm(ativos[0].pts) : ativos[0].pts, B = suave ? mm(ativos[1].pts) : ativos[1].pts;
+    if (A.length === B.length) svg.appendChild(svgEl('path', {
+      d: 'M ' + A.map(p => X(+p.d)+','+Y(p.v)).join(' L ') + ' L ' + B.slice().reverse().map(p => X(+p.d)+','+Y(p.v)).join(' L ') + ' Z',
+      fill: ativos[0].cor, opacity: .09}));
+  }
+
+  const rot = [];
+  ativos.forEach((s, idx) => {
+    if (suave) svg.appendChild(svgEl('path', {d: cam(s.pts), fill:'none', stroke: s.cor,
+      'stroke-width': 1.5, opacity: .2, 'stroke-linejoin':'round'}));
+    const linha = suave ? mm(s.pts) : s.pts;
+    const p = svgEl('path', {d: cam(linha), fill: 'none', stroke: s.cor, 'stroke-width': 2.2,
+      'stroke-linejoin': 'round', 'stroke-linecap': 'round'});
+    if (s.traco) p.setAttribute('stroke-dasharray', s.traco);
+    if (opts.anima && !s.traco) { p.classList.add('linha-anim');
+      p.style.setProperty('--dash', Math.max(1, p.getTotalLength ? 2400 : 2400));
+      p.style.animationDelay = (idx * 60) + 'ms'; }
+    svg.appendChild(p);
+    const u = linha[linha.length - 1];
+    svg.appendChild(svgEl('circle', {cx: X(+u.d), cy: Y(u.v), r: 4, fill: s.cor,
+      stroke: css('--surface'), 'stroke-width': 2}));
+    if (!estreito) rot.push({x: X(+u.d)+10, y: Y(u.v), nome: s.nome,
+      val: nd(u.v)+'%', cor: s.cor, v: u.v});
+  });
+  // rótulos de ponta: maior valor sempre acima, depois afasta o que colidir
+  rot.sort((a,b) => b.v - a.v);
+  rot.forEach((r,i) => { if (i && r.y - rot[i-1].y < 18) r.y = rot[i-1].y + 18; });
+  const ex = rot.length ? rot[rot.length-1].y - (H - padB) : 0;
+  if (ex > 0) rot.forEach(r => r.y -= ex);
+  rot.forEach(r => {
+    svg.appendChild(svgEl('rect', {x: r.x, y: r.y-4.5, width: 9, height: 9, rx: 2, fill: r.cor}));
+    const t = svgEl('text', {x: r.x+14, y: r.y+4.5, class: 'endlabel', fill: css('--ink')});
+    const a = svgEl('tspan', {class:'nm', fill: css('--ink-2')}); a.textContent = nx(r.nome);
+    const b = svgEl('tspan', {class:'vl', dx: 6}); b.textContent = r.val;
+    t.appendChild(a); t.appendChild(b); svg.appendChild(t);
+  });
+
+  const cruz = svgEl('line', {y1: padT, y2: H - padB, stroke: css('--axis'), 'stroke-width': 1, opacity: 0});
+  svg.appendChild(cruz);
+  // nascem fora do quadro: em (0,0) elas esticavam a caixa do SVG 4px para a esquerda
+  const marcas = ativos.map(s => { const c = svgEl('circle', {cx: -50, cy: -50, r: 4.5, fill: s.cor,
+    stroke: css('--surface'), 'stroke-width': 2, opacity: 0}); svg.appendChild(c); return c; });
+  const capa = svgEl('rect', {x: padL, y: padT, width: Math.max(1, W-padL-padR), height: H-padT-padB, fill: 'transparent'});
+  capa.addEventListener('pointermove', ev => {
+    const rc = svg.getBoundingClientRect(); const px = (ev.clientX - rc.left) * (W / rc.width);
+    const alvo = t0 + ((px - padL)/(W - padL - padR))*(t1 - t0);
+    let melhor = null; ativos[0].pts.forEach(p => { if (!melhor || Math.abs(+p.d-alvo) < Math.abs(+melhor.d-alvo)) melhor = p; });
+    const tx = X(+melhor.d);
+    cruz.setAttribute('x1', tx); cruz.setAttribute('x2', tx); cruz.setAttribute('opacity', 1);
+    const itens = []; let nn = 0;
+    ativos.forEach((s,i) => { const p = s.pts.find(q => +q.d === +melhor.d);
+      if (p) { nn = Math.max(nn, p.n || 0); marcas[i].setAttribute('cx', X(+p.d)); marcas[i].setAttribute('cy', Y(p.v));
+        marcas[i].setAttribute('opacity', 1); itens.push({nome: s.nome, v: p.v, cor: s.cor}); }
+      else marcas[i].setAttribute('opacity', 0); });
+    dica(tip, host, tx, Y(yT)+30, `<b>${dBR(melhor.d)}</b>${linhasDica(itens)}` +
+      (nn ? `<div class="n">${nn} pesquisa${nn>1?'s':''} no dia</div>` : ''));
+  });
+  capa.addEventListener('pointerleave', () => { cruz.setAttribute('opacity', 0);
+    marcas.forEach(m => m.setAttribute('opacity', 0)); semDica(tip); });
+  svg.appendChild(capa);
+  host.appendChild(svg);
+}
+
+// ---------------------------------------------------------------- gráfico de barras
+function desenhaBarras(host, tip, dados, opts) {
+  [...host.children].forEach(c => { if (c !== tip) c.remove(); });
+  const W = Math.max(280, host.clientWidth - 16);
+  if (!dados.length) { host.insertAdjacentHTML('beforeend', '<p class="nota">Sem pesquisas no período.</p>'); return; }
+  const estreito = W < 520;
+  // gutter medido, não chutado: nome de duelo é longo ("Flávio Bolsonaro × Fernando Haddad")
+  const rotulos = dados.map(d => opts.par
+    ? (() => { const n2 = [[d.a, d.va], [d.b, d.vb]].sort((x, y) => y[1] - x[1]);
+               return estreito ? nx(n2[0][0]).split(' ')[0] + ' × ' + nx(n2[1][0]).split(' ')[0]
+                               : nx(n2[0][0]) + ' × ' + nx(n2[1][0]); })()
+    : nx(d.nome));
+  const maiorRot = Math.max(0, ...rotulos.map(t => larguraTexto(t, '400', 13, css('--texto'))));
+  // no celular o avatar sai: 30px de gutter valem mais como barra
+  const comAvatar = W >= 420;
+  const maiorVal = Math.max(0, ...dados.flatMap(d => opts.par ? [d.va, d.vb] : [d.media])
+                                       .map(v => larguraTexto(nd(v) + '%', '500', 12, css('--numero'))));
+  const padL = Math.min(W * (estreito ? 0.40 : 0.45),
+                        Math.ceil(maiorRot) + 12 + (comAvatar ? 30 : 4)),
+        padR = Math.ceil(maiorVal) + 16, padT = 10, padB = 32;
+  const alt = opts.par ? 48 : 36;
+  const H = padT + dados.length*alt + padB;
+  const topo = Math.ceil(Math.max(10, ...dados.map(d => opts.par ? Math.max(d.va, d.vb) : d.max))/10)*10;
+  const X = v => padL + (v/topo)*(W - padL - padR);
+
+  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img'});
+  const hid = defsHachura(svg);
+  const ajustes = [];
+  const passo = estreito ? 20 : 10;
+  for (let t = 0; t <= topo; t += passo) {
+    svg.appendChild(svgEl('line', {x1: X(t), x2: X(t), y1: padT, y2: H-padB, stroke: css('--grid'), 'stroke-width': 1}));
+    const l = svgEl('text', {x: X(t), y: H-padB+19, 'text-anchor':'middle', class:'tick'});
+    l.textContent = t + '%'; svg.appendChild(l);
+  }
+
+  dados.forEach((d, i) => {
+    const y0 = padT + i*alt;
+    const g = svgEl('g', {});
+    if (opts.anima) { g.classList.add('surge'); g.style.animationDelay = (i*28) + 'ms'; }
+
+    if (opts.par) {
+      const nomes = [[d.a, d.va], [d.b, d.vb]].sort((x,y) => y[1] - x[1]);
+      const av = comAvatar ? avatarSVG(g, padL - 150, y0 + alt/2 - 1, 11, nomes[0][0]) : null;
+      const lb = svgEl('text', {x: padL - 12, y: y0 + alt/2 + 4, 'text-anchor':'end', class:'catlabel'});
+      lb.textContent = estreito ? nx(nomes[0][0]).split(' ')[0] + ' × ' + nx(nomes[1][0]).split(' ')[0]
+                                : nx(nomes[0][0]) + ' × ' + nx(nomes[1][0]);
+      g.appendChild(lb);
+      ajustes.push({lb, av, cy: y0 + alt/2 - 1});
+      const colide = corDe(nomes[0][0]) === corDe(nomes[1][0]);
+      nomes.forEach(([nm, vv], j) => {
+        const yy = y0 + 7 + j*17;
+        const larg = Math.max(2, X(vv)-padL);
+        g.appendChild(svgEl('rect', {x: padL, y: yy, width: larg, height: 14, rx: 2, fill: corDe(nm)}));
+        // duas barras na mesma cor: a de baixo ganha textura, senão o duelo fica ilegível
+        if (colide && j === 1)
+          g.appendChild(svgEl('rect', {x: padL, y: yy, width: larg, height: 14, rx: 2, fill: `url(#${hid}-1)`}));
+        const t = svgEl('text', {x: X(vv)+10, y: yy+11, class:'vallabel'});
+        t.textContent = nd(vv) + '%'; g.appendChild(t);
+      });
+    } else {
+      const bh = 14, yB = y0 + 7;
+      if (d.max > d.min) g.appendChild(svgEl('line', {x1: X(d.min), x2: X(d.max), y1: yB+bh+8, y2: yB+bh+8,
+        stroke: css('--axis'), 'stroke-width': 2, 'stroke-linecap':'round'}));
+      const av = comAvatar ? avatarSVG(g, padL - (estreito ? 106 : 168), yB + bh/2, 11, d.nome) : null;
+      const lb = svgEl('text', {x: padL - 12, y: yB + bh - 2, 'text-anchor':'end',
+        class: 'catlabel' + (SITUACAO[d.nome] ? ' alerta' : '')});
+      lb.textContent = (SITUACAO[d.nome] ? '⚠ ' : '') + nx(d.nome);
+      g.appendChild(lb);
+      ajustes.push({lb, av, cy: yB + bh/2});
+      const largS = Math.max(2, X(d.media)-padL);
+      g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: corDe(d.nome)}));
+      const hxS = hachuraDe(hid, d.nome);
+      if (hxS) g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: hxS}));
+      const t = svgEl('text', {x: X(d.media)+10, y: yB+bh-2, class:'vallabel'});
+      t.textContent = nd(d.media) + '%'; g.appendChild(t);
+    }
+
+    const hit = svgEl('rect', {x: 0, y: y0, width: W, height: alt, fill: 'transparent'});
+    hit.addEventListener('pointerenter', () => {
+      if (opts.par) {
+        dica(tip, host, W/2, y0 + alt/2, `<b>${nx(d.a)} × ${nx(d.b)}</b>` +
+          linhasDica([{nome:d.a, v:d.va, cor:corDe(d.a)}, {nome:d.b, v:d.vb, cor:corDe(d.b)}]) +
+          `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'} · diferença ${nd(Math.abs(d.va-d.vb))} p.p.</div>`);
+      } else {
+        const rel = d.margem && d.media ? (d.margem/d.media*100) : null;
+        dica(tip, host, X(d.media), y0 + alt/2, `<b>${nx(d.nome)}${PARTIDO[d.nome] ? ' · '+MAI(PARTIDO[d.nome]) : ''}</b>` +
+          `<div class="row"><span>Média</span><span class="num">${nd(d.media)}%</span></div>` +
+          `<div class="row"><span>Faixa</span><span class="num">${nd(d.min)}–${nd(d.max)}%</span></div>` +
+          (d.margem ? `<div class="row"><span>Margem</span><span class="num">±${nd(d.margem)} p.p.${rel?' · ±'+nd(rel)+'%':''}</span></div>` : '') +
+          (SITUACAO[d.nome] ? `<div class="n" style="color:var(--warn)"><b>${SITUACAO[d.nome].t}</b> — candidatura indeferida pelo TSE</div>` : '') +
+          `<div class="n">${d.n} pesquisa${d.n>1?'s':''} no período</div>`);
+      }
+    });
+    hit.addEventListener('pointerleave', () => semDica(tip));
+    g.appendChild(hit);
+    svg.appendChild(g);
+  });
+  host.appendChild(svg);
+  encaixaRotulos(ajustes, padL);
+}
+
+// ---------------------------------------------------------------- viés de casa (insight)
+function viesDeCasa(rows) {
+  const porDiaCand = new Map();
+  rows.forEach(r => { const k = r.ds + '|' + r.nome; const a = porDiaCand.get(k) || {s:0,n:0};
+    a.s += r.v; a.n++; porDiaCand.set(k, a); });
+  const foco = resumo1(rows).slice(0, 2).map(r => r.nome);
+  const m = new Map();
+  rows.forEach(r => { if (!foco.includes(r.nome)) return;
+    const base = porDiaCand.get(r.ds + '|' + r.nome); if (!base || base.n < 2) return;
+    const media = base.s / base.n;
+    const a = m.get(r.i) || {inst: r.i, por: {}, n: 0};
+    a.por[r.nome] = a.por[r.nome] || {s:0, n:0};
+    a.por[r.nome].s += r.v - media; a.por[r.nome].n++; a.n++; m.set(r.i, a);
+  });
+  const out = [...m.values()].map(a => ({inst: a.inst, n: a.n,
+    vals: foco.map(f => a.por[f] && a.por[f].n ? a.por[f].s/a.por[f].n : null)}))
+    .filter(a => a.vals.some(v => v != null));
+  out.sort((x,y) => (y.vals[0] ?? 0) - (x.vals[0] ?? 0));
+  return {foco, linhas: out};
+}
+function desenhaVies(host, tip, dados, anima) {
+  [...host.children].forEach(c => { if (c !== tip) c.remove(); });
+  const {foco, linhas} = dados;
+  if (!linhas.length || foco.length < 2) {
+    host.insertAdjacentHTML('beforeend', '<p class="nota">Precisa de pelo menos dois institutos medindo no mesmo dia.</p>'); return; }
+  const W = Math.max(280, host.clientWidth - 16);
+  const estreito = W < 520;
+  const maiorNome = Math.max(0, ...linhas.map(l => larguraTexto(MAI(l.inst), '400', 13, css('--texto'))));
+  const padL = Math.min(W * 0.42, Math.ceil(maiorNome) + 12), padR = 44, padT = 10, padB = 34, alt = 26;
+  const H = padT + linhas.length*alt + padB;
+  const lim = Math.max(1.5, ...linhas.flatMap(l => l.vals.filter(v => v != null).map(Math.abs)));
+  const esc = Math.ceil(lim*2)/2;
+  const X = v => padL + ((v + esc)/(2*esc))*(W - padL - padR);
+
+  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img'});
+  const ajustesV = [];
+  // no celular, 5 marcas no eixo viram uma tarja ilegível: ficam 3
+  const passoV = estreito ? esc : esc/2;
+  for (let v = -esc; v <= esc + 1e-9; v += passoV) {
+    const zero = Math.abs(v) < 1e-9;
+    svg.appendChild(svgEl('line', {x1: X(v), x2: X(v), y1: padT, y2: H-padB,
+      stroke: zero ? css('--axis') : css('--grid'), 'stroke-width': 1}));
+    const l = svgEl('text', {x: X(v), y: H-padB+19, 'text-anchor':'middle', class:'tick'});
+    l.textContent = (v > 0 ? '+' : '') + nd(v); svg.appendChild(l);
+  }
+  linhas.forEach((ln, i) => {
+    const y = padT + i*alt + alt/2;
+    const g = svgEl('g', {});
+    if (anima) { g.classList.add('surge'); g.style.animationDelay = (i*24) + 'ms'; }
+    const lb = svgEl('text', {x: padL-12, y: y+4, 'text-anchor':'end', class:'catlabel'});
+    lb.textContent = MAI(ln.inst);
+    ajustesV.push({lb});
+    g.appendChild(lb);
+    const vv = ln.vals.filter(v => v != null);
+    if (vv.length === 2) g.appendChild(svgEl('line', {x1: X(vv[0]), x2: X(vv[1]), y1: y, y2: y,
+      stroke: css('--axis'), 'stroke-width': 1.5, 'stroke-linecap':'round'}));
+    ln.vals.forEach((v, j) => { if (v == null) return;
+      g.appendChild(svgEl('circle', {cx: X(v), cy: y, r: 5, fill: corDe(foco[j]),
+        stroke: css('--sunken'), 'stroke-width': 2})); });
+    const hit = svgEl('rect', {x:0, y: padT+i*alt, width: W, height: alt, fill:'transparent'});
+    hit.addEventListener('pointerenter', () => dica(tip, host, W/2, y,
+      `<b>${MAI(ln.inst)}</b>` + linhasDica(foco.map((f,j) => ({nome: f, v: ln.vals[j] ?? 0, cor: corDe(f)})))
+        .replace(/(\d)%/g, '$1 p.p.') + `<div class="n">desvio médio em relação às outras pesquisas do mesmo dia</div>`));
+    hit.addEventListener('pointerleave', () => semDica(tip));
+    g.appendChild(hit);
+    svg.appendChild(g);
+  });
+  host.appendChild(svg);
+  encaixaRotulos(ajustesV, padL);
+}
+
+// ---------------------------------------------------------------- tabela ordenável
+function tabela(el, cols, linhas, chave) {
+  el.classList.add('tabwrap');
+  const ord = st.ord[chave] || {col: cols.findIndex(c => c.pad), dir: -1};
+  st.ord[chave] = ord;
+  const dados = linhas.slice().sort((a, b) => {
+    const x = a[ord.col], y = b[ord.col];
+    const nx = typeof x === 'number', ny = typeof y === 'number';
+    if (nx && ny) return (x - y) * ord.dir;
+    return String(x).localeCompare(String(y), 'pt-BR') * ord.dir;
+  });
+  el.innerHTML = '<table><thead><tr>' + cols.map((c, i) =>
+      `<th class="${i === ord.col ? 'ord' + (ord.dir === 1 ? ' asc' : '') : ''}" data-c="${i}" title="Ordenar por ${c.t}">${c.t}</th>`).join('') +
+    '</tr></thead><tbody>' + dados.map((r, ri) =>
+      `<tr style="animation-delay:${Math.min(ri, 14)*18}ms" class="surge">` + r.map((v, i) =>
+        `<td class="${i === ord.col ? 'ord' : ''}">${cols[i].f ? cols[i].f(v, r) : (typeof v === 'number' ? nd(v) : v)}</td>`).join('') + '</tr>').join('') +
+    '</tbody></table>';
+  el.querySelectorAll('th').forEach(th => th.onclick = () => {
+    const c = +th.dataset.c;
+    st.ord[chave] = {col: c, dir: ord.col === c ? -ord.dir : -1};
+    tabela(el, cols, linhas, chave);
+  });
+}
+const celCand = nome => `<span class="celcand">` + (FOTO[nome]
+  ? `<img class="cand-av" src="${FOTO[nome]}" alt="" style="--anel:${corDe(nome)}">`
+  : `<span class="cand-av" style="background:${corDe(nome)}"></span>`) + `${nx(nome)}</span>`;
+
+// ---------------------------------------------------------------- painéis
+function painelT1(anima) {
+  const rows = fat1(), res = resumo1(rows);
+  const nPesq = new Set(rows.map(r => r.ds + '|' + r.i)).size;
+  const nInst = new Set(rows.map(r => r.i)).size;
+  const lider = res[0], vice = res[1];
+  const mgMedia = res.length ? res.reduce((a,r) => a + (r.margem||0), 0) / res.filter(r => r.margem).length : null;
+
+  $('painel').innerHTML = `
+    <div class="tiles anim-sobe">
+      <div class="tile"><div class="k">Pesquisas</div><div class="v" data-num="${nPesq}">0</div><div class="s">${nInst} institutos</div></div>
+      <div class="tile"><div class="k">Líder</div><div class="v" data-num="${lider?lider.media:0}" data-suf="%">0</div><div class="s">${lider?nx(lider.nome):'–'}</div></div>
+      <div class="tile"><div class="k">Vantagem</div><div class="v" data-num="${lider&&vice?lider.media-vice.media:0}" data-suf=" p.p.">0</div><div class="s">sobre ${vice?nx(vice.nome):'–'}</div></div>
+      <div class="tile"><div class="k">Margem de erro</div><div class="v" data-num="${mgMedia||0}" data-pre="±" data-suf=" p.p.">0</div><div class="s">${lider&&mgMedia?'±'+nd(mgMedia/lider.media*100)+'% do valor do líder':'média das pesquisas'}</div></div>
+    </div>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Evolutivo do 1º turno</h2>
+        <p class="sub">Média das pesquisas de cada dia. Linha cheia suaviza 5 dias quando há série longa; a clara é o dia cru. Clique na legenda para isolar.</p></div></div>
+      <div class="plot" id="p-linha"><div class="tip" id="tip-linha"></div></div>
+      <div class="legenda" id="leg-linha"></div>
+      <div id="tab-linha" hidden></div>
+      <p class="nota">Cenários de 1º turno fechados, testados só a partir de agosto de 2026.</p>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Comparação entre candidatos</h2>
+        <p class="sub">Média no período, com a faixa entre o menor e o maior resultado dos institutos.</p></div></div>
+      ${Object.keys(SITUACAO).filter(n => res.some(r => r.nome === n)).map(n =>
+        `<div class="aviso alerta"><span><b>${nx(n)}</b> aparece nas pesquisas, mas não está na urna.</span> ${SITUACAO[n].d}</div>`).join('')}
+      <div class="plot" id="p-barra"><div class="tip" id="tip-barra"></div></div>
+      <div id="tab-barra" hidden></div>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Viés de casa</h2>
+        <p class="sub">Quanto cada instituto mede acima ou abaixo das outras pesquisas do mesmo dia, em pontos percentuais. Zero é o consenso do dia.</p></div></div>
+      <div class="plot" id="p-vies"><div class="tip" id="tip-vies"></div></div>
+      <div class="legenda" id="leg-vies"></div>
+      <p class="nota">Só entram dias com duas ou mais pesquisas — sem comparação no mesmo dia não há desvio a medir.</p>
+    </section>`;
+
+  const topN = res.slice(0, N_LINHAS()).map(r => r.nome);
+  const s = serieDiaria(rows, topN);
+  const series = topN.map(n => ({nome: n, cor: corDe(n), traco: tracoDe(n), pts: s[n], on: !st.off.has(n)}));
+
+  if (st.tabela) {
+    $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
+    $('p-barra').hidden = true; $('tab-barra').hidden = false;
+    const dias = [...new Set(Object.values(s).flat().map(p => +p.d))].sort();
+    tabela($('tab-linha'), [{t:'Dia'}, ...topN.map(n => ({t:nx(n)}))],
+      dias.map(t => [dBR(new Date(t)), ...topN.map(n => { const p = s[n].find(q => +q.d === t); return p ? p.v : null; })]), 'linha');
+    tabela($('tab-barra'), [
+      {t:'Candidato', f: v => celCand(v)}, {t:'Partido', f: v => MAI(v)}, {t:'Média %'}, {t:'Mín %'}, {t:'Máx %'},
+      {t:'Margem p.p.'}, {t:'Pesquisas', pad:true, f: v => ni(v)}],
+      res.map(r => [r.nome, PARTIDO[r.nome]||'', r.media, r.min, r.max, r.margem, r.n]), 'barra');
+  } else {
+    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima});
+    legenda($('leg-linha'), series, true);
+    desenhaBarras($('p-barra'), $('tip-barra'), res, {anima});
+  }
+  const vies = viesDeCasa(rows);
+  desenhaVies($('p-vies'), $('tip-vies'), vies, anima);
+  legenda($('leg-vies'), vies.foco.map(f => ({nome: f, cor: corDe(f), on: true})), false);
+  contaNumeros();
+}
+
+function painelT2(anima) {
+  const rows = fat2();
+  const par = [st.a, st.b].sort();
+  const doDuelo = rows.filter(r => [r.a, r.b].sort().join('||') === par.join('||'));
+  const agrup = new Map();
+  rows.forEach(r => { const k = [r.a, r.b].sort().join('||');
+    const a = agrup.get(k) || {a: r.a, b: r.b, sa:0, sb:0, n:0};
+    if (a.a === r.a) { a.sa += r.va; a.sb += r.vb; } else { a.sa += r.vb; a.sb += r.va; }
+    a.n++; agrup.set(k, a); });
+  const comp = [...agrup.values()].map(x => ({a:x.a, b:x.b, va:x.sa/x.n, vb:x.sb/x.n, n:x.n}))
+    .sort((x,y) => y.n - x.n);
+  const nSim = rows.length;
+  const atual = comp.find(c => [c.a,c.b].sort().join('||') === par.join('||'));
+  // os tiles e o título seguem quem está à frente, não a ordem dos seletores
+  const vDe = nome => !atual ? 0 : (atual.a === nome ? atual.va : atual.vb);
+  const dupla = [st.a, st.b].sort((x, y) => vDe(y) - vDe(x));
+
+  $('painel').innerHTML = `
+    <div class="tiles anim-sobe">
+      <div class="tile"><div class="k">Simulações</div><div class="v" data-num="${nSim}">0</div><div class="s">${comp.length} duelos distintos</div></div>
+      <div class="tile"><div class="k">${nx(dupla[0])||'–'}</div><div class="v" data-num="${vDe(dupla[0])}" data-suf="%">0</div><div class="s">no duelo selecionado</div></div>
+      <div class="tile"><div class="k">${nx(dupla[1])||'–'}</div><div class="v" data-num="${vDe(dupla[1])}" data-suf="%">0</div><div class="s">no duelo selecionado</div></div>
+      <div class="tile"><div class="k">Diferença</div><div class="v" data-num="${atual?Math.abs(atual.va-atual.vb):0}" data-suf=" p.p.">0</div><div class="s">${atual? nx(dupla[0])+' à frente' : '–'}</div></div>
+    </div>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Evolutivo do duelo</h2>
+        <p class="sub">${nx(dupla[0])} × ${nx(dupla[1])}, média das pesquisas de cada dia. A área sombreada é a diferença entre os dois.</p></div></div>
+      <div class="plot" id="p-linha"><div class="tip" id="tip-linha"></div></div>
+      <div class="legenda" id="leg-linha"></div>
+      <div id="tab-linha" hidden></div>
+      <p class="nota">${doDuelo.length} simulações deste duelo no período. Troque os nomes no filtro acima.</p>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Todos os duelos</h2>
+        <p class="sub">Média de cada confronto no período, ordenado por quantidade de simulações.</p></div></div>
+      <div class="plot" id="p-barra"><div class="tip" id="tip-barra"></div></div>
+      <div id="tab-barra" hidden></div>
+    </section>`;
+
+  const porDia = new Map();
+  doDuelo.forEach(r => { const A = r.a === par[0] ? r.va : r.vb, B = r.a === par[0] ? r.vb : r.va;
+    const a = porDia.get(r.ds) || {d: r.d, sa:0, sb:0, n:0}; a.sa += A; a.sb += B; a.n++; porDia.set(r.ds, a); });
+  const dias = [...porDia.values()].sort((x,y) => x.d - y.d);
+  const series = [
+    {nome: par[0], cor: corDe(par[0]), traco: tracoDe(par[0]), on: true, pts: dias.map(x => ({d:x.d, v:x.sa/x.n, n:x.n}))},
+    {nome: par[1], cor: corDe(par[1]), traco: tracoDe(par[1]), on: true, pts: dias.map(x => ({d:x.d, v:x.sb/x.n, n:x.n}))}
+  ].sort((x,y) => (y.pts.length?y.pts[y.pts.length-1].v:0) - (x.pts.length?x.pts[x.pts.length-1].v:0));
+
+  if (st.tabela) {
+    $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
+    $('p-barra').hidden = true; $('tab-barra').hidden = false;
+    tabela($('tab-linha'), [{t:'Dia'}, {t:nx(series[0].nome)+' %'}, {t:nx(series[1].nome)+' %'}, {t:'Pesquisas', pad:true, f: v=>ni(v)}],
+      dias.map(x => [dBR(x.d), (x.sa/x.n), (x.sb/x.n), x.n].map((v,i) => i===1||i===2 ? (series[0].nome===par[0] ? v : v) : v)), 'linha2');
+    tabela($('tab-barra'), [{t:'Duelo', f: (v,r) => celCand(r[6]) + ' × ' + nx(r[7])},
+      {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Simulações', pad:true, f: v=>ni(v)}, {t:''}, {t:''}, {t:''}],
+      comp.map(c => { const hi = c.va >= c.vb ? c.a : c.b, lo = c.va >= c.vb ? c.b : c.a;
+        const vh = Math.max(c.va, c.vb), vl = Math.min(c.va, c.vb);
+        return [hi+' × '+lo, vh, vl, vh-vl, c.n, '', hi, lo]; }), 'barra2');
+  } else {
+    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, faixa: true});
+    legenda($('leg-linha'), series, false);
+    desenhaBarras($('p-barra'), $('tip-barra'), comp, {anima, par: true});
+  }
+  contaNumeros();
+}
+
+function painelInst(anima) {
+  const [ini, fim] = [st.ini, st.fim];
+  const lista = INST.filter(x => !st.inst || x.nm === st.inst);
+  const totQt = lista.reduce((a,x) => a + x.qt, 0);
+  const totVr = lista.reduce((a,x) => a + x.vr, 0);
+  const totEnt = lista.reduce((a,x) => a + x.ent, 0);
+  const custo = totEnt ? totVr/totEnt : null;
+
+  $('painel').innerHTML = `
+    <div class="tiles anim-sobe">
+      <div class="tile"><div class="k">Pesquisas registradas</div><div class="v" data-num="${totQt}">0</div><div class="s">${lista.length} institutos</div></div>
+      <div class="tile"><div class="k">Investimento declarado</div><div class="v" data-num="${totVr}" data-moeda="1" data-compacto="1">0</div><div class="s">${moeda(totVr)} declarados ao TSE</div></div>
+      <div class="tile"><div class="k">Entrevistas</div><div class="v" data-num="${totEnt}">0</div><div class="s">soma das amostras</div></div>
+      <div class="tile"><div class="k">Custo por entrevista</div><div class="v" data-num="${custo||0}" data-moeda="1" data-dec="2">0</div><div class="s">total investido ÷ entrevistas</div></div>
+    </div>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Evolutivo do mercado de pesquisas</h2>
+        <p class="sub">Registros no TSE por mês. Cada linha está na própria escala: 100% é o mês de pico dela. Passe o mouse para ver os números absolutos.</p></div></div>
+      <div class="plot" id="p-mes"><div class="tip" id="tip-mes"></div></div>
+      <div class="legenda" id="leg-mes"></div>
+      <p class="nota">Este painel usa o registro obrigatório no TSE — universo diferente das abas de 1º e 2º turno, que vêm do que os institutos divulgaram.</p>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Institutos</h2>
+        <p class="sub">Clique em qualquer cabeçalho para reordenar. A coluna destacada é a que está ordenando. Passe o mouse no nome para ver quem é a empresa.</p></div></div>
+      <div id="tab-inst"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Quem são</h2>
+        <p class="sub">Quem faz as pesquisas que aparecem nas abas de 1º e 2º turno: quando a empresa surgiu, quem dirige e como ela coleta as respostas.</p></div></div>
+      <div class="fichas" id="fichas"></div>
+      <p class="nota">Método de coleta muda resultado: entrevista na rua, ligação, URA e painel online alcançam gente diferente. Por isso dois institutos podem medir o mesmo dia e chegar a números distintos — é o que o gráfico de viés de casa mostra na aba de 1º turno.</p>
+    </section>`;
+
+  const porMes = new Map();
+  IMES.filter(x => !st.inst || x.nm === st.inst).forEach(x => {
+    const a = porMes.get(x.m) || {m: x.m, qt: 0, vr: 0}; a.qt += x.qt; a.vr += x.vr; porMes.set(x.m, a); });
+  const meses = [...porMes.values()].sort((a,b) => a.m.localeCompare(b.m));
+  const maxQt = Math.max(1, ...meses.map(x => x.qt)), maxVr = Math.max(1, ...meses.map(x => x.vr));
+  const series = [
+    {nome: 'Pesquisas', cor: css('--c1'), traco: '', on: true,
+     pts: meses.map(x => ({d: pd(x.m + '-01'), v: x.qt/maxQt*100, n: x.qt, bruto: x.qt}))},
+    {nome: 'Valor declarado', cor: css('--c2'), traco: '4 3', on: true,
+     pts: meses.map(x => ({d: pd(x.m + '-01'), v: x.vr/maxVr*100, n: x.qt, bruto: x.vr}))}
+  ];
+  desenhaLinhas($('p-mes'), $('tip-mes'), series, {anima, passoY: 25, maxY: 100});
+  legenda($('leg-mes'), series, false);
+  $('leg-mes').insertAdjacentHTML('beforeend',
+    `<span class="nota" style="margin:0 0 0 auto">pico: ${ni(maxQt)} pesquisas · ${moeda(maxVr)}</span>`);
+
+  // fichas: só institutos com perfil pesquisado, ordenados pelo que registraram
+  const comInfo = [];
+  const vistos = new Set();
+  lista.slice().sort((a,b) => b.qt - a.qt).forEach(x => {
+    const inf = infoDe(x.nm);
+    if (inf && !vistos.has(inf.n)) { vistos.add(inf.n); comInfo.push({inf, d: x}); }
+  });
+  $('fichas').innerHTML = comInfo.map(({inf, d}, i) => `
+    <div class="ficha surge" style="animation-delay:${Math.min(i,12)*30}ms">
+      <h3>${MAI(inf.n)}</h3>
+      <p>${inf.d}</p>
+      <div class="num"><span><b>${ni(d.qt)}</b> pesquisas</span><span><b>${ni(d.pres)}</b> presidenciais</span>
+        <span><b>${ni(d.ent)}</b> entrevistas</span><span>fonte: ${inf.f}</span></div>
+    </div>`).join('')
+    || '<p class="nota">Nenhum instituto com perfil pesquisado no recorte atual.</p>';
+
+  tabela($('tab-inst'), [
+    {t:'Instituto', f: v => `<span class="qinst${infoDe(v) ? '' : ' sem'}" data-i="${v.replace(/"/g,'&quot;')}">${MAI(v)}</span>`},
+    {t:'Pesquisas', pad:true, f: v => ni(v)},
+    {t:'Presidência', f: v => ni(v)},
+    {t:'Próprias', f: v => nd(v) + '%'},
+    {t:'Investimento', f: v => moeda(v)},
+    {t:'Entrevistas', f: v => ni(v)},
+    {t:'Custo/entrev.', f: v => v ? moeda(v) : '–'},
+    {t:'Com alerta', f: v => ni(v)}],
+    lista.map(x => [x.nm, x.qt, x.pres, x.qt ? x.prop/x.qt*100 : 0, x.vr, x.ent,
+                    x.ent ? x.vr/x.ent : 0, x.al]), 'inst');
+  contaNumeros();
+}
+
+function painelProp() {
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const AGENDA = [
+    ['2026-08-15', 'Prazo final de registro de candidatura', 'O plano de governo é entregue junto com o pedido de registro. É daqui que saem os PDFs abaixo.'],
+    ['2026-09-27', 'Debate Record + Estadão', 'Confirmado.'],
+    ['2026-10-01', 'Debate TV Globo, após o Jornal Nacional', 'Confirmado.'],
+    ['2026-10-04', '1º turno', ''],
+    ['2026-10-25', '2º turno, se houver', '']
+  ].map(([d, t, o]) => ({d: pd(d), t, o}));
+  const ordem = c => SLOT[c.n] ?? 99;
+  const cands = PROP.cands.slice().sort((a, b) => ordem(a) - ordem(b));
+  const total = cands.reduce((a, c) => a + c.i.length, 0);
+
+  $('painel').innerHTML = `
+    <div class="tiles anim-sobe">
+      <div class="tile"><div class="k">Planos de governo</div><div class="v" data-num="${cands.length}">0</div><div class="s">lidos do PDF no TSE</div></div>
+      <div class="tile"><div class="k">Propostas listadas</div><div class="v" data-num="${total}">0</div><div class="s">${PROP.temas.length} temas</div></div>
+      <div class="tile"><div class="k">Menor plano</div><div class="v" data-num="${Math.min(...cands.map(c => c.pg))}" data-suf=" pág."></div><div class="s">${nx(cands.reduce((a,c) => c.pg < a.pg ? c : a).n)}</div></div>
+      <div class="tile"><div class="k">Maior plano</div><div class="v" data-num="${Math.max(...cands.map(c => c.pg))}" data-suf=" pág."></div><div class="s">${nx(cands.reduce((a,c) => c.pg > a.pg ? c : a).n)}</div></div>
+    </div>
+
+    <section class="card">
+      <div class="card-topo">
+        <div><h2>O que cada candidatura propõe</h2>
+          <p class="sub">Trechos do plano de governo que cada candidatura protocolou no TSE até 15/08/2026. Cada item leva ao PDF original.</p></div>
+        <div class="card-acoes"><div class="seg" role="group" aria-label="Organizar por">
+          <button type="button" id="pv-tema" aria-pressed="true">Por tema</button>
+          <button type="button" id="pv-cand" aria-pressed="false">Por candidato</button>
+        </div></div>
+      </div>
+      <div id="prop-corpo"></div>
+      <p class="nota">Texto descritivo do que o documento propõe, sem juízo de valor e sem avaliação de viabilidade. Um plano pode ser substituído durante a campanha; quando há mais de uma versão protocolada, vale a mais recente.</p>
+    </section>
+
+    <section class="card">
+      <div class="card-topo"><div><h2>Calendário</h2>
+        <p class="sub">Onde as propostas são defendidas em público até a votação.</p></div></div>
+      <div class="linhatempo">
+        ${AGENDA.map(a => {
+          const passou = a.d < hoje, dias = Math.round((a.d - hoje)/864e5);
+          return `<div class="etapa${passou ? ' passou' : ''}">
+            <div class="quando"><b>${dBR(a.d)}</b><span>${passou ? 'já ocorreu' : dias === 0 ? 'hoje' : 'em ' + dias + ' dia' + (dias > 1 ? 's' : '')}</span></div>
+            <div class="oque"><b>${a.t}</b>${a.o ? `<p>${a.o}</p>` : ''}</div></div>`;
+        }).join('')}
+      </div>
+    </section>`;
+
+  const chip = c => `<a class="pchip" href="${c.u}" target="_blank" rel="noopener" title="${c.pg} páginas — abrir o PDF no TSE">
+      ${FOTO[c.n] ? `<img class="cand-av" src="${FOTO[c.n]}" alt="" style="--anel:${corDe(c.n)}">`
+                  : `<span class="cand-av" style="background:${corDe(c.n)}"></span>`}
+      <span class="nm">${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span></a>`;
+
+  function porTema() {
+    $('prop-corpo').innerHTML = PROP.temas.map((t, k) => {
+      const linhas = cands.flatMap(c => c.i.filter(x => x.t === t).map(x => ({c, x})));
+      if (!linhas.length) return '';
+      return `<section class="tema surge" style="animation-delay:${Math.min(k,8)*30}ms">
+        <h3>${MAI(t)}<span>${linhas.length}</span></h3>
+        ${linhas.map(({c, x}) => `<div class="pitem">${chip(c)}<p>${x.x}</p></div>`).join('')}
+      </section>`;
+    }).join('');
+  }
+  function porCandidato() {
+    $('prop-corpo').innerHTML = cands.map((c, k) => `
+      <section class="tema surge" style="animation-delay:${Math.min(k,8)*30}ms">
+        <h3>${chip(c)}<span>${c.pg} pág.</span></h3>
+        ${c.obs ? `<p class="nota" style="margin:0 0 var(--e3)">${c.obs}</p>` : ''}
+        ${c.i.map(x => `<div class="pitem"><span class="ptema">${MAI(x.t)}</span><p>${x.x}</p></div>`).join('')}
+      </section>`).join('');
+  }
+  const troca = tema => {
+    $('pv-tema').setAttribute('aria-pressed', tema);
+    $('pv-cand').setAttribute('aria-pressed', !tema);
+    tema ? porTema() : porCandidato();
+  };
+  $('pv-tema').onclick = () => troca(true);
+  $('pv-cand').onclick = () => troca(false);
+  troca(true);
+  contaNumeros();
+}
+
+function legenda(el, series, clicavel) {
+  el.innerHTML = '';
+  series.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('aria-pressed', s.on !== false);
+    const est = s.traco ? `border-top-color:${s.cor}` : `background:${s.cor}`;
+    b.innerHTML = `<i class="sw${s.traco ? ' tr' : ''}" style="${est};${s.traco?'width:16px;border-top-style:dashed':''}"></i>${nx(s.nome)}`;
+    if (clicavel) b.onclick = () => { s.on ? st.off.add(s.nome) : st.off.delete(s.nome); desenha(); };
+    else b.disabled = true;
+    el.appendChild(b);
+  });
+}
+
+// contagem animada dos números-herói
+function contaNumeros() {
+  const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-num]').forEach(el => {
+    const alvo = +el.dataset.num, dec = el.dataset.dec ? +el.dataset.dec : (alvo % 1 ? 1 : 0);
+    const pre = el.dataset.pre || '', suf = el.dataset.suf || '';
+    const fmt = v => el.dataset.moeda
+      ? (el.dataset.compacto && Math.abs(alvo) >= 1e6 ? 'R$ ' + nd(v/1e6) + ' mi'
+        : dec ? 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : moeda(v))
+      : pre + (dec ? nd(v, dec) : ni(v)) + suf;
+    if (reduz || !alvo) { el.textContent = fmt(alvo); return; }
+    const t0 = performance.now(), dur = 520;
+    const passo = t => { const k = Math.min(1, (t - t0)/dur); const e = 1 - Math.pow(1-k, 3);
+      el.textContent = fmt(alvo*e); if (k < 1) requestAnimationFrame(passo); };
+    requestAnimationFrame(passo);
+  });
+}
+
+// ---------------------------------------------------------------- dica de instituto
+// Passar o mouse no nome mostra quem é a empresa e o que ela registrou no TSE.
+// Sem descrição pesquisada, a dica mostra só os números — não inventa perfil.
+const PORNOME = new Map(INST.map(x => [x.nm, x]));
+function dicaInst(el) {
+  const nome = el.dataset.i, inf = infoDe(nome), d = PORNOME.get(nome);
+  const cx = $('tip-inst');
+  const linhas = d ? `<div class="row"><span>Pesquisas registradas</span><span class="num">${ni(d.qt)}</span></div>`
+      + `<div class="row"><span>Para Presidência</span><span class="num">${ni(d.pres)}</span></div>`
+      + `<div class="row"><span>Entrevistas</span><span class="num">${ni(d.ent)}</span></div>`
+      + `<div class="row"><span>Investimento declarado</span><span class="num">${moeda(d.vr)}</span></div>`
+      + `<div class="n">Registros de ${dBR(pd(d.d1))} a ${dBR(pd(d.d2))}${d.al ? ' · ' + ni(d.al) + ' com alerta de qualidade' : ''}</div>`
+    : '';
+  cx.innerHTML = `<b>${MAI(nome)}</b>`
+    + (inf ? `<div class="d">${inf.d}</div><div class="f">fonte: ${inf.f}</div>` : '')
+    + (linhas ? `<div class="d" style="margin-top:10px">${linhas}</div>` : '')
+    + (inf ? '' : '<div class="f">Sem perfil público verificado. Os números acima vêm do registro obrigatório no TSE.</div>');
+  cx.hidden = false;
+  const r = el.getBoundingClientRect(), c = cx.getBoundingClientRect();
+  let x = r.left, y = r.bottom + 8;
+  if (x + c.width > innerWidth - 12) x = innerWidth - c.width - 12;
+  if (y + c.height > innerHeight - 12) y = r.top - c.height - 8;
+  cx.style.left = Math.max(12, x) + 'px'; cx.style.top = Math.max(12, y) + 'px';
+}
+document.addEventListener('pointerover', e => {
+  const el = e.target.closest && e.target.closest('.qinst');
+  if (el) dicaInst(el); else if (!e.target.closest || !e.target.closest('#tip-inst')) $('tip-inst').hidden = true;
+});
+document.addEventListener('scroll', () => { $('tip-inst').hidden = true; }, true);
+
+// ---------------------------------------------------------------- render
+function desenha(soRedesenho) {
+  const t1 = st.aba === 't1', t2 = st.aba === 't2';
+  // instituto: opções conforme a aba
+  const sel = $('sel-inst');
+  const fonte = t2 ? [...new Set(D2.map(r => r.i))] : st.aba === 'inst' ? INST.map(x => x.nm) : [...new Set(V1.map(r => r.i))];
+  const opcoes = fonte.sort((a,b) => a.localeCompare(b,'pt-BR'));
+  if (sel.dataset.aba !== st.aba) {
+    bInst.opcoes = opcoes;
+    sel.dataset.aba = st.aba;
+    // instituto que não pesquisou nesta aba não pode continuar filtrando
+    if (st.inst && !opcoes.includes(st.inst)) st.inst = '';
+    sel.value = st.inst;
+    $('limpa-inst').hidden = !st.inst;
+    if (bInst.aberto) listaInst(sel.value);
+  }
+  sel.title = `${opcoes.length} institutos — digite para filtrar`;
+  if (t2) {
+    const nomes = [...new Set(D2.flatMap(r => [r.a, r.b]))].sort((a,b) => (SLOT[a]??99)-(SLOT[b]??99));
+    if (!st.a || !st.b) { st.a = DUELO_PADRAO[0]; st.b = DUELO_PADRAO[1]; }
+    [['sel-a','a'], ['sel-b','b']].forEach(([id, k]) => {
+      const s = $(id); if (s.dataset.pronto !== '1') { s.innerHTML = nomes.map(n => `<option value="${n}">${nx(n)}</option>`).join('');
+        s.dataset.pronto = '1'; } s.value = st[k]; });
+  }
+  const av = $('aviso');
+  av.innerHTML = st.inst
+    ? `Mostrando só <b style="font-weight:600">${MAI(st.inst)}</b>. Os números deixam de ser média entre institutos.`
+    : `Sem instituto selecionado: todo percentual é a <b style="font-weight:600">média das pesquisas</b> do período.`;
+
+  const anima = !soRedesenho && !st.animou[st.aba];
+  st.animou[st.aba] = true;
+  if (t1) painelT1(anima); else if (t2) painelT2(anima);
+  else if (st.aba === 'inst') painelInst(anima); else painelProp();
+}
+
+// ================================================================ CONTADOR: INICIO
+// Bloco substituído pela publicação automática. Duas formas de o contador aparecer:
+//
+// CONTADOR_HIT   — URL chamada UMA vez por aparelho, na primeira visita. É ela que soma.
+// CONTADOR_GET   — URL que só lê o total, sem somar. Usada nas visitas seguintes do mesmo
+//                  aparelho e pela tarefa diária que republica o artifact.
+//                  As duas só funcionam no site (GitHub Pages): o artifact do claude.ai é
+//                  isolado da rede e nenhuma chamada externa sai de lá.
+// CONTADOR_TOTAL — número gravado no arquivo na hora de publicar. É assim que o artifact
+//                  consegue mostrar contador: a tarefa diária lê o total e escreve aqui.
+//                  Fica parado até a próxima publicação — por isso o rótulo muda para
+//                  "até <data>" quando o número vem daqui.
+//
+// Os dois juntos: o site mostra o número vivo, o artifact mostra o do último dia.
+// Vazio e zero = sem contador, e o chip nem aparece.
+const CONTADOR_HIT   = '__CONTADOR_HIT__';
+const CONTADOR_GET   = '__CONTADOR_GET__';
+const CONTADOR_TOTAL = __CONTADOR_TOTAL__;
+const CONTADOR_DATA  = '__CONTADOR_DATA__';
+// ================================================================ CONTADOR: FIM
+
+// ---------------------------------------------------------------- contador de alcance
+// Conta APARELHOS, não pessoas: cada navegador gera um id aleatório uma vez e o guarda.
+// Quem limpa o navegador ou abre aba anônima conta de novo; a mesma pessoa no celular e
+// no computador conta duas vezes. É medida de alcance — o rótulo diz isso.
+// O número gravado (CONTADOR_TOTAL) aparece de imediato; se houver endpoint, a chamada
+// viva substitui por um número mais novo. Falha de rede nunca apaga o que já está na tela.
+(function () {
+  const ligado = !!(CONTADOR_HIT || CONTADOR_GET);
+  const mostra = (total, ate) => {
+    // com o contador ligado, zero é um número legítimo e aparece: some só quando não há
+    // serviço de contagem nenhum configurado
+    if (typeof total !== 'number' || total < 0 || (!ligado && total === 0)) return;
+    $('contador').hidden = false;
+    document.querySelector('.topo').classList.add('com-contador');
+    $('contador-n').textContent = ni(total);
+    // no estreito o rótulo fica curto para caber no canto; a data continua no title
+    $('contador-rot').textContent = (ate && innerWidth > 800)
+      ? 'aparelhos até ' + dBR(pd(ate)).slice(0, 5)   // dd/mm; o ano inteiro vai no title
+      : 'aparelhos';
+    $('contador').title = ni(total) + ' aparelhos distintos já abriram o painel'
+      + (ate ? ', número apurado em ' + dBR(pd(ate)) + ' e atualizado uma vez por dia' : '')
+      + '. Conta navegador, não pessoa: limpar os dados ou abrir em aba anônima conta de novo.'
+      + (total === 0 ? ' Ainda em zero: a contagem começa quando o painel estiver publicado no endereço público.' : '');
+  };
+
+  mostra(CONTADOR_TOTAL, CONTADOR_DATA);
+
+  if (!CONTADOR_HIT && !CONTADOR_GET) return;
+
+  // A soma é feita no cliente: o aparelho que já veio antes deixou marca aqui e daí em
+  // diante só lê. É isso que transforma "visitas" em "aparelhos distintos".
+  let novo = true;
+  try {
+    novo = !localStorage.getItem('aparelho');
+    if (novo) localStorage.setItem('aparelho', String(Date.now()));
+  } catch (e) { novo = true; }   // navegador sem localStorage conta a cada visita
+
+  const alvo = (novo ? CONTADOR_HIT : CONTADOR_GET) || CONTADOR_GET || CONTADOR_HIT;
+  fetch(alvo, {cache: 'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    // serviços diferentes nomeiam o número de formas diferentes
+    .then(d => { const n = (typeof d.value === 'number') ? d.value : d.total;
+                 if (typeof n === 'number') mostra(n, ''); })
+    .catch(function () {});   // contador fora do ar nunca atrapalha o painel
+})();
+
+// ---------------------------------------------------------------- ressalva do topo
+(function () {
+  const nasPesquisas = [...new Set([...V1.map(r => r.nome), ...D2.flatMap(r => [r.a, r.b])])];
+  const semRegistro = nasPesquisas.filter(n => !REGISTRADOS.includes(n))
+    .sort((a, b) => (SLOT[a] ?? 99) - (SLOT[b] ?? 99));
+  const indeferidos = Object.keys(SITUACAO).filter(n => nasPesquisas.includes(n));
+  const chave = r => [r.a, r.b].sort().join('|');
+  const nDuelos = new Set(D2.filter(r => semRegistro.includes(r.a) || semRegistro.includes(r.b)).map(chave)).size;
+  const totDuelos = new Set(D2.map(chave)).size;
+  if (!semRegistro.length && !indeferidos.length) { $('ressalva').hidden = true; return; }
+
+  $('ressalva-tit').innerHTML = 'Nem todo nome medido nas pesquisas está na urna — '
+    + `<b>${indeferidos.length + semRegistro.length} dos ${nasPesquisas.length}</b> que aparecem aqui não são candidatos hoje.`;
+
+  $('ressalva-corpo').innerHTML =
+    (indeferidos.length ? `<h4>Candidatura indeferida</h4>
+      ${indeferidos.map(n => `<p><b>${nx(n)}</b> — ${SITUACAO[n].d}</p>`).join('')}
+      <p style="margin-top:8px">Os percentuais dele seguem no painel porque foram de fato medidos: referem-se ao período em que ainda estava na disputa. O que mudou é a situação da candidatura, não a pesquisa.</p>` : '')
+    + (semRegistro.length ? `<h4>Testados em cenário, sem candidatura registrada</h4>
+      <p>Instituto testa nome que pode vir a disputar. Estes apareceram em simulação de 2º turno mas não protocolaram registro no TSE até o prazo de 15/08/2026 — <b>${nDuelos} dos ${totDuelos}</b> confrontos do painel envolvem pelo menos um deles. Os números são reais; o cenário é que é hipotético.</p>
+      <div class="nomes">${semRegistro.map(n => `<span>${nx(n)}</span>`).join('')}</div>` : '')
+    + '<p style="margin-top:12px" class="nota">Situação conferida no DivulgaCandContas do TSE. Candidatura pode mudar de status até a votação.</p>';
+})();
+
+// ---------------------------------------------------------------- carimbos
+(function () {
+  const carga = new Date(CARGA_UTC);
+  const horas = (Date.now() - carga)/36e5, velho = horas > 30;
+  const dh = carga.toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+  const idade = horas < 1 ? 'agora há pouco' : horas < 24 ? 'há ' + Math.round(horas) + ' h'
+    : 'há ' + Math.round(horas/24) + ' dia' + (Math.round(horas/24) > 1 ? 's' : '');
+  $('carimbo').classList.toggle('velho', velho);
+  $('carimbo-txt').innerHTML = velho ? `<b>Dado desatualizado</b> — última carga ${idade}`
+    : `Dados da carga de <b>${dh}</b> (${idade})`;
+
+  // A previsão sai do INÍCIO de campo, não do fim: é a data em que o instituto foi a
+  // campo, e é o intervalo entre inícios que descreve o ritmo de divulgação.
+  const ini = pd(CAMPO_INICIO), fim = pd(CAMPO_MAIS_RECENTE);
+  const passo = Math.max(1, CADENCIA_DIAS);
+  const prox = new Date(ini.getTime() + passo*864e5);
+  const periodo = +ini === +fim ? dBR(fim) : `${dBR(ini)} a ${dBR(fim)}`;
+  $('proxima').innerHTML = `Campo mais recente <b>${periodo}</b> · próxima prevista <b>${dBR(prox)}</b>`;
+  $('proxima').title = `Entre um início de campo e o seguinte passam ${passo} dia${passo>1?'s':''}, `
+    + 'na mediana dos últimos 120 dias. A previsão é o último início + esse intervalo.';
+
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const dias = Math.round((new Date('2026-10-04T00:00:00') - hoje)/864e5);
+  $('prazo').innerHTML = dias > 0 ? `<b>${dias}</b> dias para o 1º turno` : '1º turno em 04/10/2026';
+})();
+
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => desenha(true), 150); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => desenha(true));
+
+aplicaTema(le('tema') || 'auto');
+aplicaPaleta(le('paleta') || 'conv');
+trocaAba('t1');
+</script>
