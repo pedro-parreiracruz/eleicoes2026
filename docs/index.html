@@ -414,11 +414,125 @@
                              transition-duration: .01ms !important; }
     .linha-anim { stroke-dashoffset: 0; }
   }
+
+  /* ================================================================ CAPA */
+  body.com-capa { overflow: hidden; }
+  #capa { position: fixed; inset: 0; z-index: 1000; background: var(--plane); color: var(--ink);
+          display: grid; grid-template-rows: 1fr auto; overflow-y: auto;
+          transition: opacity .6s ease, transform .6s ease; }
+  #capa.saindo { opacity: 0; transform: translateX(40px); pointer-events: none; }
+  #capa[hidden] { display: none; }
+  .capa-grade { width: 100%; max-width: 1120px; margin: 0 auto; padding: var(--e7) var(--e5) var(--e5);
+                display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--e7); }
+  .capa-titulo .eyebrow { margin: 0 0 var(--e3); white-space: nowrap; display: block; max-width: none; }
+  .capa-titulo h1 { font-family: var(--texto); font-weight: 700; font-size: clamp(30px, 5vw, 60px);
+                    line-height: 1.02; letter-spacing: -0.03em; margin: 0; }
+  .capa-titulo p { margin: var(--e4) 0 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; max-width: 30ch; }
+  .capa-pessoa { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--e4); }
+  .capa-foto { width: 200px; height: 200px; border-radius: 50%; overflow: hidden; background: var(--sunken);
+               box-shadow: 0 0 0 1px var(--hair), 0 0 0 10px var(--surface), 0 0 0 11px var(--hair);
+               display: grid; place-items: center; }
+  .capa-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .capa-foto .ini { font-family: var(--texto); font-weight: 700; font-size: 56px; color: var(--ink-2); letter-spacing: -0.02em; }
+  .capa-nome { font-family: var(--texto); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; margin: var(--e2) 0 0; }
+  .capa-papel { font-family: var(--numero); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .capa-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--e2);
+                justify-self: end; width: min(100%, 280px); }
+  .capa-links a { display: flex; align-items: center; gap: var(--e3); padding: var(--e3) var(--e4);
+                  background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+                  color: var(--ink); text-decoration: none; transition: border-color .15s, transform .15s; }
+  .capa-links a:hover { border-color: var(--ink-2); transform: translateX(4px); }
+  .capa-links a:focus-visible, .capa-botao:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .capa-links .rede { font-weight: 600; font-size: 14.5px; }
+  .capa-links .end { font-family: var(--numero); font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .capa-links .txt { display: flex; flex-direction: column; min-width: 0; }
+  .capa-links .seta { margin-left: auto; font-family: var(--numero); color: var(--muted); flex: none; }
+  .capa-rodape { display: flex; justify-content: center; padding: var(--e5) var(--e5) var(--e7); }
+  .capa-botao { font-family: var(--numero); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+                background: var(--ink); color: var(--plane); border: 0; border-radius: var(--r);
+                padding: var(--e4) var(--e6); cursor: pointer; transition: transform .15s, opacity .15s; }
+  .capa-botao:hover { transform: translateY(-2px); }
+  /* entrada: da esquerda para a direita, com fade, um bloco depois do outro */
+  .capa-anima { opacity: 0; transform: translateX(-32px); animation: capa-entra .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  .capa-anima.a2 { animation-delay: .18s; } .capa-anima.a3 { animation-delay: .36s; } .capa-anima.a4 { animation-delay: .6s; }
+  @keyframes capa-entra { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .capa-anima { animation: none; opacity: 1; transform: none; }
+    #capa { transition: opacity .2s; } #capa.saindo { transform: none; }
+  }
+  @media (max-width: 860px) {
+    .capa-grade { grid-template-columns: 1fr; gap: var(--e6); padding: var(--e6) var(--e4) var(--e4); text-align: center; }
+    .capa-titulo p { margin-left: auto; margin-right: auto; }
+    .capa-pessoa { order: -1; }
+    .capa-foto { width: 148px; height: 148px; }
+    .capa-links { justify-self: center; text-align: left; }
+    .capa-botao { width: 100%; max-width: 360px; font-size: 12px; letter-spacing: .06em; padding: var(--e4) var(--e3); }
+    .capa-titulo h1 { font-size: clamp(26px, 7.4vw, 44px); }
+  }
 </style>
 
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs><clipPath id="clip-av" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath></defs>
 </svg>
+
+<!-- ================================================================ CAPA
+     Tela de abertura. Fica por cima do painel ate o clique no botao; o painel carrega
+     por baixo normalmente. Link direto para o painel, sem capa: termine a URL com #painel. -->
+<section id="capa" aria-label="Capa">
+  <div class="capa-grade">
+    <div class="capa-titulo capa-anima">
+      <p class="eyebrow">Eleições 2026 · Presidência</p>
+      <h1>Corrida Presidencial de 2026</h1>
+      <p>Pesquisas de intenção de voto, duelos de 2º turno, mercado de pesquisas e planos de governo, direto das fontes oficiais.</p>
+    </div>
+    <div class="capa-pessoa capa-anima a2">
+      <div class="capa-foto" id="capa-foto"><span class="ini">PP</span></div>
+      <div>
+        <p class="capa-nome" id="capa-nome">Pedro Parreira</p>
+        <p class="capa-papel">dados · BI · engenharia de dados</p>
+      </div>
+    </div>
+    <ul class="capa-links capa-anima a3" id="capa-links"></ul>
+  </div>
+  <div class="capa-rodape capa-anima a4">
+    <button type="button" class="capa-botao" id="capa-botao">Clique aqui para acessar o report</button>
+  </div>
+</section>
+<script>
+// ================================================================ CAPA: DADOS
+const CAPA_FOTO = '';   // data:image/... da foto; vazio mostra as iniciais
+const CAPA_LINKS = [
+  ['LinkedIn', ''],
+  ['YouTube',  'https://www.youtube.com/@pedroparreira1'],
+  ['GitHub',   'https://github.com/pedro-parreiracruz'],
+];
+// ================================================================ CAPA: FIM
+(function () {
+  const capa = document.getElementById('capa');
+  if (/^#painel$/i.test(location.hash)) { capa.hidden = true; return; }
+  document.body.classList.add('com-capa');
+  if (CAPA_FOTO) {
+    const img = new Image(); img.alt = 'Foto de ' + document.getElementById('capa-nome').textContent; img.src = CAPA_FOTO;
+    const box = document.getElementById('capa-foto'); box.textContent = ''; box.appendChild(img);
+  }
+  const ul = document.getElementById('capa-links');
+  CAPA_LINKS.filter(l => l[1]).forEach(([rede, url]) => {
+    const li = document.createElement('li'), a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = '<span class="txt"><span class="rede"></span><span class="end"></span></span><span class="seta">↗</span>';
+    a.querySelector('.rede').textContent = rede;
+    a.querySelector('.end').textContent = url.replace(/^https?:\/\/(www\.)?/, '');
+    li.appendChild(a); ul.appendChild(li);
+  });
+  const botao = document.getElementById('capa-botao');
+  botao.addEventListener('click', () => {
+    capa.classList.add('saindo');
+    document.body.classList.remove('com-capa');
+    window.scrollTo(0, 0);
+    setTimeout(() => { capa.hidden = true; }, 650);
+  });
+})();
+</script>
 
 <div class="tip" id="tip-inst" hidden></div>
 
