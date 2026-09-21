@@ -180,3 +180,14 @@ jobs:
           name: dbt-target
           path: target/
           if-no-files-found: ignore
+
+  # Depois do dbt, regenera o painel público (docs/index.html) e publica no GitHub Pages.
+  # Roda também quando o dbt é pulado no disparo manual; não roda se algo falhou.
+  publicar:
+    name: Publicar painel
+    needs: [dbt]
+    if: ${{ !failure() && !cancelled() }}
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publicar_site.yml
+    secrets: inherit
