@@ -116,8 +116,7 @@ cad as (
   select datediff(dt_inicio_campo, lag(dt_inicio_campo) over (order by dt_inicio_campo)) as dias
   from (select distinct dt_inicio_campo from workspace.marts.fct_intencao_voto
         where dt_inicio_campo >= date_sub(current_date(), 120))
-),
-topi as (select nm_instituto from workspace.marts.fct_pesquisas_registradas group by 1 order by count(*) desc limit 12)
+)
 select
   date_format((select max(_ingerido_em) from workspace.marts.fct_intencao_voto), "yyyy-MM-dd'T'HH:mm:ss'Z'") as carga_utc,
   date_format((select max(dt_fim_campo) from workspace.marts.fct_intencao_voto), 'yyyy-MM-dd') as campo_recente,
@@ -151,13 +150,10 @@ select
      from workspace.marts.fct_pesquisas_registradas
      group by nm_instituto order by count(*) desc)) as b_inst,
   (select array_join(collect_list(l), '\n') from (
-     select concat_ws(';', date_format(p.dt_registro,'yyyy-MM'),
-              case when t.nm_instituto is null then 'Outros' else p.nm_instituto end,
-              cast(count(*) as string), cast(round(sum(p.vr_pesquisa),2) as string))  as l
+     select concat_ws(';', date_format(p.dt_registro,'yyyy-MM'), p.nm_instituto,
+              cast(count(*) as string), cast(round(sum(p.vr_pesquisa),2) as string)) as l
      from workspace.marts.fct_pesquisas_registradas p
-     left join topi t using (nm_instituto)
-     group by date_format(p.dt_registro,'yyyy-MM'),
-              case when t.nm_instituto is null then 'Outros' else p.nm_instituto end
+     group by date_format(p.dt_registro,'yyyy-MM'), p.nm_instituto
      order by 1)) as b_instmes
 """
 

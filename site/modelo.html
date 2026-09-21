@@ -1424,7 +1424,7 @@ function painelT1(anima) {
 
   $('painel').innerHTML = `
     <div class="tiles anim-sobe">
-      <div class="tile"><div class="k">Pesquisas</div><div class="v" data-num="${nPesq}">0</div><div class="s">${nInst} institutos</div></div>
+      <div class="tile"><div class="k">Pesquisas</div><div class="v" data-num="${nPesq}">0</div><div class="s">${nInst} ${nInst === 1 ? 'instituto' : 'institutos'}</div></div>
       <div class="tile"><div class="k">Líder</div><div class="v" data-num="${lider?lider.media:0}" data-suf="%">0</div><div class="s">${lider?nx(lider.nome):'–'}</div></div>
       <div class="tile"><div class="k">Vantagem</div><div class="v" data-num="${lider&&vice?lider.media-vice.media:0}" data-suf=" p.p.">0</div><div class="s">sobre ${vice?nx(vice.nome):'–'}</div></div>
       <div class="tile"><div class="k">Margem de erro</div><div class="v" data-num="${mgMedia||0}" data-pre="±" data-suf=" p.p.">0</div><div class="s">${lider&&mgMedia?'±'+nd(mgMedia/lider.media*100)+'% do valor do líder':'média das pesquisas'}</div></div>
@@ -1581,7 +1581,7 @@ function painelInst(anima) {
 
   $('painel').innerHTML = `
     <div class="tiles anim-sobe">
-      <div class="tile"><div class="k">Pesquisas registradas</div><div class="v" data-num="${totQt}">0</div><div class="s">${lista.length} institutos</div></div>
+      <div class="tile"><div class="k">Pesquisas registradas</div><div class="v" data-num="${totQt}">0</div><div class="s">${lista.length} ${lista.length === 1 ? 'instituto' : 'institutos'}</div></div>
       <div class="tile"><div class="k">Investimento declarado</div><div class="v" data-num="${totVr}" data-moeda="1" data-compacto="1">0</div><div class="s">${moeda(totVr)} declarados ao TSE</div></div>
       <div class="tile"><div class="k">Entrevistas</div><div class="v" data-num="${totEnt}">0</div><div class="s">soma das amostras</div></div>
       <div class="tile"><div class="k">Custo por entrevista</div><div class="v" data-num="${custo||0}" data-moeda="1" data-dec="2">0</div><div class="s">total investido ÷ entrevistas</div></div>
@@ -1621,8 +1621,8 @@ function painelInst(anima) {
   ];
   desenhaLinhas($('p-mes'), $('tip-mes'), series, {anima, passoY: 25, maxY: 100});
   legenda($('leg-mes'), series, false);
-  $('leg-mes').insertAdjacentHTML('beforeend',
-    `<span class="nota" style="margin:0; flex-basis:100%; text-align:center">pico: ${ni(maxQt)} pesquisas · ${moeda(maxVr)}</span>`);
+  if (meses.length) $('leg-mes').insertAdjacentHTML('beforeend',
+    `<span class="nota" style="margin:0; flex-basis:100%; text-align:center">pico: ${ni(maxQt)} ${maxQt === 1 ? 'pesquisa' : 'pesquisas'} · ${moeda(maxVr)}</span>`);
 
   // fichas: só institutos com perfil pesquisado, ordenados pelo que registraram
   const comInfo = [];

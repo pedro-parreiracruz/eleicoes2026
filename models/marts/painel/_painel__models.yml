@@ -50,7 +50,7 @@ models:
     columns: *cols_bloco
 
   - name: painel_institutos_mes
-    description: Bloco INSTITUTOSMES — pesquisas registradas por mes; fora do top 12 vira "Outros".
+    description: Bloco INSTITUTOSMES — pesquisas registradas por mes e instituto (o painel soma para o total e filtra por instituto).
     columns: *cols_bloco
 
   - name: painel_metadados

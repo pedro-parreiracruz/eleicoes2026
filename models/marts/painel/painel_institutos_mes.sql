@@ -1,20 +1,15 @@
--- Bloco INSTITUTOSMES: pesquisas registradas por mes; os 12 institutos com mais
--- registros aparecem pelo nome, o resto vira "Outros".
-with topi as (
-    select nm_instituto
-    from {{ ref('fct_pesquisas_registradas') }}
-    group by 1
-    order by count(*) desc, nm_instituto
-    limit 12
-),
-base as (
+-- Bloco INSTITUTOSMES: pesquisas registradas no TSE por mes e instituto.
+-- Uma linha por instituto (sem agrupar em "Outros"): o painel soma os meses para o
+-- total do mercado e, com um instituto escolhido no filtro, usa so as linhas dele.
+-- Ate 21/09/2026 so os 12 maiores vinham pelo nome e o resto virava "Outros", e o
+-- filtro por um instituto pequeno mostrava o grafico vazio.
+with base as (
     select
-        date_format(p.dt_registro, 'yyyy-MM') as ano_mes,
-        case when t.nm_instituto is null then 'Outros' else p.nm_instituto end as nm_instituto,
+        date_format(dt_registro, 'yyyy-MM') as ano_mes,
+        nm_instituto,
         count(*) as qt_pesquisas,
-        round(sum(p.vr_pesquisa), 2) as vr_total
-    from {{ ref('fct_pesquisas_registradas') }} p
-    left join topi t using (nm_instituto)
+        round(sum(vr_pesquisa), 2) as vr_total
+    from {{ ref('fct_pesquisas_registradas') }}
     group by 1, 2
 ),
 l as (
