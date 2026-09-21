@@ -1,10 +1,15 @@
 name: Carga eleicoes2026 (TSE + Wikipedia -> Databricks -> dbt)
 
 on:
+  # Dois agendamentos (UTC; Brasilia = UTC-3). Minutos quebrados de proposito: o GitHub atrasa
+  # muito o que esta marcado na hora cheia (o antigo "0 9" chegava a rodar 4h depois).
   schedule:
-    # 08:17 UTC = 05:17 em Brasilia. Minuto quebrado de proposito: o GitHub atrasa muito
-    # os agendamentos na hora cheia (o "0 9" chegava a rodar 4h depois).
+    # CARGA COMPLETA, 1x por dia, 05:17 em Brasilia: TSE + Wikipedia + dbt + site.
     - cron: "17 8 * * *"
+    # CHECAGEM, de hora em hora das 06:07 as 18:07 em Brasilia: so olha a Wikipedia. Se a
+    # tabela de pesquisas nao mudou desde a ultima carga, para ali (nem liga o Databricks).
+    # Se mudou, carrega a Wikipedia, roda o dbt e republica o site.
+    - cron: "7 9-21 * * *"
   workflow_dispatch:
     inputs:
       rodar_tse:
@@ -33,12 +38,56 @@ permissions:
   contents: read
 
 jobs:
+  # Impressao digital da tabela da Wikipedia (sem Databricks) e comparacao com a da ultima
+  # carga bem-sucedida, guardada no cache do Actions com a chave wiki-<hash>. Achou a chave =
+  # nada mudou. O cache vence em 7 dias sem uso; ai a checagem seguinte so recarrega uma vez.
+  verificar:
+    name: Wikipedia mudou?
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_wikipedia == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      hash: ${{ steps.impressao.outputs.hash }}
+      mudou: ${{ steps.cache.outputs.cache-hit != 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ingestion/requirements.txt
+
+      - name: Instalar dependências
+        run: pip install -r ingestion/requirements.txt
+
+      - name: Impressão digital da tabela
+        id: impressao
+        run: python ingestion/verificar_wikipedia.py
+
+      - name: Já foi carregada?
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .wiki_hash
+          key: wiki-${{ steps.impressao.outputs.hash }}
+          lookup-only: true
+
+      - name: Resultado
+        run: |
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            echo "::notice title=Sem novidade::Tabela da Wikipedia igual a da ultima carga"
+          else
+            echo "::notice title=Novidade::Tabela da Wikipedia mudou (${{ steps.impressao.outputs.linhas }} linhas)"
+          fi
+
   # Carga do TSE. O CDN (cdn.tse.jus.br) tem anti-bot: a carga usa curl_cffi (assinatura Chrome).
   # Padrão: runner do GitHub. Alternativa: runner self-hosted no computador local, escolhida pela
   # variável de repositório/environment RUNNER_TSE=local (agendado) ou pelo input onde_tse=local.
   carga_tse:
     name: Carga TSE (runner GitHub)
-    if: ${{ (github.event_name == 'schedule' && vars.RUNNER_TSE != 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse != 'local') }}
+    # TSE so na carga completa do dia (o registro de pesquisas muda pouco ao longo do dia)
+    if: ${{ (github.event.schedule == '17 8 * * *' && vars.RUNNER_TSE != 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse != 'local') }}
     environment: producao
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -66,7 +115,7 @@ jobs:
 
   carga_tse_local:
     name: Carga TSE (runner local)
-    if: ${{ (github.event_name == 'schedule' && vars.RUNNER_TSE == 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse == 'local') }}
+    if: ${{ (github.event.schedule == '17 8 * * *' && vars.RUNNER_TSE == 'local') || (github.event.inputs.rodar_tse == 'true' && github.event.inputs.onde_tse == 'local') }}
     environment: producao
     runs-on: [self-hosted, Windows]
     timeout-minutes: 45
@@ -111,7 +160,9 @@ jobs:
 
   carga_wikipedia:
     name: Carga Wikipedia (runner GitHub)
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_wikipedia == 'true' }}
+    needs: [verificar]
+    # completa do dia e disparo manual: sempre; checagem de hora em hora: so se mudou
+    if: ${{ !cancelled() && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_wikipedia == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.verificar.result == 'success' && needs.verificar.outputs.mudou == 'true')) }}
     environment: producao
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -143,7 +194,8 @@ jobs:
     name: dbt build (Databricks)
     needs: [carga_tse, carga_tse_local, carga_wikipedia]
     # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
-    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event_name == 'schedule' || github.event.inputs.rodar_dbt == 'true') }}
+    # completa do dia: sempre; de hora em hora: so se a Wikipedia foi recarregada; manual: se pedido
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_dbt == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.carga_wikipedia.result == 'success')) }}
     environment: producao
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -187,8 +239,23 @@ jobs:
   publicar:
     name: Publicar painel
     needs: [dbt]
-    if: ${{ !failure() && !cancelled() }}
+    # so quando o dbt rodou (ou no disparo manual): checagem sem novidade nao gasta warehouse
+    if: ${{ !failure() && !cancelled() && (needs.dbt.result == 'success' || github.event_name == 'workflow_dispatch') }}
     permissions:
       contents: write
     uses: ./.github/workflows/publicar_site.yml
     secrets: inherit
+
+  # Guarda a impressao digital da tabela que acabou de ir para o site: a proxima checagem que
+  # achar a mesma tabela para no primeiro passo. So grava se carga, dbt e site deram certo.
+  lembrar:
+    name: Lembrar tabela carregada
+    needs: [verificar, carga_wikipedia, dbt, publicar]
+    if: ${{ !cancelled() && needs.verificar.outputs.hash != '' && needs.carga_wikipedia.result == 'success' && needs.dbt.result == 'success' && needs.publicar.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ needs.verificar.outputs.hash }}" > .wiki_hash
+      - uses: actions/cache/save@v4
+        with:
+          path: .wiki_hash
+          key: wiki-${{ needs.verificar.outputs.hash }}
