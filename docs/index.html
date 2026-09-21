@@ -2912,7 +2912,7 @@ function desenhaVies(host, tip, dados, anima) {
   const maiorNome = Math.max(0, ...linhas.map(l => larguraTexto(MAI(l.inst), '400', 13, css('--texto'))));
   // nomes alinhados à esquerda, com respiro da borda (ML) e do eixo (GAP)
   // no celular o gutter cresce um pouco: é melhor encurtar a barra que cortar o nome
-  const ML = 14, GAP = estreito ? 12 : 16;
+  const ML = 14, GAP = estreito ? 20 : 28;
   const padL = Math.min(W * (estreito ? 0.54 : 0.46), Math.ceil(maiorNome) + ML + GAP), padR = 44, padT = 10, padB = 34, alt = 26;
   const H = padT + linhas.length*alt + padB;
   const lim = Math.max(1.5, ...linhas.flatMap(l => l.vals.filter(v => v != null).map(Math.abs)));
@@ -3510,6 +3510,10 @@ const CONTADOR_DATA  = '';
 
 let rt;
 addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => desenha(true), 150); });
+// As margens dos gráficos saem da largura medida dos nomes. Se a fonte da página
+// (Archivo) chega depois do primeiro desenho, a medida foi feita com a fonte de reserva,
+// mais estreita, e os nomes encostam no eixo. Redesenha quando a fonte termina de carregar.
+try { document.fonts && document.fonts.ready.then(() => desenha(true)); } catch (e) {}
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => desenha(true));
 
 aplicaTema(le('tema') || 'auto');
