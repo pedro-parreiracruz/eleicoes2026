@@ -3,7 +3,9 @@ name: Carga eleicoes2026 (TSE + Wikipedia -> Databricks -> dbt)
 on:
   schedule:
     # 09:00 UTC = 06:00 em Brasília, todos os dias
-    - cron: "0 9 * * *"
+    # 08:17 UTC = 05:17 em Brasilia. Minuto quebrado de proposito: o GitHub atrasa muito
+    # os agendamentos na hora cheia (o "0 9" chegava a rodar 4h depois).
+    - cron: "17 8 * * *"
   workflow_dispatch:
     inputs:
       rodar_tse:
