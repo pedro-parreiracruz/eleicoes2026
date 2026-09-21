@@ -10,6 +10,12 @@ on:
   # workflow_run não disparava nunca, então a carga passou a chamar este workflow direto
   workflow_call:
   workflow_dispatch:
+    inputs:
+      fonte:
+        description: 'De onde ler os dados (consulta = rollback para a SQL antiga)'
+        type: choice
+        options: [padrao, dbt, consulta]
+        default: padrao
 
 permissions:
   contents: write
@@ -34,6 +40,9 @@ jobs:
           DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           CONTADOR_URL: ${{ vars.CONTADOR_URL }}
+          # rollback: variavel PAINEL_FONTE=consulta no environment producao (vale para
+          # todas as cargas) ou fonte=consulta ao rodar este workflow na mao (so esta vez)
+          PAINEL_FONTE: ${{ (inputs.fonte != '' && inputs.fonte != 'padrao') && inputs.fonte || vars.PAINEL_FONTE }}
         run: python site/gerar.py --saida docs/index.html
 
       - name: Publicar se mudou

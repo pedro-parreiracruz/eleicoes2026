@@ -31,3 +31,13 @@ seeds:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: [fonte, nm_candidato_origem, sg_partido_origem]
+
+  - name: candidatos_registrados
+    description: >
+      Nomes (na grafia padronizada da Wikipedia) dos candidatos com candidatura registrada
+      no TSE para 2026. Define n_fora em painel_votos: cenario com qualquer nome fora desta
+      lista e hipotetico e nao entra no 1o turno do painel. Antes ficava fixo na consulta
+      do site/gerar.py.
+    columns:
+      - name: nm_candidato
+        data_tests: [unique, not_null]

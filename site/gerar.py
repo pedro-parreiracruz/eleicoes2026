@@ -42,7 +42,37 @@ MODELO = RAIZ / "modelo.html"
 # Barras invertidas dentro de literal SQL precisam ir DOBRADAS: o Databricks processa
 # escapes em string ('\\[' vira '\[' para o regex). Com barra simples, '\[[^\]]*\]' vira
 # um regex que apaga o nome inteiro -- foi o que esvaziou os institutos em 21/09/2026.
-CONSULTA = r"""
+# ---------------------------------------------------------------------------------------
+# De onde vem os dados (PAINEL_FONTE ou --fonte):
+#   dbt       (padrao) le os modelos workspace.marts.painel_* — toda a regra de negocio
+#             mora no dbt e aparece na linhagem do Databricks e do dbt.
+#   consulta  ROLLBACK: roda a consulta antiga abaixo (CONSULTA_LEGADA), identica a que
+#             o painel usava ate a tag git painel-consulta-legada.
+# No modo dbt, se a leitura falhar ou os blocos reprovarem em conferir(), o script cai
+# sozinho na consulta antiga e avisa no log do Actions (::warning::).
+# ---------------------------------------------------------------------------------------
+ESQUEMA_PAINEL = os.environ.get("PAINEL_ESQUEMA", "workspace.marts")
+
+
+def _bloco(modelo):
+    # junta as linhas do modelo na ordem de nr_ordem (array_sort de struct ordena pelo
+    # primeiro campo) — nao depende da ordem em que o motor devolve as linhas
+    return (f"(select array_join(transform(array_sort(collect_list(struct(nr_ordem, linha))),"
+            f" x -> x.linha), '\\n') from {ESQUEMA_PAINEL}.{modelo})")
+
+
+CONSULTA_DBT = f"""
+select m.carga_utc, m.campo_recente, m.campo_inicio, m.cadencia,
+  {_bloco('painel_1t_pesquisas')} as b_p1t,
+  {_bloco('painel_1t_valores')} as b_v1t,
+  {_bloco('painel_2t_duelos')} as b_d2t,
+  {_bloco('painel_institutos')} as b_inst,
+  {_bloco('painel_institutos_mes')} as b_instmes
+from {ESQUEMA_PAINEL}.painel_metadados m
+"""
+
+# Consulta antiga, mantida para rollback. Nao editar sem editar tambem os modelos painel_*.
+CONSULTA_LEGADA = r"""
 with inst as (
   select nm_instituto, first_value(limpo) over (partition by chave order by qt desc, limpo) as nm_canon
   from (
@@ -167,7 +197,7 @@ CABECA = """<!doctype html>
 """
 
 
-def do_warehouse():
+def do_warehouse(consulta):
     """Roda a consulta no Databricks e devolve as nove pecas."""
     try:
         from databricks import sql
@@ -187,7 +217,7 @@ def do_warehouse():
                      http_path=f"/sql/1.0/warehouses/{warehouse}",
                      access_token=token) as con:
         with con.cursor() as cur:
-            cur.execute(CONSULTA)
+            cur.execute(consulta)
             colunas = [d[0] for d in cur.description]
             linha = cur.fetchone()
     if linha is None:
@@ -279,10 +309,29 @@ def main():
     p.add_argument("--dados", help="pasta com despejo local dos blocos (pula o Databricks)")
     p.add_argument("--contador", default=os.environ.get("CONTADOR_URL", ""),
                    help="URL do contador de aparelhos; vazio desliga o contador")
+    p.add_argument("--fonte", choices=["dbt", "consulta"],
+                   default=(os.environ.get("PAINEL_FONTE", "").strip() or "dbt"),
+                   help="dbt = modelos painel_* (padrao); consulta = SQL antiga (rollback)")
     args = p.parse_args()
 
-    dados = do_despejo(args.dados) if args.dados else do_warehouse()
-    conferir(dados)
+    fonte = "despejo" if args.dados else args.fonte
+    if args.dados:
+        dados = do_despejo(args.dados)
+        conferir(dados)
+    elif fonte == "consulta":
+        dados = do_warehouse(CONSULTA_LEGADA)
+        conferir(dados)
+    else:
+        try:
+            dados = do_warehouse(CONSULTA_DBT)
+            conferir(dados)
+        except (Exception, SystemExit) as erro:
+            # rede de seguranca: modelos do dbt ausentes ou com bloco ruim -> consulta antiga
+            print(f"::warning title=Painel caiu na consulta antiga::modelos painel_* falharam ({erro}); "
+                  "usando CONSULTA_LEGADA")
+            fonte = "consulta (fallback)"
+            dados = do_warehouse(CONSULTA_LEGADA)
+            conferir(dados)
     pagina = montar(dados, args.contador.strip())
 
     saida = pathlib.Path(args.saida)
@@ -295,6 +344,7 @@ def main():
           f" | cadencia {dados['cadencia']}d")
     print("  linhas: " + ", ".join(f"{k.replace('b_', '')}={v}" for k, v in linhas.items()))
     print("  contador: " + (args.contador.strip() or "desligado"))
+    print("  fonte: " + fonte)
 
 
 if __name__ == "__main__":

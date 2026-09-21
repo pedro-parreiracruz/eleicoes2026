@@ -1,0 +1,57 @@
+version: 2
+
+# Camada do painel publico (docs/index.html e artifact no claude.ai).
+# Cada modelo e um bloco de dados do painel: colunas legiveis para quem for auditar +
+# `linha`, o texto exato que vai para o HTML, e `nr_ordem`, a ordem em que entra.
+# O site/gerar.py so junta as linhas; nenhuma regra de negocio mora mais nele.
+# Rollback para a consulta antiga: ver site/LEIA-ME.md, secao "Fonte dos dados".
+# Os testes daqui sao `warn`: se algo sair errado o dbt build nao trava a carga, e o
+# gerar.py cai sozinho na consulta antiga quando a checagem dele reprovar os blocos.
+
+models:
+  - name: painel_votos
+    description: >
+      fct_intencao_voto + nome de instituto limpo (inst_ok, sem markup da Wikipedia e com
+      grafias da mesma empresa unificadas) + perfil do cenario: qt_candidatos_cenario e
+      qt_fora_da_urna_cenario (nomes fora do seed candidatos_registrados).
+    columns:
+      - name: inst_ok
+        description: Nome do instituto como aparece no painel.
+        data_tests:
+          - not_null: {config: {severity: warn}}
+      - name: qt_candidatos_cenario
+        description: Quantos candidatos o cenario lista (2 = simulacao de 2o turno).
+      - name: qt_fora_da_urna_cenario
+        description: Quantos nomes do cenario nao tem candidatura registrada (0 = lista oficial).
+
+  - name: painel_1t_pesquisas
+    description: Bloco PESQUISAS1T — uma linha por dia de fim de campo e instituto, cenarios de 1o turno com a lista oficial.
+    columns: &cols_bloco
+      - name: linha
+        description: Texto exato gravado no HTML (campos separados por ponto e virgula).
+        data_tests:
+          - not_null: {config: {severity: warn}}
+      - name: nr_ordem
+        description: Posicao da linha no bloco.
+        data_tests:
+          - unique: {config: {severity: warn}}
+          - not_null: {config: {severity: warn}}
+
+  - name: painel_1t_valores
+    description: Bloco VALORES1T — media de intencao de voto por dia, instituto e candidato no 1o turno.
+    columns: *cols_bloco
+
+  - name: painel_2t_duelos
+    description: Bloco DUELOS2T — simulacoes de 2o turno (cenarios com 2 candidatos), quem esta na frente e atras.
+    columns: *cols_bloco
+
+  - name: painel_institutos
+    description: Bloco INSTITUTOS — pesquisas registradas no TSE por instituto (volume, valor, entrevistas, alertas).
+    columns: *cols_bloco
+
+  - name: painel_institutos_mes
+    description: Bloco INSTITUTOSMES — pesquisas registradas por mes; fora do top 12 vira "Outros".
+    columns: *cols_bloco
+
+  - name: painel_metadados
+    description: Cabecalho do painel — hora da carga, janela de campo e cadencia mediana de pesquisas (view).

@@ -11,7 +11,7 @@ organização, matando o link público. Hospedando fora, você tem os dois.
 | arquivo | para que serve |
 | --- | --- |
 | `modelo.html` | o painel inteiro, com marcadores `__CARGA__`, `__P1T__`… no lugar dos dados. É o mesmo arquivo publicado no artifact. |
-| `gerar.py` | consulta o Databricks, preenche os marcadores e escreve o `docs/index.html`. |
+| `gerar.py` | lê os modelos `painel_*` do dbt no Databricks, preenche os marcadores e escreve o `docs/index.html`. |
 | `contador/worker.js` | Cloudflare Worker, alternativa ao serviço de contagem aberto. |
 | `contador/wrangler.toml` | configuração do deploy do Worker. |
 
@@ -118,9 +118,45 @@ Com o `gerar.py` no repositório o painel se atualiza sozinho: o
 `docs/index.html` e só faz commit se o conteúdo mudou.
 
 A tarefa agendada que republica o artifact continua existindo em paralelo — as duas
-leem exatamente a mesma consulta. Quando o site do GitHub Pages estiver no ar e
+leem os mesmos modelos `painel_*` (com a consulta antiga como reserva). Quando o site do GitHub Pages estiver no ar e
 estável, o artifact vira cópia de conveniência e a tarefa agendada pode ser
 desligada.
+
+## Fonte dos dados e rollback
+
+Toda a regra do painel mora no dbt, em `models/marts/painel/`:
+
+| modelo | bloco do painel |
+| --- | --- |
+| `painel_votos` | base: instituto limpo + perfil do cenário (quantos candidatos, quantos fora da urna) |
+| `painel_1t_pesquisas` / `painel_1t_valores` | 1º turno (só cenários com a lista oficial) |
+| `painel_2t_duelos` | simulações de 2º turno |
+| `painel_institutos` / `painel_institutos_mes` | mercado de pesquisas registradas no TSE |
+| `painel_metadados` | hora da carga, janela de campo, cadência |
+
+A lista de candidatos registrados virou o seed `candidatos_registrados.csv`. Cada modelo
+tem as colunas legíveis e mais `linha` (o texto exato que vai para o HTML) e `nr_ordem`.
+O `gerar.py` só junta as linhas. No Databricks, **Catalog → workspace → marts →
+painel_… → Lineage** mostra o caminho inteiro desde `raw_eleicoes`.
+
+A consulta antiga continua dentro do `gerar.py` como `CONSULTA_LEGADA`. Há três níveis
+de volta:
+
+1. **Automático.** Se os modelos não existirem ou um bloco reprovar na checagem (vazio,
+   instituto sem nome, data estranha), o `gerar.py` usa a consulta antiga sozinho e deixa
+   um aviso amarelo "Painel caiu na consulta antiga" no run do Actions.
+2. **Uma vez, na mão.** Actions → *Publicar painel* → *Run workflow* → fonte `consulta`.
+3. **Para todas as cargas.** Settings → Environments → `producao` → variável
+   `PAINEL_FONTE` = `consulta`. Apagar a variável (ou pôr `dbt`) volta aos modelos.
+   Localmente: `python site/gerar.py --fonte consulta`.
+
+E se quiser o código exatamente como era, a tag git `painel-consulta-legada` marca o
+último commit antes da mudança:
+
+    git checkout painel-consulta-legada -- site/gerar.py .github/workflows/publicar_site.yml
+
+Os modelos novos podem ficar no projeto sem atrapalhar; a consulta antiga não depende
+deles.
 
 ## Quando o modelo mudar
 
