@@ -120,8 +120,9 @@
                     text-transform: uppercase; letter-spacing: .06em; flex: none; }
   .ressalva[open] .mais::after { content: ' \25B4'; }
   .ressalva:not([open]) .mais::after { content: ' \25BE'; }
-  .ressalva > div { padding: 0 var(--e3) var(--e3); font-size: 12.5px; color: var(--ink-2); line-height: 1.55;
-                    max-width: 92ch; }
+  /* o texto usa a largura inteira da caixa: com limite em ch ele quebrava na metade
+     e deixava a outra metade vazia */
+  .ressalva > div { padding: 0 var(--e3) var(--e3); font-size: 12.5px; color: var(--ink-2); line-height: 1.55; }
   .ressalva h4 { margin: var(--e3) 0 var(--e1); font-size: 11px; letter-spacing: .07em;
                  text-transform: uppercase; color: var(--ink); font-weight: 700; }
   .ressalva p { margin: 0; }
@@ -142,7 +143,8 @@
   @media (max-width: 430px) { .abas button { padding-left: 6px; padding-right: 6px; font-size: 13px; } }
 
   /* ---------- filtros ---------- */
-  .filtros { display: flex; flex-wrap: wrap; gap: var(--e3) var(--e5); align-items: flex-end;
+  /* rótulos de todos os campos na mesma linha: alinha pelo topo, não pela base */
+  .filtros { display: flex; flex-wrap: wrap; gap: var(--e3) var(--e5); align-items: flex-start;
              padding: var(--e4) 0 0; }
   [hidden] { display: none !important; }
   .campo { display: flex; flex-direction: column; gap: var(--e1); min-width: 0; max-width: 100%; }
@@ -151,8 +153,8 @@
   .datas { display: flex; align-items: center; gap: var(--e2); flex-wrap: wrap; }
   /* toda caixa da linha de filtro tem a mesma altura — o seletor de data traz altura
      própria do navegador, então a altura é fixada e não deixada para o padding decidir */
-  input[type="date"], select, .atalhos button, .seg { height: var(--alt-campo); box-sizing: border-box; }
-  input[type="date"], select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
+  input[type="date"], select, .busca input, .atalhos button, .seg { height: var(--alt-campo); box-sizing: border-box; }
+  input[type="date"], select, .busca input { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
       border: 1px solid var(--hair); border-radius: var(--r); padding: 0 8px; min-width: 0; max-width: 100%; }
   select { max-width: min(100%, 244px); text-overflow: ellipsis; }
   #sel-a, #sel-b { max-width: min(100%, 176px); }
@@ -162,7 +164,9 @@
      São 220 institutos na aba do TSE: rolar um select nativo até "Veritá" é sofrimento.
      Aqui o campo é um input que filtra a lista enquanto se digita, com teclado completo. */
   .busca { position: relative; display: flex; align-items: center; max-width: min(100%, 244px); }
-  .busca input { flex: 1; min-width: 0; padding-right: 26px; }
+  .busca { width: 244px; }
+  .busca input { flex: 1; min-width: 0; padding-right: 26px; outline-offset: 2px; }
+  .busca input:hover { border-color: var(--axis); }
   .busca input::placeholder { color: var(--muted); opacity: 1; text-transform: none; }
   #sel-inst, .busca li { text-transform: uppercase; }
   #limpa-inst { position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
@@ -835,9 +839,13 @@ function avatarSVG(svg, cx, cy, r, nome) {
 
 // Só dá para medir texto SVG depois que ele está no documento. Este passe encurta
 // o rótulo até caber e encosta o avatar na primeira letra — nada se sobrepõe.
+// Folga entre o avatar e a primeira letra do nome mais longo. Com 6px o avatar parecia
+// grudado em nomes compridos ("Rui Costa Pimenta"); 14px separa sem desperdiçar barra.
+const AV_FOLGA = 14;
+const AV_RESERVA = 12 + 11 * 2 + AV_FOLGA - 12;   // largura que o avatar toma do gutter
 function encaixaRotulos(ajustes, padL) {
   const temAv = ajustes.some(a => a.av);
-  const espaco = padL - 12 - (temAv ? 30 : 4);
+  const espaco = padL - 12 - (temAv ? AV_RESERVA : 4);
   // 1ª passada: encurta o que não cabe
   ajustes.forEach(({lb}) => {
     let txt = lb.textContent;
@@ -850,7 +858,8 @@ function encaixaRotulos(ajustes, padL) {
   // 2ª passada: todos os avatares na MESMA coluna. Antes cada um encostava no
   // próprio texto e a coluna saía serrilhada, como se as linhas estivessem tortas.
   const maior = Math.max(0, ...ajustes.map(a => a.lb.getComputedTextLength()));
-  const xAv = Math.max(11, padL - 12 - maior - 17);
+  // centro do avatar = raio (11) + folga até a 1ª letra do maior nome
+  const xAv = Math.max(11, padL - 12 - maior - 11 - AV_FOLGA);
   ajustes.forEach(({av, cy}) => { if (av) av.setAttribute('transform', `translate(${xAv},${cy})`); });
 }
 
@@ -988,7 +997,7 @@ function desenhaBarras(host, tip, dados, opts) {
   const maiorVal = Math.max(0, ...dados.flatMap(d => opts.par ? [d.va, d.vb] : [d.media])
                                        .map(v => larguraTexto(nd(v) + '%', '500', 12, css('--numero'))));
   const padL = Math.min(W * (estreito ? 0.40 : 0.45),
-                        Math.ceil(maiorRot) + 12 + (comAvatar ? 30 : 4)),
+                        Math.ceil(maiorRot) + 12 + (comAvatar ? AV_RESERVA : 4)),
         padR = Math.ceil(maiorVal) + 16, padT = 10, padB = 32;
   const alt = opts.par ? 48 : 36;
   const H = padT + dados.length*alt + padB;
@@ -1099,7 +1108,10 @@ function desenhaVies(host, tip, dados, anima) {
   const W = Math.max(280, host.clientWidth - 16);
   const estreito = W < 520;
   const maiorNome = Math.max(0, ...linhas.map(l => larguraTexto(MAI(l.inst), '400', 13, css('--texto'))));
-  const padL = Math.min(W * 0.42, Math.ceil(maiorNome) + 12), padR = 44, padT = 10, padB = 34, alt = 26;
+  // nomes alinhados à esquerda, com respiro da borda (ML) e do eixo (GAP)
+  // no celular o gutter cresce um pouco: é melhor encurtar a barra que cortar o nome
+  const ML = 14, GAP = estreito ? 12 : 16;
+  const padL = Math.min(W * (estreito ? 0.54 : 0.46), Math.ceil(maiorNome) + ML + GAP), padR = 44, padT = 10, padB = 34, alt = 26;
   const H = padT + linhas.length*alt + padB;
   const lim = Math.max(1.5, ...linhas.flatMap(l => l.vals.filter(v => v != null).map(Math.abs)));
   const esc = Math.ceil(lim*2)/2;
@@ -1120,7 +1132,7 @@ function desenhaVies(host, tip, dados, anima) {
     const y = padT + i*alt + alt/2;
     const g = svgEl('g', {});
     if (anima) { g.classList.add('surge'); g.style.animationDelay = (i*24) + 'ms'; }
-    const lb = svgEl('text', {x: padL-12, y: y+4, 'text-anchor':'end', class:'catlabel'});
+    const lb = svgEl('text', {x: ML, y: y+4, 'text-anchor':'start', class:'catlabel'});
     lb.textContent = MAI(ln.inst);
     ajustesV.push({lb});
     g.appendChild(lb);
@@ -1139,7 +1151,17 @@ function desenhaVies(host, tip, dados, anima) {
     svg.appendChild(g);
   });
   host.appendChild(svg);
-  encaixaRotulos(ajustesV, padL);
+  // encurta só o que não cabe entre a margem e o eixo
+  const espacoV = padL - ML - GAP;
+  ajustesV.forEach(({lb}) => {
+    const cheio = lb.textContent; let txt = cheio;
+    while (txt.length > 6 && lb.getComputedTextLength() > espacoV) {
+      txt = txt.slice(0, -2); lb.textContent = txt + '…';
+    }
+    if (txt !== cheio) {                       // nome encurtado: o inteiro fica no toque/hover
+      const t = svgEl('title', {}); t.textContent = cheio; lb.appendChild(t);
+    }
+  });
 }
 
 // ---------------------------------------------------------------- tabela ordenável
@@ -1246,7 +1268,8 @@ function painelT2(anima) {
     if (a.a === r.a) { a.sa += r.va; a.sb += r.vb; } else { a.sa += r.vb; a.sb += r.va; }
     a.n++; agrup.set(k, a); });
   const comp = [...agrup.values()].map(x => ({a:x.a, b:x.b, va:x.sa/x.n, vb:x.sb/x.n, n:x.n}))
-    .sort((x,y) => y.n - x.n);
+    // mais acirrado primeiro: menor diferença entre os dois; empate desfeito por mais simulações
+    .sort((x,y) => Math.abs(x.va - x.vb) - Math.abs(y.va - y.vb) || y.n - x.n);
   const nSim = rows.length;
   const atual = comp.find(c => [c.a,c.b].sort().join('||') === par.join('||'));
   // os tiles e o título seguem quem está à frente, não a ordem dos seletores
@@ -1272,7 +1295,7 @@ function painelT2(anima) {
 
     <section class="card">
       <div class="card-topo"><div><h2>Todos os duelos</h2>
-        <p class="sub">Média de cada confronto no período, ordenado por quantidade de simulações.</p></div></div>
+        <p class="sub">Média de cada confronto no período, do mais acirrado ao menos acirrado.</p></div></div>
       <div class="plot" id="p-barra"><div class="tip" id="tip-barra"></div></div>
       <div id="tab-barra" hidden></div>
     </section>`;
@@ -1636,7 +1659,8 @@ const CONTADOR_DATA  = '__CONTADOR_DATA__';
 (function () {
   const nasPesquisas = [...new Set([...V1.map(r => r.nome), ...D2.flatMap(r => [r.a, r.b])])];
   const semRegistro = nasPesquisas.filter(n => !REGISTRADOS.includes(n))
-    .sort((a, b) => (SLOT[a] ?? 99) - (SLOT[b] ?? 99));
+    // ordem alfabética pelo nome exibido, com acento tratado como no português
+    .sort((a, b) => nx(a).localeCompare(nx(b), 'pt-BR', {sensitivity: 'base'}));
   const indeferidos = Object.keys(SITUACAO).filter(n => nasPesquisas.includes(n));
   const chave = r => [r.a, r.b].sort().join('|');
   const nDuelos = new Set(D2.filter(r => semRegistro.includes(r.a) || semRegistro.includes(r.b)).map(chave)).size;
