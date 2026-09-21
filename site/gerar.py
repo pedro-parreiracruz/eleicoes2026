@@ -39,6 +39,9 @@ MODELO = RAIZ / "modelo.html"
 # uma citacao <ref> dentro do nome. Ele limpa o markup e faz a grafia mais usada
 # vencer. Nao remova mesmo que o dado pareca limpo: e o que impede o filtro de
 # instituto de fatiar a media em varias grafias do mesmo instituto.
+# Barras invertidas dentro de literal SQL precisam ir DOBRADAS: o Databricks processa
+# escapes em string ('\\[' vira '\[' para o regex). Com barra simples, '\[[^\]]*\]' vira
+# um regex que apaga o nome inteiro -- foi o que esvaziou os institutos em 21/09/2026.
 CONSULTA = r"""
 with inst as (
   select nm_instituto, first_value(limpo) over (partition by chave order by qt desc, limpo) as nm_canon
@@ -48,8 +51,8 @@ with inst as (
     from (
       select nm_instituto,
              trim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
-               nm_instituto, '(?i)<?ref[ \t]+name[ \t]*=.*$', ''), '(?i)<ref[^>]*>.*$', ''),
-               '<[^>]*>', ''), '\[[^\]]*\]', ''), ' +', ' ')) as limpo,
+               nm_instituto, '(?i)<?ref[ \\t]+name[ \\t]*=.*$', ''), '(?i)<ref[^>]*>.*$', ''),
+               '<[^>]*>', ''), '\\[[^\\]]*\\]', ''), ' +', ' ')) as limpo,
              count(*) as qt
       from workspace.marts.fct_intencao_voto group by 1, 2
     )
@@ -218,6 +221,12 @@ def conferir(dados):
             sys.exit(f"{chave} nao parece data: {dados.get(chave)!r}")
     if not re.match(r"^\d+$", str(dados.get("cadencia") or "")):
         sys.exit(f"cadencia precisa ser numero puro, veio {dados.get('cadencia')!r}")
+    # instituto vazio embaralha todas as medias num "instituto" sem nome (aconteceu em
+    # 21/09/2026 com um regex mal escapado): melhor nao publicar
+    vazios = sum(1 for l in (dados["b_p1t"] + "\n" + dados["b_v1t"]).splitlines()
+                 if l and (l.split(";")[1:2] or [""])[0].strip() == "")
+    if vazios:
+        sys.exit(f"{vazios} linhas com instituto vazio -- a consulta de limpeza de nomes falhou")
     # o filtro de instituto nao pode mostrar sobra de markup da Wikipedia
     sujos = [l.split(";")[1] for l in (dados["b_p1t"] + "\n" + dados["b_v1t"]).splitlines()
              if l and re.search(r"<|\[|ref name=", l.split(";")[1] if ";" in l else "")]
