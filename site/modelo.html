@@ -404,6 +404,7 @@
 
   /* ================================================================ CAPA */
   body.com-capa { overflow: hidden; }
+  #capa { --capa-verde: #138a3d; }
   #capa { position: fixed; inset: 0; z-index: 1000; background: var(--plane); color: var(--ink);
           display: grid; grid-template-rows: 1fr auto auto; overflow-y: auto;
           transition: opacity .6s ease, transform .6s ease; }
@@ -416,14 +417,22 @@
   .capa-foto { width: 200px; height: 200px; border-radius: 50%; overflow: hidden; background: var(--sunken);
                box-shadow: 0 0 0 1px var(--hair), 0 0 0 10px var(--surface), 0 0 0 11px var(--hair);
                display: grid; place-items: center; }
+  .capa-foto-wrap { position: relative; }
+  .capa-anel { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); pointer-events: none; overflow: visible; }
+  .capa-anel circle { fill: none; stroke: var(--capa-verde); stroke-width: 1.6; stroke-linecap: round;
+                      stroke-dasharray: 100; stroke-dashoffset: 100; transform-origin: 50% 50%; transform: rotate(-90deg);
+                      transition: stroke-dashoffset .7s cubic-bezier(.2,.7,.2,1); }
+  #capa.ativo .capa-anel circle { stroke-dashoffset: 0; }
+  #capa.ativo .capa-anel { animation: capa-gira 6s linear infinite; }
+  @keyframes capa-gira { to { transform: rotate(360deg); } }
   .capa-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .capa-foto .ini { font-family: var(--texto); font-weight: 700; font-size: 56px; color: var(--ink-2); letter-spacing: -0.02em; }
   .capa-titulo { font-family: var(--texto); font-weight: 700; font-size: clamp(30px, 4.2vw, 50px);
                  line-height: 1.04; letter-spacing: -0.03em; margin: 0; max-width: 14ch; }
   .capa-autor { position: absolute; right: var(--e5); bottom: var(--e4); margin: 0;
                 font-family: var(--texto); font-weight: 700; font-size: 13.8px; letter-spacing: -0.03em; color: var(--ink); }
-  .capa-links .ico { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6;
-                     stroke-linecap: round; stroke-linejoin: round; color: var(--ink-2); }
+  .capa-links .ico { width: 22px; height: 22px; flex: none; display: block; }
+  .capa-links a[href*='github'] .ico { background: #fff; border-radius: 50%; }
   .capa-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--e2);
                 justify-self: end; width: min(100%, 310px); }
   .capa-links a { display: flex; align-items: center; gap: var(--e3); padding: var(--e3) var(--e4);
@@ -443,7 +452,7 @@
   .capa-botao .txt { display: inline-block; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
   .capa-botao .seta { position: absolute; right: var(--e5); top: 50%; font-size: 17px; line-height: 1;
                       opacity: 0; transform: translate(-14px, -50%); transition: opacity .3s ease, transform .3s cubic-bezier(.2,.7,.2,1); }
-  .capa-botao:hover, .capa-botao:focus-visible { background: #0a7d2c; color: #ffffff; }
+  .capa-botao:hover, .capa-botao:focus-visible { background: var(--capa-verde); color: #ffffff; }
   .capa-botao:hover .txt, .capa-botao:focus-visible .txt { transform: translateX(-14px); }
   .capa-botao:hover .seta, .capa-botao:focus-visible .seta { opacity: 1; transform: translate(0, -50%); }
   /* entrada: da esquerda para a direita, com fade, um bloco depois do outro */
@@ -452,6 +461,7 @@
   @keyframes capa-entra { to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) {
     .capa-anima { animation: none; opacity: 1; transform: none; }
+    #capa.ativo .capa-anel { animation: none; } .capa-anel circle { transition: none; }
     #capa { transition: opacity .2s; } #capa.saindo { transform: none; }
   }
   @media (max-width: 860px) {
@@ -478,7 +488,7 @@
   <div class="capa-grade">
     <p class="capa-desc capa-anima">Pesquisas de intenção de voto, duelos de 2º turno, mercado de pesquisas e planos de governo, direto das fontes oficiais.</p>
     <div class="capa-pessoa capa-anima a2">
-      <div class="capa-foto" id="capa-foto"><span class="ini">PP</span></div>
+      <div class="capa-foto-wrap"><svg class="capa-anel" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48.5" pathLength="100"/></svg><div class="capa-foto" id="capa-foto"><span class="ini">PP</span></div></div>
       <h1 class="capa-titulo">Corrida Presidencial 2026</h1>
     </div>
     <ul class="capa-links capa-anima a3" id="capa-links"></ul>
@@ -505,21 +515,25 @@ const CAPA_LINKS = [
     const img = new Image(); img.alt = 'Foto de ' + document.getElementById('capa-autor').textContent; img.src = CAPA_FOTO;
     const box = document.getElementById('capa-foto'); box.textContent = ''; box.appendChild(img);
   }
+  // icones oficiais enviados pelo Pedro (PNG 48px)
   const ICONES = {
-    LinkedIn: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 18c.8-2.4 2.7-3.6 5-3.6s4.2 1.2 5 3.6"/>',
-    YouTube:  '<rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/>',
-    GitHub:   '<path d="M8.5 8 4.5 12l4 4M15.5 8l4 4-4 4M13.5 5.5l-3 13"/>',
+    LinkedIn: 'data:image/png;base64,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',
+    YouTube: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAC40lEQVR42u2Zy04UQRSGv76MikJEE0lc4IIQFNywZ8GSlbwB8yi8Cu5ZsSSZDStdstFgmJAYLiaYyCiKZvryu+jqmZ52EOnLOA1zkpOanlRX/3+dqnOqzoGRjOR2i1X0gLpiTAtUOgEDIql9unRaZQGWIJpsL/uWAPX7hpXqaQOWBUFOC9h9wAgI81hA4Bgi4R8EBE4MXDAOPAOmgafAFPDI6DhwH7hn2rtAzahL9BEnNaPxLAZGfcAz2gZ+Gv0BnAMt4Aw4BT4BR8BHC76nsSaZIZgXvBYcCUKBhkiPDLb5JOZ42SBYFXxLvRQIvD7qpzTIqOlx+n0rSGE6F6x2sAsswYLgl+nQNrM/bBYIDTYZrAsdRyDYTIDXkGuMcROi2Z8CPgAPy4oNxYcaAL4Cz21gEZisCPgkxklg0QZemj/C/EMPjH+MdcEGZoszrsBxBmmNWdcEq/ziusbxBpElLAvCsGwC07aJstnXf7xsajXY3oZ63Ti9MLKGbZe5D6YQ7CX87PXdmmVFretKJyeSJDUa0tJSt4/rdvsVFxMk2ENwXAiBWk1qNqUgUEc2NqSZmW5fxymawDGCs8IIHBxEwNttKQyj362WtL4uTUx0++cnEmM9Q3CRa7B+BGIr+H7XGvv70tparzXyL6sLzIGpHAJSZAnP6z7v7EjLy0UtJY/ch7arCMQSBL0W2dqS5uai920781KyqbrchCVU+U1ceTda+UBW+aPE28QFPjuBsbEIeL3eO+PZXeTfNMb6xjW5l+RV7fp3AADPg5WV3uN0EJToPAE4dYHDQob0/ah1nAi4NIgocGgDzeJO6aXOej9p2sA785A/Kg9m1pNY39vArslFZt8H/yet0gJ2bSvaxA1zTfMrQMA3WBsWnFYltRhemlpMJHdfVTK5m0qvvxjS9Hp4WXr9XwscT4DHJp03ATwAxozeKanA8QX4fFWB4+aUmDIU+ZKFvuEo8lWxzDqSkdx2+Q0EMBFuTNVicAAAAABJRU5ErkJggg==',
+    GitHub: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFcUlEQVR42sWZWYhdRRCGv3vubOgMmjASM+AyyQxGRnwxaAZETNweDLg9COpDJIg+iKAgSB4FAxkXiFFQiHmQEIKCUaO4oMEFA4HkQVxijCgOATWOmGjCZGbuvceHqRqKovssd7PhcO4953T3/1dVV1VXV2i+JXLVIu/PB/rl9xxwNvJdD9CQq3SrNAm8AtTNszXAtcBa4ApgJXCBI3Aa+A04BhwBDgE/mDGqQNoskaJkq+b/KmALcFi0kJa86tJ3i4xliVTaDd4CnwB2AWccoBqwIPe6MQu96u4b2/eMjDkRmbOl1iP3IWAKmDUTLxiwZTWgpBbMs1mZY8jN3TL4G4CjDngzoLPIWCJHZc6mSVh7f9SovN3As4jUZO7S68KC3+rUnXbpsma5tSwJVdm2gNR1ITY6JP2aEZTVxrai5qQfPCEd5zPA1pp0n6Fx6hmk5uX343kk1GxuDkhe798AXwAzTt1151ViV819a4XzO/AZ8KOb02rippiL1bRgOXDC2XzDSEIDzjBwr0zYqgY+BO4ElsnY1xnB+DVxQjAq3qVFUZWPdgKbRVKqqoZ8/C1wtfSx4f5u4BngMuC4SPBX4A+T/wwBK4DLgXFgTFKKp4SAFeQA8JOkIzo3BtNO4CGDeUkda81C8jaaAu84b2C9wqAQKNpGBaiC1rF0vINubr/Ir7GmpAT2Bzqlxv72BvIhIv97IldeX5X2gQgW/b/f958wizGNdPrITeJjR9JERhvLjo8E1kHqXLnNm3jWSdu7sgZwyiy0tmeLRgCXGPcdcuGKcUo79smCSnM08AlwXob02pGuJ7KPOJSjgVQw9wFMZrDV538BF2eYULu1MCYerJERSOvAugS4MeAatdXl3Q4JND2d3DHJ2D3iRncFdn4WVwKsB9gXWfE2gK1uYqG2snmqiKuMaUCx7gP43oVub2vfdQm490QDEnlDa2EJW2Js27dU7tNCrtolAqmQOCcELBZPcmUiUTTLNZ6j+62SM/dSBpAAvTmDDfwPBFTi/Tnf9WYVprQtNx6iW9JPTXacZR21xGSMacQnXyoBLO1QAIu1YWAkQkCxnk2AkzmSWCGVt265UY30V8n6bGQI7mQiQYOcQHZ7FzWggrsjA5c+O55IeS8vtG+WxdxpEomAuxC4T+bLct+HkX1mmrN5T4GnTfLXKcnr2C9FsoPUYd2gZfDpQMSzOyC932UqA9U2Aq+a8R7MAa8YpwU7AK8GyntpoAa6ADwSKMVUS6TZ6gx6AiWSJwOFrdh+4BXbcTLQ8RfJy/8OvPtA1NcOr9QnTuJzl0SmORpY5xfqQek4Jx88L88vkqpDqJj1NfAccI9ULIYzAo8+G5ECwv3Ay65onFco0/dfWeyqxtsClbLXzfvHTLUuVF6cNdWCJMOjbcjY56YFCdziN/X64/2ApN82+dJb8mxObHFeDifmgBcLHEzou90y/myJorHieTc0jy7AUeBfowU1p03yfpmxVX9dHym7+AVfATYWNBl/GPKP1J+CWYFOvClgKsdMh17gYdkNHQD2mEBXKRCoAK4sWeHWAu8DeVpWe9/hSKTinymQfhchMGrcYaMg+BeKlNitCbxp7L0mpnVrm6oOqwoSUPB7nAkWDjRvuIHq4vomJVfvM3XR3hIEVucQsEF1t6lGlzpm0o+3R/z0DPAzi4fXM5J251XtLIFahIDNBqYCeEpXyjQ/OeVMyp/zliEwFiBg48+fko3SaiXQrolxiQlWG0rmtKluFCEwbvIrf4y1V84R8mJK6WKTto3AlwG7HSlBYE2g/8csHm/RbvB2chs81gOvSVr7nlQQ8mxV3w8Cn7J4orOdxWOl2DwdK/1pG2xhrH4HvLTU/wOfo1SNxH5pQQAAAABJRU5ErkJggg==',
   };
   const ul = document.getElementById('capa-links');
   CAPA_LINKS.filter(l => l[1]).forEach(([rede, url]) => {
     const li = document.createElement('li'), a = document.createElement('a');
     a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.innerHTML = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + (ICONES[rede] || '') + '</svg><span class="txt"><span class="rede"></span><span class="end"></span></span><span class="seta">↗</span>';
+    a.innerHTML = '<img class="ico" alt="" src="' + (ICONES[rede] || '') + '"><span class="txt"><span class="rede"></span><span class="end"></span></span><span class="seta">↗</span>';
     a.querySelector('.rede').textContent = rede;
     a.querySelector('.end').textContent = url.replace(/^https?:\/\/(www\.)?/, '');
     li.appendChild(a); ul.appendChild(li);
   });
   const botao = document.getElementById('capa-botao');
+  const liga = on => () => capa.classList.toggle('ativo', on);
+  botao.addEventListener('mouseenter', liga(true));  botao.addEventListener('mouseleave', liga(false));
+  botao.addEventListener('focus', liga(true));       botao.addEventListener('blur', liga(false));
   botao.addEventListener('click', () => {
     capa.classList.add('saindo');
     document.body.classList.remove('com-capa');
