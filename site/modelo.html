@@ -949,7 +949,7 @@ function desenhaLinhas(host, tip, series, opts) {
   const vmax = Math.max(...pts.map(p => p.v)), vmin = Math.min(...pts.map(p => p.v));
   const pY = opts.passoY || 5;
   const yT = Math.min(opts.maxY ?? Infinity, Math.ceil((vmax + 2)/pY)*pY),
-        yB = Math.max(0, Math.floor((vmin - 2)/pY)*pY);
+        yB = opts.minY ?? Math.max(0, Math.floor((vmin - 2)/pY)*pY);
   const X = t => padL + (t1 === t0 ? 0.5 : (t - t0)/(t1 - t0)) * (W - padL - padR);
   const Y = v => padT + (1 - (v - yB)/(yT - yB)) * (H - padT - padB);
 
@@ -1332,7 +1332,8 @@ function painelT1(anima) {
       {t:'Margem p.p.'}, {t:'Pesquisas', pad:true, f: v => ni(v)}],
       res.map(r => [r.nome, PARTIDO[r.nome]||'', r.media, r.min, r.max, r.margem, r.n]), 'barra');
   } else {
-    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima});
+    // 1º turno: eixo de 25 em 25 a partir do zero, até o primeiro múltiplo acima do maior valor
+    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, passoY: 25, minY: 0});
     legenda($('leg-linha'), series, true);
     desenhaBarras($('p-barra'), $('tip-barra'), res, {anima});
   }
