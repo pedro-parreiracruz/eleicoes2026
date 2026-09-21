@@ -62,7 +62,18 @@ f as (
   select v.*, i.nm_canon as inst_ok
   from workspace.marts.fct_intencao_voto v join inst i using (nm_instituto)
 ),
-c as (select id_cenario, count(case when tp_resposta='Candidato' then 1 end) as n from f group by 1),
+-- n_fora: nomes do cenário sem candidatura registrada no TSE. O 1º turno só usa cenários
+-- com n_fora = 0: um percentual medido contra uma lista hipotética (com Jair, Michelle,
+-- Haddad...) não é comparável ao medido contra a lista oficial. Marçal fica (foi candidato
+-- até ser indeferido; o painel mostra com aviso). Duelos não passam por aqui: o painel
+-- filtra na tela, com o botão de cenários hipotéticos.
+c as (select id_cenario,
+             count(case when tp_resposta='Candidato' then 1 end) as n,
+             count(case when tp_resposta='Candidato' and nm_candidato not in (
+               'Lula','Flávio Bolsonaro','Cury (Avante)','Renan Santos','Ronaldo Caiado',
+               'Pablo Marçal','Romeu Zema','Samara','Pimenta','Dias','Clariana','Costa','Grassi',
+               'Avalanche','Leonardo Avalanche') then 1 end) as n_fora
+      from f group by 1),
 duelo as (
   select date_format(f.dt_fim_campo,'yyyy-MM-dd') as d, f.inst_ok, max(f.pc_margem_erro) as margem,
          max(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as hi,
@@ -86,14 +97,14 @@ select
      select concat_ws(';', date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok,
               cast(max(f.qt_amostra) as string), cast(max(f.pc_margem_erro) as string)) as l
      from f join c using (id_cenario)
-     where c.n >= 7 and f.dt_fim_campo is not null
+     where c.n >= 7 and c.n_fora = 0 and f.dt_fim_campo is not null
      group by date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok order by 1)) as b_p1t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok,
               concat(f.nm_candidato, '|', coalesce(f.sg_partido,'?')),
               cast(round(avg(cast(f.pc_intencao_voto as double)),2) as string)) as l
      from f join c using (id_cenario)
-     where c.n >= 7 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
+     where c.n >= 7 and c.n_fora = 0 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
      group by date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok, f.nm_candidato, coalesce(f.sg_partido,'?')
      order by 1)) as b_v1t,
   (select array_join(collect_list(l), '\n') from (
