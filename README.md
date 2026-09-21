@@ -81,8 +81,8 @@ e pt.wikipedia.org). Conexões de entrada funcionam normalmente. Em um workspace
 | Tipo | Nome | Valor |
 |---|---|---|
 | Secret | `DATABRICKS_TOKEN` | token `dapi...` |
-| Variable | `DATABRICKS_HOST` | `dbc-f1556444-f00a.cloud.databricks.com` |
-| Variable | `DATABRICKS_WAREHOUSE_ID` | `73dc97c464e41132` |
+| Variable | `DATABRICKS_HOST` | `dbc-XXXXXXXX-XXXX.cloud.databricks.com` — Databricks → SQL Warehouses → o warehouse → Connection details → Server hostname |
+| Variable | `DATABRICKS_WAREHOUSE_ID` | id do warehouse: o trecho final do HTTP path, em `/sql/1.0/warehouses/<id>` |
 | Variable (opcional) | `DATABRICKS_CATALOG` / `DATABRICKS_SCHEMA` | padrão `workspace` / `raw_eleicoes` |
 
 Os três primeiros ficam no **Environment `producao`** (Settings → Environments), que é o que os
