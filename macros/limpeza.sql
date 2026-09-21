@@ -59,7 +59,33 @@
 
 {# Remove notas de rodape da Wikipedia ("[12]", "[34][35]", "[nota 1]") e normaliza espacos.
    Sem isso: "Quaest[17]" e "Quaest[34][35]" viram institutos diferentes, e os digitos da
-   nota entram nos numeros ("2.000[12]" -> 200012 entrevistados). #}
+   nota entram nos numeros ("2.000[12]" -> 200012 entrevistados).
+
+   Tambem tira citacao <ref>: em algumas celulas a referencia vem como texto colado no
+   nome ("Parana Pesquisasref name=\"Parana9\">«...»</ref>"), as vezes ja sem o "<" inicial,
+   e arrasta o artigo inteiro para dentro do nome do instituto. A partir de "ref name=" /
+   "<ref" nao ha mais dado util na celula, entao o resto da string sai. #}
 {% macro sem_notas(col) -%}
-    trim(regexp_replace(regexp_replace(cast({{ col }} as string), '\\[[^\\]]*\\]', ''), ' +', ' '))
+    trim(regexp_replace(
+        regexp_replace(
+            regexp_replace(
+                regexp_replace(
+                    regexp_replace(cast({{ col }} as string), '(?i)<?ref[ \\t]+name[ \\t]*=.*$', ''),
+                    '(?i)<ref[^>]*>.*$', ''),
+                '<[^>]*>', ''),
+            '\\[[^\\]]*\\]', ''),
+        ' +', ' '))
+{%- endmacro %}
+
+{# Chave de comparacao de nomes: minusculas, sem pontuacao e com os termos em ordem
+   alfabetica. E o que faz "DataFolha" = "Datafolha", "Futura/Inteligencia" =
+   "Futura Inteligencia" e "Futura/Apex" = "Apex/Futura" cairem no mesmo grupo,
+   sem colar institutos de fato diferentes ("Indexa" continua separado de
+   "Indexa/Broadcast", porque um termo a mais muda a chave). #}
+{% macro chave_nome(col) -%}
+    array_join(
+        array_sort(filter(
+            split(lower(regexp_replace(cast({{ col }} as string), '[^A-Za-z0-9À-ÿ]', ' ')), ' +'),
+            x -> x <> ''
+        )), '|')
 {%- endmacro %}

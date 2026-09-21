@@ -13,6 +13,12 @@ with base as (
 de_para_instituto as (
 
     select * from {{ ref('de_para_instituto') }}
+    -- o join abaixo e por chave, entao duas linhas do seed que so diferem em caixa
+    -- multiplicariam as linhas do fato; fica so uma por chave
+    qualify row_number() over (
+        partition by {{ chave_nome('nm_instituto_origem') }}
+        order by nm_instituto_origem
+    ) = 1
 
 ),
 
@@ -22,11 +28,33 @@ de_para_candidato as (
 
 ),
 
+-- Grafia vencedora de cada instituto. A Wikipedia e escrita por muita gente: o mesmo
+-- instituto aparece como "Datafolha" e "DataFolha", "Futura/Inteligencia" e
+-- "Futura Inteligencia", "Apex/Futura" e "Futura/Apex". Sem isto cada grafia vira um
+-- instituto no filtro do painel e a media por instituto sai fatiada.
+-- Regra: entre as grafias de mesma chave vence a mais usada (desempate alfabetico).
+-- O DE-PARA continua mandando; isto so resolve o que ninguem cadastrou.
+grafia_canonica as (
+
+    select
+        nm_instituto_origem,
+        first_value(nm_instituto_origem) over (
+            partition by {{ chave_nome('nm_instituto_origem') }}
+            order by qt_linhas desc, nm_instituto_origem
+        )                                                                   as nm_instituto_canonico
+    from (
+        select nm_instituto_origem, count(*) as qt_linhas
+        from base
+        group by 1
+    )
+
+),
+
 separado as (
 
     select
         b.*,
-        coalesce(di.nm_instituto_padronizado, b.nm_instituto_origem)        as nm_instituto,
+        coalesce(di.nm_instituto_padronizado, g.nm_instituto_canonico)      as nm_instituto,
         case
             when b.tp_resposta <> 'Candidato' then null
             when b.coluna_candidato rlike '(?i) sem partido$'
@@ -42,8 +70,12 @@ separado as (
                 then regexp_extract(b.coluna_candidato, ' ([^ ]+)$', 1)
         end                                                                 as sg_partido
     from base b
+    left join grafia_canonica g
+        on g.nm_instituto_origem = b.nm_instituto_origem
+    -- join pela chave, nao pelo texto: assim uma linha do DE-PARA cobre todas as grafias
+    -- daquele instituto e nao precisa de uma linha nova a cada variacao de caixa
     left join de_para_instituto di
-        on di.nm_instituto_origem = b.nm_instituto_origem
+        on {{ chave_nome('di.nm_instituto_origem') }} = {{ chave_nome('b.nm_instituto_origem') }}
 
 ),
 
