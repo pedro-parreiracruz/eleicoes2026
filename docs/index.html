@@ -239,6 +239,9 @@
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   .tick { font-family: var(--numero); font-size: 11.5px; fill: var(--muted); }
   .catlabel { font-family: var(--texto); font-size: 13px; fill: var(--ink-2); }
+  .tip .dif { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--hair); font-size: 12px; color: var(--ink-2); }
+  .tip .dif-l { display: flex; justify-content: space-between; gap: 14px; }
+  .tip .dif-l .v { font-family: var(--numero); color: var(--ink); font-weight: 600; white-space: nowrap; }
   .catlabel.alerta { fill: var(--warn); }
   .aviso.alerta { background: rgba(176,120,0,.10); border-left-color: var(--warn); margin-bottom: var(--e4); }
   .vallabel { font-family: var(--numero); font-size: 12px; font-weight: 500; fill: var(--ink); }
@@ -397,8 +400,8 @@
     </div>
     <div class="temas">
       <span class="contador" id="contador" hidden
-            title="Aparelhos distintos que abriram este painel">
-        <span class="n" id="contador-n">—</span><span class="rot" id="contador-rot">aparelhos</span>
+            title="Acessos a este painel">
+        <span class="n" id="contador-n">—</span><span class="rot" id="contador-rot">acessos</span>
       </span>
       <div class="seg" role="group" aria-label="Modo de cor">
         <button type="button" data-tema="claro">Claro</button>
@@ -2861,9 +2864,22 @@ function desenhaBarras(host, tip, dados, opts) {
     const hit = svgEl('rect', {x: 0, y: y0, width: W, height: alt, fill: 'transparent'});
     hit.addEventListener('pointerenter', () => {
       if (opts.par) {
-        dica(tip, host, W/2, y0 + alt/2, `<b>${nx(d.a)} × ${nx(d.b)}</b>` +
+        // título na mesma ordem do rótulo da linha: quem está na frente primeiro
+        dica(tip, host, W/2, y0 + alt/2, `<b>${d.va >= d.vb ? nx(d.a) + ' × ' + nx(d.b) : nx(d.b) + ' × ' + nx(d.a)}</b>` +
           linhasDica([{nome:d.a, v:d.va, cor:corDe(d.a)}, {nome:d.b, v:d.vb, cor:corDe(d.b)}]) +
-          `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'} · diferença ${nd(Math.abs(d.va-d.vb))} p.p.</div>`);
+          (() => {
+            // diferença em pontos percentuais (subtração) e em percentual (quanto o
+            // primeiro tem a mais que o segundo, relativo ao valor do segundo)
+            const [hi, lo] = d.va >= d.vb ? [[d.a, d.va], [d.b, d.vb]] : [[d.b, d.vb], [d.a, d.va]];
+            const pp = hi[1] - lo[1];
+            const rel = lo[1] > 0 ? pp / lo[1] * 100 : null;
+            const lin = (r, v) => `<div class="dif-l"><span>${r}</span><span class="v">${v}</span></div>`;
+            const dif = '<div class="dif">' + (pp < 0.05
+              ? lin('Empate', '0,0 p.p.')
+              : lin('Diferença', nd(pp) + ' p.p.') +
+                (rel != null ? lin(`${nx(hi[0])} tem a mais`, nd(rel) + '%') : '')) + '</div>';
+            return dif + `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'}</div>`;
+          })());
       } else {
         const rel = d.margem && d.media ? (d.margem/d.media*100) : null;
         dica(tip, host, X(d.media), y0 + alt/2, `<b>${nx(d.nome)}${PARTIDO[d.nome] ? ' · '+MAI(PARTIDO[d.nome]) : ''}</b>` +
@@ -3392,9 +3408,10 @@ function desenha(soRedesenho) {
 // ================================================================ CONTADOR: INICIO
 // Bloco substituído pela publicação automática. Duas formas de o contador aparecer:
 //
-// CONTADOR_HIT   — URL chamada UMA vez por aparelho, na primeira visita. É ela que soma.
-// CONTADOR_GET   — URL que só lê o total, sem somar. Usada nas visitas seguintes do mesmo
-//                  aparelho e pela tarefa diária que republica o artifact.
+// CONTADOR_HIT   — URL chamada a cada abertura da página. É ela que soma: um acesso por
+//                  carregamento, inclusive recarregar.
+// CONTADOR_GET   — URL que só lê o total, sem somar. Usada pela tarefa diária que
+//                  republica o artifact (se ela usasse a HIT, contaria a si mesma).
 //                  As duas só funcionam no site (GitHub Pages): o artifact do claude.ai é
 //                  isolado da rede e nenhuma chamada externa sai de lá.
 // CONTADOR_TOTAL — número gravado no arquivo na hora de publicar. É assim que o artifact
@@ -3410,10 +3427,9 @@ const CONTADOR_TOTAL = 0;
 const CONTADOR_DATA  = '';
 // ================================================================ CONTADOR: FIM
 
-// ---------------------------------------------------------------- contador de alcance
-// Conta APARELHOS, não pessoas: cada navegador gera um id aleatório uma vez e o guarda.
-// Quem limpa o navegador ou abre aba anônima conta de novo; a mesma pessoa no celular e
-// no computador conta duas vezes. É medida de alcance — o rótulo diz isso.
+// ---------------------------------------------------------------- contador de acessos
+// Conta ACESSOS: cada vez que a página é aberta ou recarregada soma 1, venha de quem vier.
+// Não guarda nada no aparelho de quem visita e não manda nenhum dado pessoal.
 // O número gravado (CONTADOR_TOTAL) aparece de imediato; se houver endpoint, a chamada
 // viva substitui por um número mais novo. Falha de rede nunca apaga o que já está na tela.
 (function () {
@@ -3426,13 +3442,13 @@ const CONTADOR_DATA  = '';
     document.querySelector('.topo').classList.add('com-contador');
     $('contador-n').textContent = ni(total);
     // no estreito o rótulo fica curto para caber no canto; a data continua no title
-    const pal = total === 1 ? 'aparelho' : 'aparelhos';
+    const pal = total === 1 ? 'acesso' : 'acessos';
     $('contador-rot').textContent = (ate && innerWidth > 800)
       ? pal + ' até ' + dBR(pd(ate)).slice(0, 5)   // dd/mm; o ano inteiro vai no title
       : pal;
-    $('contador').title = ni(total) + (total === 1 ? ' aparelho distinto já abriu' : ' aparelhos distintos já abriram') + ' o painel'
+    $('contador').title = ni(total) + (total === 1 ? ' acesso' : ' acessos') + ' ao painel'
       + (ate ? ', número apurado em ' + dBR(pd(ate)) + ' e atualizado uma vez por dia' : '')
-      + '. Conta navegador, não pessoa: limpar os dados ou abrir em aba anônima conta de novo.'
+      + '. Cada abertura da página conta, inclusive recarregar.'
       + (total === 0 ? ' Ainda em zero: a contagem começa quando o painel estiver publicado no endereço público.' : '');
   };
 
@@ -3440,16 +3456,8 @@ const CONTADOR_DATA  = '';
 
   if (!CONTADOR_HIT && !CONTADOR_GET) return;
 
-  // A soma é feita no cliente: o aparelho que já veio antes deixou marca aqui e daí em
-  // diante só lê. É isso que transforma "visitas" em "aparelhos distintos".
-  let novo = true;
-  try {
-    novo = !localStorage.getItem('aparelho');
-    if (novo) localStorage.setItem('aparelho', String(Date.now()));
-  } catch (e) { novo = true; }   // navegador sem localStorage conta a cada visita
-
-  const alvo = (novo ? CONTADOR_HIT : CONTADOR_GET) || CONTADOR_GET || CONTADOR_HIT;
-  fetch(alvo, {cache: 'no-store'})
+  // todo carregamento soma; sem URL de soma configurada, só lê
+  fetch(CONTADOR_HIT || CONTADOR_GET, {cache: 'no-store'})
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     // serviços diferentes nomeiam o número de formas diferentes
     .then(d => { const n = (typeof d.value === 'number') ? d.value : d.total;

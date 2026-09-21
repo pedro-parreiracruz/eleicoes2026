@@ -1,4 +1,4 @@
-# Painel público + contador de aparelhos
+# Painel público + contador de acessos
 
 Por que sair do artifact: a página publicada no claude.ai é **isolada da rede externa**.
 Testei os quatro tipos de endpoint e todos foram bloqueados — inclusive o CDN que a
@@ -12,7 +12,7 @@ organização, matando o link público. Hospedando fora, você tem os dois.
 | --- | --- |
 | `modelo.html` | o painel inteiro, com marcadores `__CARGA__`, `__P1T__`… no lugar dos dados. É o mesmo arquivo publicado no artifact. |
 | `gerar.py` | consulta o Databricks, preenche os marcadores e escreve o `docs/index.html`. |
-| `contador/worker.js` | Cloudflare Worker que conta aparelhos distintos. |
+| `contador/worker.js` | Cloudflare Worker, alternativa ao serviço de contagem aberto. |
 | `contador/wrangler.toml` | configuração do deploy do Worker. |
 
 E em `.github/workflows/publicar_site.yml`, o passo que roda o `gerar.py` depois da
@@ -52,9 +52,10 @@ O contador já existe e já está ligado — não precisa instalar nada. Ele usa
     somar:     https://abacus.jasoncameron.dev/hit/pedro-parreiracruz.github.io/corrida-2026
     ler:       https://abacus.jasoncameron.dev/get/pedro-parreiracruz.github.io/corrida-2026
 
-A contagem por aparelho distinto é feita no navegador: na primeira visita a página
-chama a URL que soma e deixa uma marca no `localStorage`; nas visitas seguintes chama
-só a que lê. O `gerar.py` recebe as duas de uma vez, no formato `base|namespace/chave`:
+O contador conta **acessos**: cada vez que a página é aberta ou recarregada soma 1, de
+qualquer aparelho. A página chama a URL que soma a cada carregamento; a de leitura fica para
+a tarefa diária que grava o número no artifact. Nada é guardado no aparelho de quem visita.
+O `gerar.py` recebe as duas de uma vez, no formato `base|namespace/chave`:
 
     python site/gerar.py --saida docs/index.html \
       --contador "https://abacus.jasoncameron.dev|pedro-parreiracruz.github.io/corrida-2026"
@@ -82,35 +83,27 @@ Ele responde `{"total": N}` em `POST /` e `GET /total`, e a página aceita tanto
 ### E no artifact do claude.ai?
 
 A página publicada lá é isolada da rede: nenhuma chamada externa sai de dentro dela,
-então ela não consegue perguntar o número a ninguém. A saída é gravar o número dentro
-do HTML na hora de publicar. Quem faz isso é a tarefa agendada que republica o
-artifact todo dia: ela lê `CONTADOR_URL` no arquivo, faz um `GET <url>/total` no
-Worker e escreve o resultado em `CONTADOR_TOTAL` / `CONTADOR_DATA`.
+então ela não consegue perguntar o número a ninguém nem somar acesso. A saída é gravar o
+número dentro do HTML na hora de publicar: a tarefa agendada que republica o artifact
+todo dia lê `CONTADOR_GET` (sem cache) e escreve o resultado em `CONTADOR_TOTAL` /
+`CONTADOR_DATA`. Ela só troca o número se o novo for maior — contador não diminui.
 
 Por isso o rótulo muda conforme a origem do número:
 
-- no site, "aparelhos" — número do momento, a cada visita;
-- no artifact, "aparelhos até 19/09" — número do dia da última publicação.
+- no site, "acessos" — número do momento, somado a cada abertura;
+- no artifact, "acessos até 21/09" — número do dia da última publicação.
 
-Os dois contam a mesma coisa: aparelhos que abriram **o site**. Quem abre só o link
-do artifact não entra na conta, porque de lá não sai chamada nenhuma. Enquanto o
-Worker não estiver no ar, `CONTADOR_TOTAL` fica em `0` e o chip nem aparece.
+Os dois mostram a mesma conta: acessos **ao site**. Quem abre só o link do artifact
+não entra na conta, porque de lá não sai chamada nenhuma.
 
-### O que ele conta, e o que não conta
+### O que ele conta
 
-Cada navegador gera um id aleatório na primeira visita e guarda no `localStorage`.
-Só esse id chega ao Worker — **nenhum IP, nenhum dado pessoal**.
+Cada abertura da página soma 1: recarregar conta, abrir em outra aba conta, a mesma
+pessoa voltando amanhã conta de novo. Nada é guardado no aparelho de quem visita e
+**nenhum IP ou dado pessoal** sai da página — ela só chama a URL de soma.
 
-Conta aparelho, não pessoa:
-
-- quem limpa os dados do navegador conta de novo;
-- aba anônima conta de novo;
-- a mesma pessoa no celular e no computador conta duas vezes;
-- quem bloqueia `localStorage` recebe um id efêmero e conta a cada visita.
-
-É medida de alcance, não de audiência. Se você precisar de audiência de verdade —
-páginas vistas, origem do acesso, retorno — a ferramenta certa é GoatCounter ou
-Plausible, que não usam cookie e continuam sem guardar dado pessoal.
+Até 21/09/2026 o contador contava aparelhos distintos; a partir daí passou a contar
+acessos e seguiu do mesmo número (12), sem zerar.
 
 Sobre IP, já que você perguntou: JavaScript no navegador **nunca** enxerga o IP de
 quem acessa — só o servidor que entrega a requisição vê. E no Brasil IP é dado
