@@ -214,7 +214,8 @@
                justify-content: space-between; margin-bottom: var(--e5); }
   .card-acoes { display: flex; gap: var(--e2); align-items: center; }
 
-  .legenda { display: flex; flex-wrap: wrap; gap: var(--e1) var(--e4); margin-top: var(--e4); }
+  /* legendas centralizadas sob o gráfico, inclusive quando quebram linha */
+  .legenda { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--e1) var(--e4); margin-top: var(--e4); }
   .legenda button { display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 12.5px;
       background: none; border: 0; padding: var(--e1) 2px; cursor: pointer; color: var(--ink-2); border-radius: var(--r); }
   .legenda button[aria-pressed="false"] { opacity: .35; }
@@ -1379,7 +1380,7 @@ function painelInst(anima) {
   desenhaLinhas($('p-mes'), $('tip-mes'), series, {anima, passoY: 25, maxY: 100});
   legenda($('leg-mes'), series, false);
   $('leg-mes').insertAdjacentHTML('beforeend',
-    `<span class="nota" style="margin:0 0 0 auto">pico: ${ni(maxQt)} pesquisas · ${moeda(maxVr)}</span>`);
+    `<span class="nota" style="margin:0; flex-basis:100%; text-align:center">pico: ${ni(maxQt)} pesquisas · ${moeda(maxVr)}</span>`);
 
   // fichas: só institutos com perfil pesquisado, ordenados pelo que registraram
   const comInfo = [];
