@@ -174,7 +174,9 @@
       line-height: 1; border: 0; border-radius: var(--r); background: transparent; color: var(--muted);
       cursor: pointer; padding: 0; }
   #limpa-inst:hover { background: var(--chip); color: var(--ink); }
-  .busca ul { position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 40;
+  /* a lista cresce até caber o nome mais longo (sem cortar), sem sair da tela */
+  .busca ul { position: absolute; top: calc(100% + 2px); left: 0; z-index: 40;
+      min-width: 100%; width: max-content; max-width: min(440px, calc(100vw - 32px)); box-sizing: border-box;
       margin: 0; padding: var(--e1) 0; list-style: none; max-height: 264px; overflow-y: auto;
       background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
       box-shadow: 0 8px 24px rgba(0,0,0,.16); }
@@ -878,7 +880,7 @@ function listaInst(termo) {
   bInst.filtradas.forEach(o => {
     const u = bInst.ult.get(o);
     const dt = u ? `<span class="ult" title="Última pesquisa: ${dBR(pd(u))}">(${u.slice(8,10)}/${u.slice(5,7)}/${u.slice(2,4)})</span>` : '';
-    itens.push(`<li role="option" data-v="${escapaHTML(o)}" aria-selected="${o === st.inst}">`
+    itens.push(`<li role="option" data-v="${escapaHTML(o)}" title="${escapaHTML(o)}" aria-selected="${o === st.inst}">`
       + `<span class="nm">${realcaTrecho(o, termo.trim())}</span>${dt}</li>`);
   });
   if (!itens.length) itens.push('<li class="vazio">Nenhum instituto com esse nome</li>');
@@ -898,6 +900,7 @@ function fechaInst() {
   $('sel-inst').setAttribute('aria-expanded', 'false');
   bInst.aberto = false; bInst.ativo = -1;
   $('sel-inst').value = st.inst;          // texto solto não vira filtro
+  $('sel-inst').title = st.inst || '';
   $('limpa-inst').hidden = !st.inst;
 }
 
