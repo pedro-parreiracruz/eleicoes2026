@@ -239,7 +239,19 @@
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   .tick { font-family: var(--numero); font-size: 11.5px; fill: var(--muted); }
   .catlabel { font-family: var(--texto); font-size: 13px; fill: var(--ink-2); }
-  .tip .dif { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--hair); font-size: 12px; color: var(--ink-2); }
+  /* diferença em destaque: é a resposta que a dica existe para dar */
+  .tip .dif { margin-top: 8px; padding: 7px 9px; border-radius: var(--r); background: var(--chip);
+             font-size: 12px; color: var(--ink-2); display: grid; gap: 3px; }
+  .tip .dif-l .v { font-size: 14px; }
+  /* fora da urna: ⚠ + sublinhado amarelo, no gráfico e na dica */
+  .catlabel .fora { fill: var(--warn); text-decoration: underline; text-decoration-color: var(--warn);
+                    text-underline-offset: 3px; }
+  .tip .fora { color: var(--warn); text-decoration: underline; text-decoration-color: var(--warn);
+              text-underline-offset: 3px; }
+  .tip .fora-nota { display: flex; gap: 6px; margin-top: 7px; font-size: 11.5px; line-height: 1.4;
+                   color: var(--ink-2); max-width: 280px; }
+  .tip .fora-nota > span:first-child { color: var(--warn); flex: none; }
+  .tip .fora-nota b { display: inline; text-transform: none; letter-spacing: 0; color: var(--ink); font-size: inherit; margin: 0; }
   .tip .dif-l { display: flex; justify-content: space-between; gap: 14px; }
   .tip .dif-l .v { font-family: var(--numero); color: var(--ink); font-weight: 600; white-space: nowrap; }
   .catlabel.alerta { fill: var(--warn); }
@@ -2307,6 +2319,10 @@ function nx(n) {                              // n = chave do dado; devolve o no
   _cacheNx.set(n, t); return t;
 }
 
+// fora da urna = sem registro no TSE ou com candidatura indeferida (SITUACAO)
+const foraDaUrna = n => !REGISTRADOS.includes(n) || !!SITUACAO[n];
+const motivoFora = n => SITUACAO[n] ? 'candidatura indeferida pelo TSE; os números são do período em que estava na disputa'
+                                    : 'sem candidatura registrada no TSE; o confronto é um cenário hipotético';
 const REGISTRADOS = ['Lula','Flávio Bolsonaro','Cury (Avante)','Renan Santos','Ronaldo Caiado',
   'Pablo Marçal','Romeu Zema','Samara','Pimenta','Dias','Clariana','Costa','Grassi'];
 
@@ -2792,8 +2808,8 @@ function desenhaBarras(host, tip, dados, opts) {
   // gutter medido, não chutado: nome de duelo é longo ("Flávio Bolsonaro × Fernando Haddad")
   const rotulos = dados.map(d => opts.par
     ? (() => { const n2 = [[d.a, d.va], [d.b, d.vb]].sort((x, y) => y[1] - x[1]);
-               return estreito ? nx(n2[0][0]).split(' ')[0] + ' × ' + nx(n2[1][0]).split(' ')[0]
-                               : nx(n2[0][0]) + ' × ' + nx(n2[1][0]); })()
+               const nm = n => (foraDaUrna(n) ? '⚠ ' : '') + (estreito ? nx(n).split(' ')[0] : nx(n));
+               return nm(n2[0][0]) + ' × ' + nm(n2[1][0]); })()
     : nx(d.nome));
   const maiorRot = Math.max(0, ...rotulos.map(t => larguraTexto(t, '400', 13, css('--texto'))));
   // no celular o avatar sai: 30px de gutter valem mais como barra
@@ -2827,8 +2843,12 @@ function desenhaBarras(host, tip, dados, opts) {
       const nomes = [[d.a, d.va], [d.b, d.vb]].sort((x,y) => y[1] - x[1]);
       const av = comAvatar ? avatarSVG(g, padL - 150, y0 + alt/2 - 1, 11, nomes[0][0]) : null;
       const lb = svgEl('text', {x: padL - 12, y: y0 + alt/2 + 4, 'text-anchor':'end', class:'catlabel'});
-      lb.textContent = estreito ? nx(nomes[0][0]).split(' ')[0] + ' × ' + nx(nomes[1][0]).split(' ')[0]
-                                : nx(nomes[0][0]) + ' × ' + nx(nomes[1][0]);
+      // quem está fora da urna ganha ⚠ e sublinhado amarelo, no rótulo e na dica
+      const parte = n => { const t = svgEl('tspan', foraDaUrna(n) ? {class: 'fora'} : {});
+        t.textContent = (foraDaUrna(n) ? '⚠ ' : '') + (estreito ? nx(n).split(' ')[0] : nx(n)); return t; };
+      lb.appendChild(parte(nomes[0][0]));
+      lb.appendChild(document.createTextNode(' × '));
+      lb.appendChild(parte(nomes[1][0]));
       g.appendChild(lb);
       ajustes.push({lb, av, cy: y0 + alt/2 - 1});
       const colide = corDe(nomes[0][0]) === corDe(nomes[1][0]);
@@ -2865,7 +2885,11 @@ function desenhaBarras(host, tip, dados, opts) {
     hit.addEventListener('pointerenter', () => {
       if (opts.par) {
         // título na mesma ordem do rótulo da linha: quem está na frente primeiro
-        dica(tip, host, W/2, y0 + alt/2, `<b>${d.va >= d.vb ? nx(d.a) + ' × ' + nx(d.b) : nx(d.b) + ' × ' + nx(d.a)}</b>` +
+        const tit = n => foraDaUrna(n) ? `<span class="fora">⚠ ${nx(n)}</span>` : nx(n);
+        const ordem = d.va >= d.vb ? [d.a, d.b] : [d.b, d.a];
+        const adendo = ordem.filter(foraDaUrna).map(n =>
+          `<div class="fora-nota"><span>⚠</span><span><b>${nx(n)}</b>: ${motivoFora(n)}.</span></div>`).join('');
+        dica(tip, host, W/2, y0 + alt/2, `<b>${tit(ordem[0])} × ${tit(ordem[1])}</b>` +
           linhasDica([{nome:d.a, v:d.va, cor:corDe(d.a)}, {nome:d.b, v:d.vb, cor:corDe(d.b)}]) +
           (() => {
             // diferença em pontos percentuais (subtração) e em percentual (quanto o
@@ -2878,7 +2902,7 @@ function desenhaBarras(host, tip, dados, opts) {
               ? lin('Empate', '0,0 p.p.')
               : lin('Diferença', nd(pp) + ' p.p.') +
                 (rel != null ? lin(`${nx(hi[0])} tem a mais`, nd(rel) + '%') : '')) + '</div>';
-            return dif + `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'}</div>`;
+            return dif + adendo + `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'}</div>`;
           })());
       } else {
         const rel = d.margem && d.media ? (d.margem/d.media*100) : null;
