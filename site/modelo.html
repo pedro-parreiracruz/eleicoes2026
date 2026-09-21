@@ -304,7 +304,7 @@
 
   .tema { margin-top: var(--e5); }
   .tema:first-child { margin-top: var(--e3); }
-  .tema h3 { display: flex; align-items: center; gap: var(--e3); margin: 0 0 var(--e3);
+  .tema h3 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e3); margin: 0 0 var(--e3);
              font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
              padding-bottom: var(--e2); border-bottom: 1px solid var(--hair); }
   .tema h3 > span { margin-left: auto; font-family: var(--numero); font-weight: 500;
@@ -315,10 +315,23 @@
   .pitem p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
   .pitem .ptema { font-family: var(--numero); font-size: 10.5px; letter-spacing: .06em;
                   color: var(--muted); padding-top: 2px; }
+  /* o candidato é um link para o plano completo: tem que PARECER clicável sem passar o
+     mouse -- borda sempre visível, nome sublinhado e a seta de link externo */
   .pchip { display: inline-flex; align-items: center; gap: var(--e2); text-decoration: none; color: inherit;
-           padding: 2px 6px 2px 2px; border-radius: 999px; border: 1px solid transparent; }
-  .pchip:hover { border-color: var(--hair); background: var(--chip); }
-  .pchip .nm { font-size: 13px; font-weight: 600; }
+           padding: 2px 8px 2px 2px; border-radius: 999px; border: 1px solid var(--hair);
+           background: var(--surface); cursor: pointer; transition: border-color .12s, background .12s; }
+  .pchip:hover, .pchip:focus-visible { border-color: var(--focus); background: var(--chip); }
+  .pchip .nm { font-size: 13px; font-weight: 600; text-decoration: underline;
+               text-decoration-color: var(--axis); text-underline-offset: 3px; }
+  .pchip:hover .nm { text-decoration-color: currentColor; }
+  .pchip .ir { font-size: 12px; color: var(--muted); }
+  .pchip:hover .ir { color: var(--ink); }
+  .plano { font-family: var(--numero); font-size: 11.5px; color: var(--ink-2); text-decoration: none;
+           border: 1px solid var(--hair); border-radius: var(--r); padding: 3px 8px; white-space: nowrap; }
+  .plano:hover { border-color: var(--focus); color: var(--ink); }
+  .pitem > .pchip { justify-self: start; }
+  .tema h3 > .plano { margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 500; }
+  .tema h3 .pchip { text-transform: none; letter-spacing: 0; }
   .pchip .pt { font-family: var(--numero); font-size: 10px; font-weight: 600; letter-spacing: .04em;
                color: var(--ink-2); background: var(--chip); border-radius: var(--r); padding: 1px 5px; }
   @media (max-width: 620px) { .pitem { grid-template-columns: 1fr; gap: var(--e2); } }
@@ -1523,7 +1536,7 @@ function painelProp() {
     <section class="card">
       <div class="card-topo">
         <div><h2>O que cada candidatura propõe</h2>
-          <p class="sub">Trechos do plano de governo que cada candidatura protocolou no TSE até 15/08/2026. Para ver todas as propostas de uma candidatura, clique no candidato: abre o plano de governo completo, no site do TSE.</p></div>
+          <p class="sub">Trechos do plano de governo que cada candidatura protocolou no TSE até 15/08/2026. Clique em qualquer candidato (↗) para abrir o plano de governo completo dele, com todas as propostas, no site do TSE.</p></div>
         <div class="card-acoes"><div class="seg" role="group" aria-label="Organizar por">
           <button type="button" id="pv-tema" aria-pressed="true">Por tema</button>
           <button type="button" id="pv-cand" aria-pressed="false">Por candidato</button>
@@ -1549,7 +1562,7 @@ function painelProp() {
   const chip = c => `<a class="pchip" href="${c.u}" target="_blank" rel="noopener" title="${c.pg} páginas — abrir o PDF no TSE">
       ${FOTO[c.n] ? `<img class="cand-av" src="${FOTO[c.n]}" alt="" style="--anel:${corDe(c.n)}">`
                   : `<span class="cand-av" style="background:${corDe(c.n)}"></span>`}
-      <span class="nm">${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span></a>`;
+      <span class="nm">${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span><span class="ir" aria-hidden="true">↗</span></a>`;
 
   function porTema() {
     $('prop-corpo').innerHTML = PROP.temas.map((t, k) => {
@@ -1564,7 +1577,7 @@ function painelProp() {
   function porCandidato() {
     $('prop-corpo').innerHTML = cands.map((c, k) => `
       <section class="tema surge" style="animation-delay:${Math.min(k,8)*30}ms">
-        <h3>${chip(c)}<span>${c.pg} pág.</span></h3>
+        <h3>${chip(c)}<a class="plano" href="${c.u}" target="_blank" rel="noopener">Ver plano completo · ${c.pg} pág. ↗</a></h3>
         ${c.obs ? `<p class="nota" style="margin:0 0 var(--e3)">${c.obs}</p>` : ''}
         ${c.i.map(x => `<div class="pitem"><span class="ptema">${MAI(x.t)}</span><p>${x.x}</p></div>`).join('')}
       </section>`).join('');
