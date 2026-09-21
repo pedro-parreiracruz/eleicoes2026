@@ -637,7 +637,7 @@ const LIM = {
 };
 
 // ---------------------------------------------------------------- estado
-const st = { aba: 't1', ini: null, fim: null, inst: '', a: null, b: null, tabela: false,
+const st = { aba: 't1', ini: null, fim: null, inst: '', a: null, b: null, tabela: false, hipot: false,
              off: new Set(), ord: {}, animou: {} };
 
 function guarda(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -867,13 +867,20 @@ function encaixaRotulos(ajustes, padL) {
   const temAv = ajustes.some(a => a.av);
   const espaco = padL - 12 - (temAv ? AV_RESERVA : 4);
   // 1ª passada: encurta o que não cabe
+  // encurta pelo fim, pedaço por pedaço: o rótulo pode ter tspans (nome fora da urna
+  // com ⚠ e sublinhado) e trocar o textContent inteiro apagaria essa marcação
   ajustes.forEach(({lb}) => {
-    let txt = lb.textContent;
-    if (lb.getComputedTextLength() > espaco) {
-      while (txt.length > 6 && lb.getComputedTextLength() > espaco) {
-        txt = txt.slice(0, -2); lb.textContent = txt + '…';
+    if (lb.getComputedTextLength() <= espaco) return;
+    const cheio = lb.textContent;
+    const partes = [...lb.childNodes];
+    for (let k = partes.length - 1; k >= 0 && lb.getComputedTextLength() > espaco; k--) {
+      const no = partes[k]; let txt = no.textContent.replace(/…$/, '');
+      while (txt.length > 1 && lb.getComputedTextLength() > espaco) {
+        txt = txt.slice(0, -1); no.textContent = txt.trimEnd() + '…';
       }
+      if (lb.getComputedTextLength() > espaco && k > 0) no.textContent = '';
     }
+    const t = svgEl('title', {}); t.textContent = cheio; lb.appendChild(t);
   });
   // 2ª passada: todos os avatares na MESMA coluna. Antes cada um encostava no
   // próprio texto e a coluna saía serrilhada, como se as linhas estivessem tortas.
@@ -1312,6 +1319,11 @@ function painelT2(anima) {
   const comp = [...agrup.values()].map(x => ({a:x.a, b:x.b, va:x.sa/x.n, vb:x.sb/x.n, n:x.n}))
     // mais acirrado primeiro: menor diferença entre os dois; empate desfeito por mais simulações
     .sort((x,y) => Math.abs(x.va - x.vb) - Math.abs(y.va - y.vb) || y.n - x.n);
+  // por padrão só confrontos entre candidatos na urna; o resto é cenário hipotético e
+  // fica atrás do botão (ainda marcado com ⚠ quando aparece)
+  const reais = comp.filter(c => !foraDaUrna(c.a) && !foraDaUrna(c.b));
+  const lista = st.hipot ? comp : reais;
+  const nHip = comp.length - reais.length;
   const nSim = rows.length;
   const atual = comp.find(c => [c.a,c.b].sort().join('||') === par.join('||'));
   // os tiles e o título seguem quem está à frente, não a ordem dos seletores
@@ -1337,7 +1349,12 @@ function painelT2(anima) {
 
     <section class="card">
       <div class="card-topo"><div><h2>Todos os duelos</h2>
-        <p class="sub">Média de cada confronto no período, do mais acirrado ao menos acirrado.</p></div></div>
+        <p class="sub">Média de cada confronto no período, do mais acirrado ao menos acirrado. ${st.hipot
+          ? `Inclui ${nHip} cenários hipotéticos, marcados com ⚠.`
+          : `Só confrontos entre candidatos com candidatura registrada no TSE (${reais.length} de ${comp.length}).`}</p></div>
+        ${nHip ? `<div class="seg" role="group" aria-label="Confrontos exibidos">
+          <button type="button" data-hipot="0" aria-pressed="${!st.hipot}">Só candidatos</button>
+          <button type="button" data-hipot="1" aria-pressed="${st.hipot}">Incluir hipotéticos</button></div>` : ''}</div>
       <div class="plot" id="p-barra"><div class="tip" id="tip-barra"></div></div>
       <div id="tab-barra" hidden></div>
     </section>`;
@@ -1358,15 +1375,18 @@ function painelT2(anima) {
       dias.map(x => [dBR(x.d), (x.sa/x.n), (x.sb/x.n), x.n].map((v,i) => i===1||i===2 ? (series[0].nome===par[0] ? v : v) : v)), 'linha2');
     tabela($('tab-barra'), [{t:'Duelo', f: (v,r) => celCand(r[6]) + ' × ' + nx(r[7])},
       {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Simulações', pad:true, f: v=>ni(v)}, {t:''}, {t:''}, {t:''}],
-      comp.map(c => { const hi = c.va >= c.vb ? c.a : c.b, lo = c.va >= c.vb ? c.b : c.a;
+      lista.map(c => { const hi = c.va >= c.vb ? c.a : c.b, lo = c.va >= c.vb ? c.b : c.a;
         const vh = Math.max(c.va, c.vb), vl = Math.min(c.va, c.vb);
         return [hi+' × '+lo, vh, vl, vh-vl, c.n, '', hi, lo]; }), 'barra2');
   } else {
     desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, faixa: true});
     legenda($('leg-linha'), series, false);
-    desenhaBarras($('p-barra'), $('tip-barra'), comp, {anima, par: true});
+    desenhaBarras($('p-barra'), $('tip-barra'), lista, {anima, par: true});
   }
   contaNumeros();
+  document.querySelectorAll('[data-hipot]').forEach(bt => bt.onclick = () => {
+    st.hipot = bt.dataset.hipot === '1'; desenha(true);
+  });
 }
 
 function painelInst(anima) {
