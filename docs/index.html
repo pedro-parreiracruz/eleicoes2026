@@ -2829,7 +2829,8 @@ function desenhaBarras(host, tip, dados, opts) {
       ajustes.push({lb, av, cy: y0 + alt/2 - 1});
       const colide = corDe(nomes[0][0]) === corDe(nomes[1][0]);
       nomes.forEach(([nm, vv], j) => {
-        const yy = y0 + 7 + j*17;
+        // duas barras de 14px separadas por 2px, o par centrado na linha
+        const yy = y0 + (alt - (14*2 + 2))/2 + j*(14 + 2);
         const larg = Math.max(2, X(vv)-padL);
         g.appendChild(svgEl('rect', {x: padL, y: yy, width: larg, height: 14, rx: 2, fill: corDe(nm)}));
         // duas barras na mesma cor: a de baixo ganha textura, senão o duelo fica ilegível
