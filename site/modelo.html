@@ -1172,13 +1172,13 @@ function desenhaLinhas(host, tip, series, opts) {
       p.style.setProperty('--dash', Math.max(1, p.getTotalLength ? 2400 : 2400));
       p.style.animationDelay = (idx * 60) + 'ms'; }
     svg.appendChild(p);
-    // o ponto e o número da ponta são o ÚLTIMO DIA DE PESQUISA (valor cru); a linha
-    // cheia continua suavizada, mas o rótulo tem que bater com o dia mais recente
-    const u = s.pts[s.pts.length - 1];
+    // a bolinha fica na ponta da linha desenhada (senão ela "solta" da linha quando a
+    // linha é suavizada); o NÚMERO é o do último dia de pesquisa, valor cru
+    const u = linha[linha.length - 1], ult = s.pts[s.pts.length - 1];
     svg.appendChild(svgEl('circle', {cx: X(+u.d), cy: Y(u.v), r: 4, fill: s.cor,
       stroke: css('--surface'), 'stroke-width': 2}));
     if (!estreito) rot.push({x: X(+u.d)+10, y: Y(u.v), nome: s.nome,
-      val: nd(u.v)+'%', cor: s.cor, v: u.v});
+      val: nd(ult.v)+'%', cor: s.cor, v: u.v});
   });
   // rótulos de ponta: maior valor sempre acima, depois afasta o que colidir
   rot.sort((a,b) => b.v - a.v);
