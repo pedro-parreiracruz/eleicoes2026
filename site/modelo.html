@@ -284,6 +284,8 @@
      aparecer por baixo dela. Aqui ela usa sempre cor sólida. */
   tbody tr:hover td:first-child { background: var(--hover-op); }
   td.ord, th.ord { background: var(--realce); }
+  /* thead é sticky: cor translúcida deixaria as linhas aparecerem por baixo ao rolar */
+  thead th.ord, thead th:first-child.ord { background: var(--realce-op); }
   tbody tr:hover td.ord { background: var(--realce); }
   td:first-child.ord, th:first-child.ord { background: var(--realce-op); }
   tbody tr:hover td:first-child.ord { background: var(--realce-op); }
@@ -313,7 +315,7 @@
              padding-bottom: var(--e2); border-bottom: 1px solid var(--hair); }
   .tema h3 > span { margin-left: auto; font-family: var(--numero); font-weight: 500;
                     letter-spacing: 0; color: var(--muted); text-transform: none; }
-  .pitem { display: grid; grid-template-columns: 210px 1fr; gap: var(--e4); align-items: start;
+  .pitem { display: grid; grid-template-columns: minmax(210px, max-content) 1fr; gap: var(--e4); align-items: start;
            padding: var(--e3) 0; border-top: 1px solid var(--hair); }
   .tema h3 + .pitem, .tema .nota + .pitem { border-top: 0; }
   .pitem p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
@@ -325,7 +327,8 @@
            padding: 2px 8px 2px 2px; border-radius: 999px; border: 1px solid var(--hair);
            background: var(--surface); cursor: pointer; transition: border-color .12s, background .12s; }
   .pchip:hover, .pchip:focus-visible { border-color: var(--focus); background: var(--chip); }
-  .pchip .nm { font-size: 13px; font-weight: 600; text-decoration: underline;
+  .pchip { flex-wrap: nowrap; }
+  .pchip .nm { white-space: nowrap; font-size: 13px; font-weight: 600; text-decoration: underline;
                text-decoration-color: var(--axis); text-underline-offset: 3px; }
   .pchip:hover .nm { text-decoration-color: currentColor; }
   .pchip .ir { font-size: 12px; color: var(--muted); }
@@ -336,7 +339,9 @@
   .pitem > .pchip { justify-self: start; }
   .tema h3 > .plano { margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 500; }
   .tema h3 .pchip { text-transform: none; letter-spacing: 0; }
-  .pchip .pt { font-family: var(--numero); font-size: 10px; font-weight: 600; letter-spacing: .04em;
+  .pchip.fora-chip { border-color: var(--warn); }
+  .pchip.fora-chip .nm { color: var(--warn); text-decoration-color: var(--warn); }
+  .pchip .pt { flex: none; font-family: var(--numero); font-size: 10px; font-weight: 600; letter-spacing: .04em;
                color: var(--ink-2); background: var(--chip); border-radius: var(--r); padding: 1px 5px; }
   @media (max-width: 620px) { .pitem { grid-template-columns: 1fr; gap: var(--e2); } }
 
@@ -599,8 +604,8 @@ const CAPA_LINKS = [
       <span class="rotulo">Atalhos</span>
       <div class="atalhos" id="atalhos">
         <button type="button" data-dias="0">Tudo</button>
-        <button type="button" data-dias="90">90 d</button>
         <button type="button" data-dias="30">30 d</button>
+        <button type="button" data-dias="7">7 d</button>
       </div>
     </div>
     <div class="campo">
@@ -732,10 +737,15 @@ const iniciais = nome => { const p = nx(nome).replace(/\(.*?\)/g,'').trim().spli
 // ---------------------------------------------------------------- parsing
 const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m] = l.split(';');
   return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null}; });
-const V1 = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v] = l.split(';');
-  const [nome, part] = c.split('|'); return {d: pd(d), ds: d, i, nome, part, v: +v}; });
-const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m] = l.split(';');
-  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null}; });
+// 5º campo (C/N) separa candidato de não-resposta (indecisos, brancos, nulos, outros);
+// carga antiga não tem o campo e tudo vira candidato, como era antes
+const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split(';');
+  const [nome, part] = c.split('|'); return {d: pd(d), ds: d, i, nome, part, v: +v, nr: t === 'N'}; });
+const V1 = V1TUDO.filter(r => !r.nr);
+const VNR = V1TUDO.filter(r => r.nr);
+// 8º campo: indecisos, brancos e nulos do mesmo cenário (carga antiga não tem)
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr] = l.split(';');
+  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null}; });
 const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
   return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
 const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
@@ -955,6 +965,7 @@ const noPeriodo = r => r.d >= st.ini && r.d <= st.fim;
 const doInst = r => !st.inst || r.i === st.inst;
 const fat1 = () => V1.filter(r => noPeriodo(r) && doInst(r));
 const fat2 = () => D2.filter(r => noPeriodo(r) && doInst(r));
+const fatNR = () => VNR.filter(r => noPeriodo(r) && doInst(r));
 
 function resumo1(rows) {
   const m = new Map();
@@ -964,6 +975,23 @@ function resumo1(rows) {
     m.set(r.nome, a); });
   return [...m.values()].map(a => ({...a, media: a.s/a.n, margem: a.mgn ? a.mg/a.mgn : null}))
     .sort((x,y) => y.media - x.media);
+}
+// Não-resposta = indecisos, brancos, nulos e "outros". Some tudo dentro da mesma
+// pesquisa (dia + instituto) e só depois tira a média entre pesquisas.
+const NOME_NR = 'Indecisos, brancos e nulos';
+function porPesquisaNR(rows) {
+  const m = new Map();
+  rows.forEach(r => { const k = r.ds + '|' + r.i; const a = m.get(k) || {ds: r.ds, d: r.d, i: r.i, v: 0};
+    a.v += r.v; m.set(k, a); });
+  return [...m.values()];
+}
+function resumoNR(rows) {
+  const ps = porPesquisaNR(rows);
+  if (!ps.length) return null;
+  const vs = ps.map(p => p.v);
+  return {nome: NOME_NR, media: vs.reduce((a, b) => a + b, 0)/vs.length,
+          min: Math.min(...vs), max: Math.max(...vs), margem: null, n: vs.length,
+          cor: css('--muted'), semFoto: true};
 }
 function serieDiaria(rows, nomes) {
   const k = new Map();
@@ -1144,7 +1172,9 @@ function desenhaLinhas(host, tip, series, opts) {
       p.style.setProperty('--dash', Math.max(1, p.getTotalLength ? 2400 : 2400));
       p.style.animationDelay = (idx * 60) + 'ms'; }
     svg.appendChild(p);
-    const u = linha[linha.length - 1];
+    // o ponto e o número da ponta são o ÚLTIMO DIA DE PESQUISA (valor cru); a linha
+    // cheia continua suavizada, mas o rótulo tem que bater com o dia mais recente
+    const u = s.pts[s.pts.length - 1];
     svg.appendChild(svgEl('circle', {cx: X(+u.d), cy: Y(u.v), r: 4, fill: s.cor,
       stroke: css('--surface'), 'stroke-width': 2}));
     if (!estreito) rot.push({x: X(+u.d)+10, y: Y(u.v), nome: s.nome,
@@ -1168,8 +1198,9 @@ function desenhaLinhas(host, tip, series, opts) {
   // nascem fora do quadro: em (0,0) elas esticavam a caixa do SVG 4px para a esquerda
   const marcas = ativos.map(s => { const c = svgEl('circle', {cx: -50, cy: -50, r: 4.5, fill: s.cor,
     stroke: css('--surface'), 'stroke-width': 2, opacity: 0}); svg.appendChild(c); return c; });
-  const capa = svgEl('rect', {x: padL, y: padT, width: Math.max(1, W-padL-padR), height: H-padT-padB, fill: 'transparent'});
-  capa.addEventListener('pointermove', ev => {
+  const capa = svgEl('rect', {x: padL, y: padT, width: Math.max(1, W-padL-padR), height: H-padT-padB,
+    fill: 'transparent', style: 'touch-action: pan-y'});
+  const mostra = ev => {
     const rc = svg.getBoundingClientRect(); const px = (ev.clientX - rc.left) * (W / rc.width);
     const alvo = t0 + ((px - padL)/(W - padL - padR))*(t1 - t0);
     let melhor = null; ativos[0].pts.forEach(p => { if (!melhor || Math.abs(+p.d-alvo) < Math.abs(+melhor.d-alvo)) melhor = p; });
@@ -1182,9 +1213,16 @@ function desenhaLinhas(host, tip, series, opts) {
       else marcas[i].setAttribute('opacity', 0); });
     dica(tip, host, tx, Y(yT)+30, `<b>${dBR(melhor.d)}</b>${linhasDica(itens)}` +
       (nn ? `<div class="n">${nn} pesquisa${nn>1?'s':''} no dia</div>` : ''));
-  });
-  capa.addEventListener('pointerleave', () => { cruz.setAttribute('opacity', 0);
-    marcas.forEach(m => m.setAttribute('opacity', 0)); semDica(tip); });
+  };
+  const some = () => { cruz.setAttribute('opacity', 0);
+    marcas.forEach(m => m.setAttribute('opacity', 0)); semDica(tip); };
+  capa.addEventListener('pointermove', mostra);
+  // no celular o dedo só gera pointermove depois do pointerdown: sem isso, arrastar
+  // o dedo no gráfico não mostrava dica nenhuma
+  capa.addEventListener('pointerdown', ev => { if (capa.setPointerCapture) { try { capa.setPointerCapture(ev.pointerId); } catch (e) {} } mostra(ev); });
+  capa.addEventListener('pointerup', some);
+  capa.addEventListener('pointercancel', some);
+  capa.addEventListener('pointerleave', some);
   svg.appendChild(capa);
   host.appendChild(svg);
 }
@@ -1257,15 +1295,15 @@ function desenhaBarras(host, tip, dados, opts) {
       const bh = 14, yB = y0 + 7;
       if (d.max > d.min) g.appendChild(svgEl('line', {x1: X(d.min), x2: X(d.max), y1: yB+bh+8, y2: yB+bh+8,
         stroke: css('--axis'), 'stroke-width': 2, 'stroke-linecap':'round'}));
-      const av = comAvatar ? avatarSVG(g, padL - (estreito ? 106 : 168), yB + bh/2, 11, d.nome) : null;
+      const av = (comAvatar && !d.semFoto) ? avatarSVG(g, padL - (estreito ? 106 : 168), yB + bh/2, 11, d.nome) : null;
       const lb = svgEl('text', {x: padL - 12, y: yB + bh - 2, 'text-anchor':'end',
         class: 'catlabel' + (SITUACAO[d.nome] ? ' alerta' : '')});
       lb.textContent = (SITUACAO[d.nome] ? '⚠ ' : '') + nx(d.nome);
       g.appendChild(lb);
       ajustes.push({lb, av, cy: yB + bh/2});
       const largS = Math.max(2, X(d.media)-padL);
-      g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: corDe(d.nome)}));
-      const hxS = hachuraDe(hid, d.nome);
+      g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: d.cor || corDe(d.nome)}));
+      const hxS = d.cor ? null : hachuraDe(hid, d.nome);
       if (hxS) g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: hxS}));
       const t = svgEl('text', {x: X(d.media)+10, y: yB+bh-2, class:'vallabel'});
       t.textContent = nd(d.media) + '%'; g.appendChild(t);
@@ -1292,7 +1330,9 @@ function desenhaBarras(host, tip, dados, opts) {
               ? lin('Empate', '0,0 p.p.')
               : lin('Diferença', nd(pp) + ' p.p.') +
                 (rel != null ? lin(`${nx(hi[0])} tem a mais`, nd(rel) + '%') : '')) + '</div>';
-            return dif + adendo + `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'}</div>`;
+            const ind = d.nr != null
+              ? `<div class="row"><span>Indecisos e nulos</span><span class="num">${nd(d.nr)}%</span></div>` : '';
+            return ind + dif + adendo + `<div class="n">${d.n} simulaç${d.n>1?'ões':'ão'}</div>`;
           })());
       } else {
         const rel = d.margem && d.media ? (d.margem/d.media*100) : null;
@@ -1430,6 +1470,7 @@ const celCand = nome => `<span class="celcand">` + (FOTO[nome]
 // ---------------------------------------------------------------- painéis
 function painelT1(anima) {
   const rows = fat1(), res = resumo1(rows);
+  const nr = resumoNR(fatNR());
   const nPesq = new Set(rows.map(r => r.ds + '|' + r.i)).size;
   const nInst = new Set(rows.map(r => r.i)).size;
   const lider = res[0], vice = res[1];
@@ -1438,8 +1479,9 @@ function painelT1(anima) {
   $('painel').innerHTML = `
     <div class="tiles anim-sobe">
       <div class="tile"><div class="k">Pesquisas</div><div class="v" data-num="${nPesq}">0</div><div class="s">${nInst} ${nInst === 1 ? 'instituto' : 'institutos'}</div></div>
-      <div class="tile"><div class="k">Líder</div><div class="v" data-num="${lider?lider.media:0}" data-suf="%">0</div><div class="s">${lider?nx(lider.nome):'–'}</div></div>
+      <div class="tile"><div class="k">Líder geral</div><div class="v" data-num="${lider?lider.media:0}" data-suf="%">0</div><div class="s">${lider?nx(lider.nome):'–'}</div></div>
       <div class="tile"><div class="k">Vantagem</div><div class="v" data-num="${lider&&vice?lider.media-vice.media:0}" data-suf=" p.p.">0</div><div class="s">sobre ${vice?nx(vice.nome):'–'}</div></div>
+      ${nr ? `<div class="tile"><div class="k">Indecisos e nulos</div><div class="v" data-num="${nr.media}" data-suf="%">0</div><div class="s">quem não escolheu candidato</div></div>` : ''}
       <div class="tile"><div class="k">Margem de erro</div><div class="v" data-num="${mgMedia||0}" data-pre="±" data-suf=" p.p.">0</div><div class="s">${lider&&mgMedia?'±'+nd(mgMedia/lider.media*100)+'% do valor do líder':'média das pesquisas'}</div></div>
     </div>
 
@@ -1472,6 +1514,16 @@ function painelT1(anima) {
   const topN = res.slice(0, N_LINHAS()).map(r => r.nome);
   const s = serieDiaria(rows, topN);
   const series = topN.map(n => ({nome: n, cor: corDe(n), traco: tracoDe(n), pts: s[n], on: !st.off.has(n)}));
+  // indecisos, brancos e nulos entram como uma linha só, cinza e tracejada: não é
+  // candidato, mas é a fatia que decide a eleição
+  const psNR = porPesquisaNR(fatNR());
+  if (psNR.length) {
+    const porDiaNR = new Map();
+    psNR.forEach(x => { const a = porDiaNR.get(x.ds) || {d: x.d, s: 0, n: 0}; a.s += x.v; a.n++; porDiaNR.set(x.ds, a); });
+    const ptsNR = [...porDiaNR.values()].sort((a, b) => a.d - b.d).map(a => ({d: a.d, v: a.s/a.n, n: a.n}));
+    if (ptsNR.length) series.push({nome: NOME_NR, cor: css('--muted'), traco: '5 4', pts: ptsNR, on: !st.off.has(NOME_NR)});
+  }
+  const resBarra = nr ? [...res, nr] : res;
 
   if (st.tabela) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
@@ -1484,12 +1536,12 @@ function painelT1(anima) {
     tabela($('tab-barra'), [
       {t:'Candidato', f: v => celCand(v)}, {t:'Partido', f: v => MAI(v)}, {t:'Média %'}, {t:'Mín %'}, {t:'Máx %'},
       {t:'Margem p.p.'}, {t:'Pesquisas', pad:true, f: v => ni(v)}],
-      res.map(r => [r.nome, PARTIDO[r.nome]||'', r.media, r.min, r.max, r.margem, r.n]), 'barra');
+      resBarra.map(r => [r.nome, PARTIDO[r.nome]||'', r.media, r.min, r.max, r.margem, r.n]), 'barra');
   } else {
     // 1º turno: eixo de 25 em 25 a partir do zero, até o primeiro múltiplo acima do maior valor
     desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, passoY: 25, minY: 0});
     legenda($('leg-linha'), series, true);
-    desenhaBarras($('p-barra'), $('tip-barra'), res, {anima});
+    desenhaBarras($('p-barra'), $('tip-barra'), resBarra, {anima});
   }
   const vies = viesDeCasa(rows);
   desenhaVies($('p-vies'), $('tip-vies'), vies, anima);
@@ -1503,10 +1555,12 @@ function painelT2(anima) {
   const doDuelo = rows.filter(r => [r.a, r.b].sort().join('||') === par.join('||'));
   const agrup = new Map();
   rows.forEach(r => { const k = [r.a, r.b].sort().join('||');
-    const a = agrup.get(k) || {a: r.a, b: r.b, sa:0, sb:0, n:0};
+    const a = agrup.get(k) || {a: r.a, b: r.b, sa:0, sb:0, n:0, snr:0, nnr:0};
     if (a.a === r.a) { a.sa += r.va; a.sb += r.vb; } else { a.sa += r.vb; a.sb += r.va; }
+    if (r.nr != null) { a.snr += r.nr; a.nnr++; }
     a.n++; agrup.set(k, a); });
-  const comp = [...agrup.values()].map(x => ({a:x.a, b:x.b, va:x.sa/x.n, vb:x.sb/x.n, n:x.n}))
+  const comp = [...agrup.values()].map(x => ({a:x.a, b:x.b, va:x.sa/x.n, vb:x.sb/x.n, n:x.n,
+                                              nr: x.nnr ? x.snr/x.nnr : null}))
     // mais acirrado primeiro: menor diferença entre os dois; empate desfeito por mais simulações
     .sort((x,y) => Math.abs(x.va - x.vb) - Math.abs(y.va - y.vb) || y.n - x.n);
   // por padrão só confrontos entre candidatos na urna; o resto é cenário hipotético e
@@ -1525,6 +1579,7 @@ function painelT2(anima) {
       <div class="tile"><div class="k">Simulações</div><div class="v" data-num="${nSim}">0</div><div class="s">${comp.length} duelos distintos</div></div>
       <div class="tile"><div class="k">${nx(dupla[0])||'–'}</div><div class="v" data-num="${vDe(dupla[0])}" data-suf="%">0</div><div class="s">no duelo selecionado</div></div>
       <div class="tile"><div class="k">${nx(dupla[1])||'–'}</div><div class="v" data-num="${vDe(dupla[1])}" data-suf="%">0</div><div class="s">no duelo selecionado</div></div>
+      ${atual && atual.nr != null ? `<div class="tile"><div class="k">Indecisos e nulos</div><div class="v" data-num="${atual.nr}" data-suf="%">0</div><div class="s">no duelo selecionado</div></div>` : ''}
       <div class="tile"><div class="k">Diferença</div><div class="v" data-num="${atual?Math.abs(atual.va-atual.vb):0}" data-suf=" p.p.">0</div><div class="s">${atual? nx(dupla[0])+' à frente' : '–'}</div></div>
     </div>
 
@@ -1567,12 +1622,12 @@ function painelT2(anima) {
     // quem está fora da urna ganha ⚠ e sublinhado, como no gráfico
     const nomeDuelo = n => foraDaUrna(n) ? `<span class="fora">⚠ ${nx(n)}</span>` : nx(n);
     tabela($('tab-barra'), [{t:'Duelo', f: (v,r) => `<span class="celduelo">${
-        celCand(r[6]).replace(`>${nx(r[6])}</span>`, `>${nomeDuelo(r[6])}</span>`)}<span class="x">×</span>${nomeDuelo(r[7])}</span>`},
-      {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Simulações', pad:true, f: v=>ni(v)},
+        celCand(r[7]).replace(`>${nx(r[7])}</span>`, `>${nomeDuelo(r[7])}</span>`)}<span class="x">×</span>${nomeDuelo(r[8])}</span>`},
+      {t:'Maior %'}, {t:'Menor %'}, {t:'Diferença p.p.'}, {t:'Indecisos %'}, {t:'Simulações', pad:true, f: v=>ni(v)},
       {t:'', oculta:true}, {t:'', oculta:true}, {t:'', oculta:true}],
       lista.map(c => { const hi = c.va >= c.vb ? c.a : c.b, lo = c.va >= c.vb ? c.b : c.a;
         const vh = Math.max(c.va, c.vb), vl = Math.min(c.va, c.vb);
-        return [hi+' × '+lo, vh, vl, vh-vl, c.n, '', hi, lo]; }), 'barra2');
+        return [hi+' × '+lo, vh, vl, vh-vl, c.nr, c.n, '', hi, lo]; }), 'barra2');
   } else {
     desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, faixa: true});
     legenda($('leg-linha'), series, false);
@@ -1616,7 +1671,7 @@ function painelInst(anima) {
 
     <section class="card">
       <div class="card-topo"><div><h2>Quem são</h2>
-        <p class="sub">Quem faz as pesquisas que aparecem nas abas de 1º e 2º turno: quando a empresa surgiu, quem dirige e como ela coleta as respostas.</p></div></div>
+        <p class="sub">Quem faz as pesquisas que aparecem nas abas de 1º e 2º turno.</p></div></div>
       <div class="fichas" id="fichas"></div>
       <p class="nota">Método de coleta muda resultado: entrevista na rua, ligação, URA e painel online alcançam gente diferente. Por isso dois institutos podem medir o mesmo dia e chegar a números distintos — é o que o gráfico de viés de casa mostra na aba de 1º turno.</p>
     </section>`;
@@ -1716,10 +1771,15 @@ function painelProp() {
       </div>
     </section>`;
 
-  const chip = c => `<a class="pchip" href="${c.u}" target="_blank" rel="noopener" title="${c.pg} páginas — abrir o PDF no TSE">
+  // fora da corrida (ex.: candidatura indeferida) ganha ⚠ e nome em amarelo, do mesmo
+  // jeito dos gráficos; o nome nunca quebra linha
+  const chip = c => { const fora = foraDaUrna(c.n);
+    const tit = fora ? `${nx(c.n)} — ${motivoFora(c.n)}. ${c.pg} páginas: abrir o PDF no TSE`
+                     : `${c.pg} páginas — abrir o PDF no TSE`;
+    return `<a class="pchip${fora ? ' fora-chip' : ''}" href="${c.u}" target="_blank" rel="noopener" title="${escapaHTML(tit)}">
       ${FOTO[c.n] ? `<img class="cand-av" src="${FOTO[c.n]}" alt="" style="--anel:${corDe(c.n)}">`
                   : `<span class="cand-av" style="background:${corDe(c.n)}"></span>`}
-      <span class="nm">${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span><span class="ir" aria-hidden="true">↗</span></a>`;
+      <span class="nm">${fora ? '⚠ ' : ''}${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span><span class="ir" aria-hidden="true">↗</span></a>`; };
 
   function porTema() {
     $('prop-corpo').innerHTML = PROP.temas.map((t, k) => {

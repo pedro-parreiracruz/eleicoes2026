@@ -104,11 +104,18 @@ c as (select id_cenario,
                'Pablo Marçal','Romeu Zema','Samara','Pimenta','Dias','Clariana','Costa','Grassi',
                'Avalanche','Leonardo Avalanche') then 1 end) as n_fora
       from f group by 1),
+nr2 as (
+  select f.id_cenario, sum(cast(f.pc_intencao_voto as double)) as ind
+  from f join c using (id_cenario)
+  where c.n = 2 and f.tp_resposta <> 'Candidato'
+  group by f.id_cenario
+),
 duelo as (
   select date_format(f.dt_fim_campo,'yyyy-MM-dd') as d, f.inst_ok, max(f.pc_margem_erro) as margem,
          max(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as hi,
-         min(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as lo
-  from f join c using (id_cenario)
+         min(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as lo,
+         max(nr2.ind) as ind
+  from f join c using (id_cenario) left join nr2 on nr2.id_cenario = f.id_cenario
   where c.n = 2 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
   group by f.id_cenario, date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok
 ),
@@ -131,13 +138,16 @@ select
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok,
               concat(f.nm_candidato, '|', coalesce(f.sg_partido,'?')),
-              cast(round(avg(cast(f.pc_intencao_voto as double)),2) as string)) as l
+              cast(round(avg(cast(f.pc_intencao_voto as double)),2) as string),
+              case when f.tp_resposta='Candidato' then 'C' else 'N' end) as l
      from f join c using (id_cenario)
-     where c.n >= 7 and c.n_fora = 0 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
-     group by date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok, f.nm_candidato, coalesce(f.sg_partido,'?')
+     where c.n >= 7 and c.n_fora = 0 and f.dt_fim_campo is not null
+     group by date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok, f.nm_candidato,
+              coalesce(f.sg_partido,'?'), f.tp_resposta
      order by 1)) as b_v1t,
   (select array_join(collect_list(l), '\n') from (
-     select concat_ws(';', d, inst_ok, hi.nm, cast(hi.v as string), lo.nm, cast(lo.v as string), cast(margem as string)) as l
+     select concat_ws(';', d, inst_ok, hi.nm, cast(hi.v as string), lo.nm, cast(lo.v as string),
+              cast(margem as string), cast(round(ind,2) as string)) as l
      from duelo order by d, inst_ok, hi.nm)) as b_d2t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', nm_instituto, cast(count(*) as string), cast(round(sum(vr_pesquisa),2) as string),
