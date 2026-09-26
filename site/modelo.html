@@ -110,6 +110,7 @@
 
   /* ---------- ressalva do topo ----------
      Fechada por padrão: ocupa uma linha e não empurra gráfico nenhum. Aberta, explica. */
+  .aviso-legal { margin: var(--e3) 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 110ch; }
   .ressalva { margin-top: var(--e4); border: 1px solid var(--hair); border-left: 2px solid var(--warn);
               border-radius: var(--r); background: rgba(176,120,0,.08); }
   .ressalva summary { display: flex; align-items: flex-start; gap: var(--e2); padding: var(--e2) var(--e3);
@@ -586,6 +587,11 @@ const CAPA_LINKS = [
     <div id="ressalva-corpo"></div>
   </details>
 
+  <!-- aviso fixo: o painel agrega pesquisas de terceiros; não é pesquisa própria -->
+  <p class="aviso-legal" id="aviso-legal">Este painel reúne pesquisas de intenção de voto já divulgadas pelos
+    institutos; não é pesquisa própria. As médias são agregações dessas pesquisas, não um novo levantamento.
+    Cada pesquisa pertence ao instituto que a realizou.</p>
+
   <nav class="abas" role="tablist">
     <button type="button" role="tab" data-aba="t1" aria-selected="true">1º turno</button>
     <button type="button" role="tab" data-aba="t2" aria-selected="false">2º turno</button>
@@ -638,7 +644,7 @@ const CAPA_LINKS = [
   <div id="painel"></div>
 
   <footer>
-    <p>Pesquisas de intenção de voto divulgadas pelos institutos · <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">Metodologia e código do projeto no GitHub</a></p>
+    <p>Agregação de pesquisas de intenção de voto divulgadas pelos institutos; não é pesquisa própria · <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">Metodologia e código do projeto no GitHub</a></p>
   </footer>
 </div>
 
@@ -1213,6 +1219,7 @@ function desenhaLinhas(host, tip, series, opts) {
         marcas[i].setAttribute('opacity', 1); itens.push({nome: s.nome, v: p.v, cor: s.cor}); }
       else marcas[i].setAttribute('opacity', 0); });
     dica(tip, host, tx, Y(yT)+30, `<b>${dBR(melhor.d)}</b>${linhasDica(itens)}` +
+      (opts.extraDica ? opts.extraDica(melhor.d) : '') +
       (nn ? `<div class="n">${nn} pesquisa${nn>1?'s':''} no dia</div>` : ''));
   };
   const some = () => { cruz.setAttribute('opacity', 0);
@@ -1525,6 +1532,21 @@ function painelT1(anima) {
     if (ptsNR.length) series.push({nome: NOME_NR, cor: css('--muted'), traco: '5 4', pts: ptsNR, on: !st.off.has(NOME_NR)});
   }
   const resBarra = nr ? [...res, nr] : res;
+  // dica: quem ficou fora do gráfico entra como "Demais candidatos", e o total do dia fecha
+  // a conta (média do dia de cada nome, somada). Não fecha 100% quando o próprio instituto
+  // não publica tudo ou arredonda cada número.
+  const mediaDia = new Map();
+  [...rows, ...fatNR().map(r => ({...r, nome: NOME_NR}))].forEach(r => {
+    const m = mediaDia.get(+r.d) || new Map(); const a = m.get(r.nome) || {s: 0, n: 0};
+    a.s += r.v; a.n++; m.set(r.nome, a); mediaDia.set(+r.d, m); });
+  const noGrafico = new Set([...topN, NOME_NR]);
+  const extraDica = d => {
+    const m = mediaDia.get(+d); if (!m) return '';
+    let demais = 0, total = 0;
+    m.forEach((a, nome) => { const v = a.s / a.n; total += v; if (!noGrafico.has(nome)) demais += v; });
+    return `<div class="row"><span>Demais candidatos</span><span class="num">${nd(demais)}%</span></div>` +
+           `<div class="row" style="border-top:1px solid var(--hair);margin-top:4px;padding-top:4px"><span><b style="display:inline;margin:0">Total</b></span><span class="num">${nd(total)}%</span></div>`;
+  };
 
   if (st.tabela) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
@@ -1540,7 +1562,7 @@ function painelT1(anima) {
       resBarra.map(r => [r.nome, PARTIDO[r.nome]||'', r.media, r.min, r.max, r.margem, r.n]), 'barra');
   } else {
     // 1º turno: eixo de 25 em 25 a partir do zero, até o primeiro múltiplo acima do maior valor
-    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, passoY: 25, minY: 0});
+    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, passoY: 25, minY: 0, extraDica});
     legenda($('leg-linha'), series, true);
     desenhaBarras($('p-barra'), $('tip-barra'), resBarra, {anima});
   }

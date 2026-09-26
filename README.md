@@ -14,7 +14,7 @@ GitHub Actions (servidores do GitHub; horários de Brasília)
          ingestion/carga_raw.py: TSE (zips) + Wikipédia -> parquet -> workspace.raw_eleicoes.*
          dbt build: seeds + snapshots + staging -> intermediate -> marts -> marts.painel_* + testes
          site/gerar.py: lê marts.painel_* -> docs/index.html -> GitHub Pages
-  06:07 às 18:07, de hora em hora  checagem
+  06:07 a 18:07, a cada 3 horas  checagem
          ingestion/verificar_wikipedia.py: a tabela de pesquisas mudou desde a última carga?
          não -> para aí, sem ligar o Databricks
          sim -> carrega a Wikipédia, roda o dbt e republica o painel
@@ -28,7 +28,7 @@ policy", testado em 17/09/2026 para cdn.tse.jus.br, dadosabertos.tse.jus.br e pt
 
 ```
 .github/workflows/
-  carga_eleicoes.yml      carga diária, checagem de hora em hora e dbt build
+  carga_eleicoes.yml      carga diária, checagem a cada 3 horas e dbt build
   publicar_site.yml       gera docs/index.html a partir dos modelos painel_* e publica
 ingestion/
   carga_raw.py            baixa TSE e Wikipédia e grava as tabelas cruas (tudo string)

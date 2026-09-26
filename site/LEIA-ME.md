@@ -117,7 +117,7 @@ Tudo roda nos servidores do GitHub (nenhum computador precisa estar ligado), em
 `.github/workflows/carga_eleicoes.yml`, com dois agendamentos (horário de Brasília):
 
 - **05:17, carga completa:** TSE + Wikipédia → dbt build → site.
-- **06:07 a 18:07, de hora em hora, checagem:** baixa só a tabela da Wikipédia e tira uma
+- **06:07, 09:07, 12:07, 15:07 e 18:07, checagem:** baixa só a tabela da Wikipédia e tira uma
   impressão digital dela (`ingestion/verificar_wikipedia.py`, mesmo leitor da carga). Se for
   igual à da última carga que foi para o site, para ali — sem ligar o Databricks. Se mudou,
   carrega a Wikipédia, roda o dbt e republica. A impressão da última carga fica no cache do

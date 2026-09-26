@@ -6,10 +6,11 @@ on:
   schedule:
     # CARGA COMPLETA, 1x por dia, 05:17 em Brasilia: TSE + Wikipedia + dbt + site.
     - cron: "17 8 * * *"
-    # CHECAGEM, de hora em hora das 06:07 as 18:07 em Brasilia: so olha a Wikipedia. Se a
+    # CHECAGEM, a cada 3 horas (06:07, 09:07, 12:07, 15:07 e 18:07 em Brasilia): so olha a
+    # Wikipedia. Era de hora em hora, mas estourou a cota diaria da Free Edition. Se a
     # tabela de pesquisas nao mudou desde a ultima carga, para ali (nem liga o Databricks).
     # Se mudou, carrega a Wikipedia, roda o dbt e republica o site.
-    - cron: "7 9-21 * * *"
+    - cron: "7 9-21/3 * * *"
   workflow_dispatch:
     inputs:
       rodar_tse:
@@ -109,8 +110,8 @@ jobs:
   carga_wikipedia:
     name: Carga Wikipedia
     needs: [verificar]
-    # completa do dia e disparo manual: sempre; checagem de hora em hora: so se mudou
-    if: ${{ !cancelled() && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_wikipedia == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.verificar.result == 'success' && needs.verificar.outputs.mudou == 'true')) }}
+    # completa do dia e disparo manual: sempre; checagem a cada 3 horas: so se mudou
+    if: ${{ !cancelled() && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_wikipedia == 'true' || (github.event.schedule == '7 9-21/3 * * *' && needs.verificar.result == 'success' && needs.verificar.outputs.mudou == 'true')) }}
     environment: producao
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -142,8 +143,8 @@ jobs:
     name: dbt build (Databricks)
     needs: [carga_tse, carga_wikipedia]
     # roda se nenhuma carga falhou (cargas desmarcadas contam como "skipped")
-    # completa do dia: sempre; de hora em hora: so se a Wikipedia foi recarregada; manual: se pedido
-    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_dbt == 'true' || (github.event.schedule == '7 9-21 * * *' && needs.carga_wikipedia.result == 'success')) }}
+    # completa do dia: sempre; checagem a cada 3 horas: so se a Wikipedia foi recarregada; manual: se pedido
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && (github.event.schedule == '17 8 * * *' || github.event.inputs.rodar_dbt == 'true' || (github.event.schedule == '7 9-21/3 * * *' && needs.carga_wikipedia.result == 'success')) }}
     environment: producao
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -171,8 +172,15 @@ jobs:
         run: dbt debug --target prod
 
       # build = seeds + snapshots + models + testes, na ordem do DAG
+      # Na checagem, so o que depende da Wikipedia (poupa a cota diaria da Free Edition);
+      # na carga completa e no disparo manual, o projeto inteiro
       - name: dbt build
-        run: dbt build --target prod
+        run: |
+          if [ "${{ github.event.schedule }}" = "7 9-21/3 * * *" ]; then
+            dbt build --target prod --select stg_wikipedia__intencao_voto_2026+
+          else
+            dbt build --target prod
+          fi
 
       - name: Guardar artefatos (manifest, run_results)
         if: always()
