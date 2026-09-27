@@ -126,6 +126,7 @@
   .ressalva.registros { border-left-color: var(--muted); }
   .ressalva.registros .sinal { color: var(--muted); }
   .ressalva.registros #tab-registros td { white-space: nowrap; }
+  #tab-registros th:nth-child(-n+5), #tab-registros td:nth-child(-n+5) { text-align: left; }
   .aviso-legal { margin: var(--e3) 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 110ch; }
   .ressalva { margin-top: var(--e4); border: 1px solid var(--hair); border-left: 2px solid var(--warn);
               border-radius: var(--r); background: rgba(176,120,0,.08); }
@@ -1475,668 +1476,668 @@ const RAW_V1T = `2026-08-02;Nexus/BTG Pactual;Costa|PCB;0.0;C
 2026-09-24;Datafolha;Romeu Zema|NOVO;1.0;C
 2026-09-24;Datafolha;Ronaldo Caiado|PSD;4.0;C
 2026-09-24;Datafolha;Samara|UP;1.0;C`;
-const RAW_D2T = `2026-01-11;Genial/Quaest;Lula;43.0;Ratinho Júnior;36.0;2.00;21.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;44.0;Ronaldo Caiado;33.0;2.00;23.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;44.0;Tarcísio de Freitas;39.0;2.00;17.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;45.0;Aldo Rebelo;27.0;2.00;28.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;45.0;Flávio Bolsonaro;38.0;2.00;17.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;46.0;Renan Santos;26.0;2.00;28.0;BR008352026
-2026-01-11;Genial/Quaest;Lula;46.0;Romeu Zema;31.0;2.00;23.0;BR008352026
-2026-01-12;Meio/Ideia;Lula;44.4;Tarcísio de Freitas;42.1;2.20;13.6;BR067312026
-2026-01-12;Meio/Ideia;Lula;45.0;Eduardo Leite;23.0;2.20;32.1;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.0;Michelle Bolsonaro;39.0;2.20;15.1;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.0;Ratinho Júnior;37.0;2.20;17.1;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.2;Flávio Bolsonaro;36.0;2.20;17.8;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.3;Romeu Zema;36.1;2.20;17.8;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.3;Ronaldo Caiado;36.5;2.20;17.3;BR067312026
-2026-01-12;Meio/Ideia;Lula;46.5;Renan Santos;23.5;2.20;30.1;BR067312026
-2026-01-19;Apex/Futura;Flávio Bolsonaro;37.5;Tarcísio de Freitas;34.7;2.20;27.8;BR082332026
-2026-01-19;Apex/Futura;Flávio Bolsonaro;48.1;Lula;41.9;2.20;10.0;BR082332026
-2026-01-19;Apex/Futura;Lula;41.9;Eduardo Leite;37.3;2.20;20.9;BR082332026
-2026-01-19;Apex/Futura;Lula;42.8;Romeu Zema;40.5;2.20;16.7;BR082332026
-2026-01-19;Apex/Futura;Ratinho Júnior;44.8;Lula;41.2;2.20;14.0;BR082332026
-2026-01-19;Apex/Futura;Ronaldo Caiado;42.0;Lula;41.8;2.20;16.3;BR082332026
-2026-01-19;Apex/Futura;Tarcísio de Freitas;46.1;Lula;41.3;2.20;12.5;BR082332026
-2026-01-20;AtlasIntel;Lula;48.0;Eduardo Leite;23.0;1.00;29.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Flávio Bolsonaro;45.0;1.00;6.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Jair Bolsonaro;46.0;1.00;5.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Michelle Bolsonaro;45.0;1.00;6.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Ratinho Júnior;39.0;1.00;12.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Romeu Zema;39.0;1.00;12.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Ronaldo Caiado;39.0;1.00;12.0;BR028042026
-2026-01-20;AtlasIntel;Lula;49.0;Tarcísio de Freitas;45.0;1.00;6.0;BR028042026
-2026-01-28;Paraná Pesquisas;Lula;43.9;Jair Bolsonaro;41.9;2.20;14.3;BR082542026
-2026-01-28;Paraná Pesquisas;Lula;43.9;Tarcísio de Freitas;42.5;2.20;13.7;BR082542026
-2026-01-28;Paraná Pesquisas;Lula;44.7;Ratinho Júnior;38.9;2.20;16.4;BR082542026
-2026-01-28;Paraná Pesquisas;Lula;44.8;Flávio Bolsonaro;42.2;2.20;13.0;BR082542026
-2026-01-28;Paraná Pesquisas;Lula;45.4;Michelle Bolsonaro;38.7;2.20;15.8;BR082542026
-2026-01-28;Paraná Pesquisas;Lula;45.8;Tarcísio de Freitas;34.6;2.20;19.6;BR082542026
-2026-02-02;Gerp;Lula;42.0;Ciro Gomes;36.0;2.24;22.0;BR045192026
-2026-02-02;Gerp;Lula;45.0;Flávio Bolsonaro;45.0;2.24;10.0;BR045192026
-2026-02-02;Gerp;Lula;45.0;Ratinho Júnior;41.0;2.24;14.0;BR045192026
-2026-02-02;Gerp;Lula;46.0;Aldo Rebelo;30.0;2.24;24.0;BR045192026
-2026-02-02;Gerp;Lula;47.0;Renan Santos;26.0;2.24;26.0;BR045192026
-2026-02-02;Gerp;Lula;47.0;Romeu Zema;36.0;2.24;17.0;BR045192026
-2026-02-02;Gerp;Lula;47.0;Ronaldo Caiado;34.0;2.24;19.0;BR045192026
-2026-02-02;Meio/Ideia;Fernando Haddad;41.8;Flávio Bolsonaro;40.0;2.50;18.2;BR084252026
-2026-02-02;Meio/Ideia;Lula;44.7;Tarcísio de Freitas;42.2;2.50;13.1;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.0;Aldo Rebelo;20.0;2.50;35.0;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.0;Michelle Bolsonaro;40.7;2.50;14.3;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.0;Ratinho Júnior;38.0;2.50;17.0;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.0;Romeu Zema;34.5;2.50;20.5;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.0;Ronaldo Caiado;34.0;2.50;21.0;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.4;Eduardo Leite;21.0;2.50;33.6;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.5;Renan Santos;26.0;2.50;28.5;BR084252026
-2026-02-02;Meio/Ideia;Lula;45.8;Flávio Bolsonaro;41.1;2.50;13.1;BR084252026
-2026-02-02;Meio/Ideia;Tarcísio de Freitas;44.5;Fernando Haddad;40.5;2.50;14.9;BR084252026
-2026-02-07;Apex/Futura;Flávio Bolsonaro;40.1;Tarcísio de Freitas;35.0;2.20;24.9;BR022762026
-2026-02-07;Apex/Futura;Flávio Bolsonaro;48.2;Lula;42.4;2.20;9.4;BR022762026
-2026-02-07;Apex/Futura;Lula;42.7;Eduardo Leite;38.5;2.20;18.8;BR022762026
-2026-02-07;Apex/Futura;Lula;43.1;Ronaldo Caiado;42.3;2.20;14.6;BR022762026
-2026-02-07;Apex/Futura;Lula;43.3;Romeu Zema;42.4;2.20;14.3;BR022762026
-2026-02-07;Apex/Futura;Ratinho Júnior;45.2;Lula;42.1;2.20;12.6;BR022762026
-2026-02-07;Apex/Futura;Tarcísio de Freitas;47.4;Lula;41.4;2.20;11.2;BR022762026
-2026-02-09;Genial/Quaest;Lula;42.0;Eduardo Leite;28.0;2.00;30.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;42.0;Ronaldo Caiado;32.0;2.00;26.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;43.0;Flávio Bolsonaro;38.0;2.00;19.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;43.0;Ratinho Júnior;35.0;2.00;22.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;43.0;Romeu Zema;32.0;2.00;25.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;44.0;Aldo Rebelo;25.0;2.00;31.0;BR002492026
-2026-02-09;Genial/Quaest;Lula;44.0;Renan Santos;25.0;2.00;31.0;BR002492026
-2026-02-24;AtlasIntel;Flávio Bolsonaro;46.3;Lula;46.2;1.00;7.5;BR076002026
-2026-02-24;AtlasIntel;Lula;45.2;Eduardo Leite;24.5;1.00;30.3;BR076002026
-2026-02-24;AtlasIntel;Lula;45.5;Ratinho Júnior;39.0;1.00;15.5;BR076002026
-2026-02-24;AtlasIntel;Lula;45.7;Ronaldo Caiado;37.6;1.00;16.7;BR076002026
-2026-02-24;AtlasIntel;Lula;46.0;Romeu Zema;41.7;1.00;12.3;BR076002026
-2026-02-24;AtlasIntel;Lula;47.3;Jair Bolsonaro;45.4;1.00;7.3;BR076002026
-2026-02-24;AtlasIntel;Lula;47.5;Michelle Bolsonaro;44.7;1.00;7.8;BR076002026
-2026-02-24;AtlasIntel;Tarcísio de Freitas;47.1;Lula;45.9;1.00;7.0;BR076002026
-2026-02-25;Paraná Pesquisas;Flávio Bolsonaro;44.4;Lula;43.8;2.20;11.9;BR079742026
-2026-02-25;Paraná Pesquisas;Lula;43.6;Ratinho Júnior;39.7;2.20;16.7;BR079742026
-2026-02-25;Paraná Pesquisas;Lula;45.3;Ronaldo Caiado;36.2;2.20;18.4;BR079742026
-2026-03-02;Real Time Big Data;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;43.0;Ratinho Júnior;39.0;2.00;18.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;44.0;Romeu Zema;35.0;2.00;21.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;45.0;Ronaldo Caiado;36.0;2.00;19.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;46.0;Eduardo Leite;35.0;2.00;19.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;51.0;Aldo Rebelo;19.0;2.00;30.0;BR093532026
-2026-03-02;Real Time Big Data;Lula;51.0;Renan Santos;18.0;2.00;31.0;BR093532026
-2026-03-02;Vetor/Arrow;Flávio Bolsonaro;49.0;Lula;40.4;1.30;10.5;BR037422026
-2026-03-05;Datafolha;Flávio Bolsonaro;43.0;Fernando Haddad;41.0;2.00;15.0;BR037152026
-2026-03-05;Datafolha;Lula;45.0;Ratinho Júnior;41.0;2.00;15.0;BR037152026
-2026-03-05;Datafolha;Lula;45.0;Tarcísio de Freitas;42.0;2.00;13.0;BR037152026
-2026-03-05;Datafolha;Lula;46.0;Eduardo Leite;34.0;2.00;20.0;BR037152026
-2026-03-05;Datafolha;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR037152026
-2026-03-05;Datafolha;Lula;46.0;Ronaldo Caiado;36.0;2.00;18.0;BR037152026
-2026-03-05;Datafolha;Ratinho Júnior;40.0;Fernando Haddad;40.0;2.00;20.0;BR037152026
-2026-03-06;Apex/Futura;Flávio Bolsonaro;48.8;Lula;40.5;2.20;10.7;BR066072026
-2026-03-06;Apex/Futura;Lula;41.1;Eduardo Leite;37.1;2.20;21.8;BR066072026
-2026-03-06;Apex/Futura;Lula;42.5;Romeu Zema;40.5;2.20;17.0;BR066072026
-2026-03-06;Apex/Futura;Ratinho Júnior;45.5;Lula;41.0;2.20;13.1;BR066072026
-2026-03-06;Apex/Futura;Ronaldo Caiado;41.2;Lula;41.1;2.20;17.7;BR066072026
-2026-03-06;Apex/Futura;Tarcísio de Freitas;45.5;Lula;41.4;2.20;13.1;BR066072026
-2026-03-09;Genial/Quaest;Lula;41.0;Flávio Bolsonaro;41.0;2.00;18.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;42.0;Eduardo Leite;26.0;2.00;32.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;42.0;Ratinho Júnior;33.0;2.00;25.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;43.0;Renan Santos;24.0;2.00;33.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;44.0;Aldo Rebelo;23.0;2.00;33.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;44.0;Romeu Zema;34.0;2.00;22.0;BR058092026
-2026-03-09;Genial/Quaest;Lula;44.0;Ronaldo Caiado;32.0;2.00;24.0;BR058092026
-2026-03-10;Meio/Ideia;Lula;46.0;Romeu Zema;38.0;2.50;16.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;46.0;Ronaldo Caiado;37.0;2.50;16.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;46.0;Tarcísio de Freitas;45.0;2.50;9.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;47.0;Aldo Rebelo;19.0;2.50;34.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;47.0;Eduardo Leite;29.0;2.50;24.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;47.0;Flávio Bolsonaro;45.0;2.50;7.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;47.0;Ratinho Júnior;41.0;2.50;13.0;BR003862026
-2026-03-10;Meio/Ideia;Lula;47.0;Renan Santos;25.0;2.50;28.0;BR003862026
-2026-03-11;Alfa Inteligência;Lula;41.0;Flávio Bolsonaro;38.0;3.10;21.0;BR031652026
-2026-03-23;AtlasIntel;Flávio Bolsonaro;47.6;Lula;46.6;1.00;5.8;BR042272026
-2026-03-23;AtlasIntel;Jair Bolsonaro;47.4;Lula;46.6;1.00;6.0;BR042272026
-2026-03-23;AtlasIntel;Lula;45.5;Eduardo Leite;22.7;1.00;31.8;BR042272026
-2026-03-23;AtlasIntel;Lula;46.1;Ratinho Júnior;38.7;1.00;15.2;BR042272026
-2026-03-23;AtlasIntel;Lula;46.2;Ronaldo Caiado;36.7;1.00;17.1;BR042272026
-2026-03-23;AtlasIntel;Lula;46.6;Romeu Zema;43.7;1.00;9.8;BR042272026
-2026-03-23;AtlasIntel;Michelle Bolsonaro;47.0;Lula;46.8;1.00;6.2;BR042272026
-2026-03-23;AtlasIntel;Tarcísio de Freitas;47.2;Lula;46.3;1.00;6.5;BR042272026
-2026-03-24;AtlasIntel;Jair Bolsonaro;48.0;Lula;46.0;1.00;6.0;BR042272026
-2026-03-24;AtlasIntel;Lula;44.0;Romeu Zema;25.0;1.00;31.0;BR042272026
-2026-03-24;AtlasIntel;Lula;46.0;Eduardo Leite;36.0;1.00;18.0;BR042272026
-2026-03-24;AtlasIntel;Lula;47.0;Ronaldo Caiado;37.0;1.00;16.0;BR042272026
-2026-03-24;AtlasIntel;Pablo Marçal;51.0;Lula;46.0;1.00;3.0;BR042272026
-2026-03-24;AtlasIntel;Tarcísio de Freitas;47.0;Lula;46.0;1.00;7.0;BR042272026
-2026-03-25;Gerp;Flávio Bolsonaro;48.0;Lula;45.0;2.24;8.0;BR028462026
-2026-03-25;Gerp;Lula;39.0;Ciro Gomes;38.0;2.24;23.0;BR028462026
-2026-03-25;Gerp;Lula;41.0;Eduardo Leite;35.0;2.24;24.0;BR028462026
-2026-03-25;Gerp;Lula;44.0;Ronaldo Caiado;37.0;2.24;19.0;BR028462026
-2026-03-25;Gerp;Lula;45.0;Romeu Zema;41.0;2.24;14.0;BR028462026
-2026-03-25;Gerp;Ratinho Júnior;42.0;Lula;42.0;2.24;16.0;BR028462026
-2026-03-28;Paraná Pesquisas;Flávio Bolsonaro;45.2;Lula;44.1;2.20;10.7;BR008732026
-2026-03-29;Nexus/BTG Pactual;Lula;46.0;Eduardo Leite;36.0;2.00;18.0;BR078752026
-2026-03-29;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;46.0;2.00;7.0;BR078752026
-2026-03-29;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;40.0;2.00;14.0;BR078752026
-2026-03-29;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;41.0;2.00;13.0;BR078752026
-2026-04-04;Veritá;Flávio Bolsonaro;42.8;Lula;38.4;1.00;23.2;BR024762026
-2026-04-07;Meio/Ideia;Flávio Bolsonaro;45.8;Lula;45.5;2.50;8.7;BR006052026
-2026-04-07;Meio/Ideia;Lula;44.7;Romeu Zema;38.7;2.50;16.6;BR006052026
-2026-04-07;Meio/Ideia;Lula;45.0;Renan Santos;26.4;2.50;28.6;BR006052026
-2026-04-07;Meio/Ideia;Lula;45.0;Ronaldo Caiado;39.0;2.50;16.0;BR006052026
-2026-04-07;Meio/Ideia;Lula;46.0;Aldo Rebelo;22.6;2.50;31.4;BR006052026
-2026-04-09;Datafolha;Flávio Bolsonaro;46.0;Lula;45.0;2.00;9.0;BR037702026
-2026-04-09;Datafolha;Lula;45.0;Romeu Zema;42.0;2.00;13.0;BR037702026
-2026-04-09;Datafolha;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR037702026
-2026-04-11;Apex/Futura;Flávio Bolsonaro;48.0;Lula;42.6;2.20;9.4;BR082822026
-2026-04-11;Apex/Futura;Flávio Bolsonaro;48.3;Fernando Haddad;34.8;2.20;16.9;BR082822026
-2026-04-11;Apex/Futura;Lula;43.9;Ronaldo Caiado;38.8;2.20;17.3;BR082822026
-2026-04-11;Apex/Futura;Lula;44.8;Romeu Zema;38.0;2.20;17.1;BR082822026
-2026-04-12;CNT/MDA;Lula;44.4;Ronaldo Caiado;32.7;2.20;22.9;BR028472026
-2026-04-12;CNT/MDA;Lula;44.9;Flávio Bolsonaro;40.2;2.20;14.9;BR028472026
-2026-04-12;CNT/MDA;Lula;45.0;Renan Santos;28.3;2.20;26.7;BR028472026
-2026-04-12;CNT/MDA;Lula;45.2;Romeu Zema;31.6;2.20;23.2;BR028472026
-2026-04-12;CNT/MDA;Lula;45.4;Aldo Rebelo;29.1;2.20;25.5;BR028472026
-2026-04-13;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;40.0;2.00;18.0;BR092852026
-2026-04-13;Genial/Quaest;Lula;43.0;Romeu Zema;36.0;2.00;21.0;BR092852026
-2026-04-13;Genial/Quaest;Lula;43.0;Ronaldo Caiado;35.0;2.00;22.0;BR092852026
-2026-04-13;Genial/Quaest;Lula;44.0;Cury (Avante);23.0;2.00;33.0;BR092852026
-2026-04-13;Genial/Quaest;Lula;44.0;Renan Santos;24.0;2.00;32.0;BR092852026
-2026-04-24;AtlasIntel;Lula;45.0;Ronaldo Caiado;36.3;1.00;18.7;BR079922026
-2026-04-24;AtlasIntel;Lula;45.3;Eduardo Leite;24.2;1.00;30.5;BR079922026
-2026-04-24;AtlasIntel;Lula;45.6;Romeu Zema;39.5;1.00;14.8;BR079922026
-2026-04-24;AtlasIntel;Lula;46.6;Michelle Bolsonaro;46.1;1.00;7.3;BR079922026
-2026-04-24;AtlasIntel;Lula;47.2;Ratinho Júnior;34.9;1.00;17.9;BR079922026
-2026-04-24;AtlasIntel;Lula;48.5;Jair Bolsonaro;46.4;1.00;5.2;BR079922026
-2026-04-24;AtlasIntel;Tarcísio de Freitas;46.7;Lula;46.7;1.00;6.6;BR079922026
-2026-04-26;Nexus/BTG Pactual;Lula;45.0;Romeu Zema;41.0;2.00;14.0;BR010752026
-2026-04-26;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;41.0;2.00;13.0;BR010752026
-2026-04-26;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR010752026
-2026-04-27;AtlasIntel;Flávio Bolsonaro;47.5;Alckmin;45.9;1.00;6.6;BR079922026
-2026-04-27;AtlasIntel;Flávio Bolsonaro;47.8;Lula;47.5;1.00;4.7;BR079922026
-2026-04-27;AtlasIntel;Flávio Bolsonaro;48.1;Fernando Haddad;44.3;1.00;7.6;BR079922026
-2026-04-27;AtlasIntel;Lula;46.8;Ronaldo Caiado;42.2;1.00;11.0;BR079922026
-2026-04-27;AtlasIntel;Lula;47.1;Renan Santos;29.5;1.00;23.5;BR079922026
-2026-04-27;AtlasIntel;Lula;47.4;Romeu Zema;46.5;1.00;6.1;BR079922026
-2026-04-27;AtlasIntel;Lula;48.0;Jair Bolsonaro;46.8;1.00;5.2;BR079922026
-2026-05-04;Real Time Big Data;Flávio Bolsonaro;44.0;Lula;43.0;2.00;13.0;BR036272026
-2026-05-04;Real Time Big Data;Lula;43.0;Ciro Gomes;43.0;2.00;14.0;BR036272026
-2026-05-04;Real Time Big Data;Lula;43.0;Romeu Zema;39.0;2.00;18.0;BR036272026
-2026-05-04;Real Time Big Data;Lula;43.0;Ronaldo Caiado;42.0;2.00;15.0;BR036272026
-2026-05-04;Real Time Big Data;Lula;48.0;Renan Santos;24.0;2.00;28.0;BR036272026
-2026-05-05;Meio/Ideia;Flávio Bolsonaro;45.3;Lula;44.7;2.50;10.0;BR053562026
-2026-05-05;Meio/Ideia;Lula;44.0;Romeu Zema;39.0;2.50;17.0;BR053562026
-2026-05-05;Meio/Ideia;Lula;44.7;Ronaldo Caiado;40.0;2.50;15.3;BR053562026
-2026-05-08;Apex/Futura;Flávio Bolsonaro;46.9;Lula;44.4;2.20;8.6;BR036782026
-2026-05-08;Apex/Futura;Flávio Bolsonaro;47.8;Fernando Haddad;36.2;2.20;16.0;BR036782026
-2026-05-08;Apex/Futura;Lula;41.4;Ciro Gomes;37.8;2.20;20.8;BR036782026
-2026-05-08;Apex/Futura;Lula;45.1;Ronaldo Caiado;36.9;2.20;17.9;BR036782026
-2026-05-08;Apex/Futura;Lula;46.0;Romeu Zema;37.8;2.20;15.3;BR036782026
-2026-05-11;Genial/Quaest;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR035982026
-2026-05-11;Genial/Quaest;Lula;44.0;Romeu Zema;37.0;2.00;17.0;BR035982026
-2026-05-11;Genial/Quaest;Lula;44.0;Ronaldo Caiado;35.0;2.00;21.0;BR035982026
-2026-05-11;Genial/Quaest;Lula;45.0;Renan Santos;28.0;2.00;27.0;BR035982026
-2026-05-12;Gerp;Ciro Gomes;40.0;Lula;38.0;2.24;22.0;BR033692026
-2026-05-12;Gerp;Flávio Bolsonaro;50.0;Lula;43.0;2.24;7.0;BR033692026
-2026-05-12;Gerp;Lula;43.0;Romeu Zema;41.0;2.24;16.0;BR033692026
-2026-05-12;Gerp;Lula;43.0;Ronaldo Caiado;39.0;2.24;18.0;BR033692026
-2026-05-12;Gerp;Lula;44.0;Pablo Marçal;37.0;2.24;19.0;BR033692026
-2026-05-12;Vox Brasil;Flávio Bolsonaro;43.8;Lula;40.2;2.15;16.0;BR024232026
-2026-05-12;Vox Brasil;Lula;42.9;Ronaldo Caiado;32.5;2.15;24.6;BR024232026
-2026-05-12;Vox Brasil;Lula;43.1;Romeu Zema;34.3;2.15;22.6;BR024232026
-2026-05-12;Vox Brasil;Lula;44.4;Renan Santos;26.2;2.15;29.4;BR024232026
-2026-05-14;Datafolha;Lula;45.0;Flávio Bolsonaro;45.0;2.00;10.0;BR002902026
-2026-05-14;Datafolha;Lula;46.0;Romeu Zema;40.0;2.00;14.0;BR002902026
-2026-05-14;Datafolha;Lula;46.0;Ronaldo Caiado;39.0;2.00;15.0;BR002902026
-2026-05-18;AtlasIntel;Lula;47.5;Ronaldo Caiado;38.5;1.00;14.0;BR069392026
-2026-05-18;AtlasIntel;Lula;47.8;Renan Santos;28.4;1.00;23.8;BR069392026
-2026-05-18;AtlasIntel;Lula;47.8;Romeu Zema;37.6;1.00;14.6;BR069392026
-2026-05-18;AtlasIntel;Lula;48.9;Flávio Bolsonaro;41.8;1.00;9.3;BR069392026
-2026-05-18;Vetor/Arrow;Lula;50.7;Flávio Bolsonaro;38.3;1.00;11.0;BR093012026
-2026-05-19;Vox Brasil;Lula;46.8;Flávio Bolsonaro;38.1;2.15;15.1;BR024162026
-2026-05-19;Vox Brasil;Lula;47.8;Ronaldo Caiado;34.1;2.15;18.1;BR024162026
-2026-05-19;Vox Brasil;Lula;48.5;Romeu Zema;36.3;2.15;15.2;BR024162026
-2026-05-20;Apex/Futura;Lula;47.6;Ronaldo Caiado;36.5;2.20;15.9;BR065292026
-2026-05-20;Apex/Futura;Lula;47.7;Flávio Bolsonaro;42.2;2.20;10.2;BR065292026
-2026-05-20;Apex/Futura;Lula;47.9;Michelle Bolsonaro;41.6;2.20;10.6;BR065292026
-2026-05-20;Apex/Futura;Lula;48.3;Romeu Zema;35.9;2.20;15.8;BR065292026
-2026-05-21;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;11.0;BR074892026
-2026-05-21;Datafolha;Lula;48.0;Michelle Bolsonaro;43.0;2.00;9.0;BR074892026
-2026-05-21;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR074892026
-2026-05-21;Datafolha;Lula;48.0;Ronaldo Caiado;39.0;2.00;13.0;BR074892026
-2026-05-21;Gerp;Flávio Bolsonaro;47.0;Lula;44.0;2.20;9.0;BR079712026
-2026-05-21;Gerp;Lula;41.0;Ciro Gomes;31.0;2.20;28.0;BR079712026
-2026-05-21;Gerp;Lula;44.0;Ronaldo Caiado;32.0;2.20;23.0;BR079712026
-2026-05-21;Gerp;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR079712026
-2026-05-24;Indexa;Flávio Bolsonaro;40.0;Alckmin;35.0;2.20;25.0;BR021542026
-2026-05-24;Indexa;Flávio Bolsonaro;40.0;Fernando Haddad;36.0;2.20;24.0;BR021542026
-2026-05-24;Indexa;Lula;46.0;Flávio Bolsonaro;41.0;2.20;10.0;BR021542026
-2026-05-24;Indexa;Lula;47.0;Romeu Zema;37.0;2.20;16.0;BR021542026
-2026-05-24;Indexa;Lula;47.0;Ronaldo Caiado;39.0;2.20;14.0;BR021542026
-2026-05-24;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;40.0;2.00;13.0;BR041932026
-2026-05-24;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;43.0;2.00;10.0;BR041932026
-2026-05-24;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;38.0;2.00;13.0;BR041932026
-2026-05-26;Veritá;Flávio Bolsonaro;53.2;Lula;46.8;2.00;;BR042762026
-2026-05-27;Meio/Ideia;Fernando Haddad;42.0;Flávio Bolsonaro;41.5;2.50;16.5;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Aécio Neves;25.0;2.50;29.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Barbosa (DC);26.0;2.50;28.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Michelle Bolsonaro;40.0;2.50;14.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Renan Santos;31.0;2.50;23.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Romeu Zema;37.0;2.50;17.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Ronaldo Caiado;40.0;2.50;14.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.0;Tereza Cristina;27.0;2.50;27.0;BR029182026
-2026-05-27;Meio/Ideia;Lula;46.5;Flávio Bolsonaro;41.4;2.50;12.2;BR029182026
-2026-05-28;PoderData/Aya;Lula;43.0;Barbosa (DC);41.0;2.00;16.0;BR048822026
-2026-05-28;PoderData/Aya;Lula;45.0;Renan Santos;36.0;2.00;19.0;BR048822026
-2026-05-28;PoderData/Aya;Lula;45.0;Romeu Zema;41.0;2.00;15.0;BR048822026
-2026-05-28;PoderData/Aya;Lula;45.0;Ronaldo Caiado;41.0;2.00;15.0;BR048822026
-2026-05-28;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;42.0;2.00;12.0;BR048822026
-2026-05-30;Real Time Big Data;Lula;43.0;Romeu Zema;40.0;2.00;17.0;BR058642026
-2026-05-30;Real Time Big Data;Lula;45.0;Flávio Bolsonaro;40.0;2.00;15.0;BR058642026
-2026-05-30;Real Time Big Data;Lula;46.0;Renan Santos;30.0;2.00;24.0;BR058642026
-2026-05-30;Real Time Big Data;Ronaldo Caiado;43.0;Lula;43.0;2.00;14.0;BR058642026
-2026-06-05;Gerp;Flávio Bolsonaro;44.7;Lula;39.1;2.24;16.2;BR017922026
-2026-06-05;Gerp;Lula;38.9;Ronaldo Caiado;33.8;2.24;27.3;BR017922026
-2026-06-05;Gerp;Lula;39.2;Romeu Zema;34.5;2.24;26.3;BR017922026
-2026-06-06;Vox Brasil;Lula;46.3;Romeu Zema;42.5;2.15;11.2;BR080162026
-2026-06-06;Vox Brasil;Lula;46.5;Ronaldo Caiado;44.9;2.15;8.6;BR080162026
-2026-06-06;Vox Brasil;Lula;47.8;Flávio Bolsonaro;41.3;2.15;10.9;BR080162026
-2026-06-08;Genial/Quaest;Lula;44.0;Flávio Bolsonaro;38.0;2.00;18.0;BR076612026
-2026-06-08;Genial/Quaest;Lula;45.0;Renan Santos;31.0;2.00;24.0;BR076612026
-2026-06-08;Genial/Quaest;Lula;45.0;Romeu Zema;35.0;2.00;20.0;BR076612026
-2026-06-08;Genial/Quaest;Lula;45.0;Ronaldo Caiado;35.0;2.00;20.0;BR076612026
-2026-06-10;Alfa Inteligência;Lula;41.0;Barbosa (DC);34.0;2.60;25.0;BR034962026
-2026-06-10;Alfa Inteligência;Lula;44.0;Flávio Bolsonaro;41.0;2.60;15.0;BR034962026
-2026-06-10;Alfa Inteligência;Lula;44.0;Renan Santos;26.0;2.60;30.0;BR034962026
-2026-06-10;Alfa Inteligência;Lula;44.0;Ronaldo Caiado;38.0;2.60;17.0;BR034962026
-2026-06-12;Apex/Futura;Flávio Bolsonaro;43.9;Fernando Haddad;38.9;2.20;17.2;BR014612026
-2026-06-12;Apex/Futura;Lula;45.0;Ronaldo Caiado;36.3;2.20;18.7;BR014612026
-2026-06-12;Apex/Futura;Lula;48.0;Michelle Bolsonaro;42.4;2.20;9.6;BR014612026
-2026-06-12;Apex/Futura;Lula;48.1;Flávio Bolsonaro;42.9;2.20;10.0;BR014612026
-2026-06-12;Apex/Futura;Lula;48.3;Renan Santos;30.8;2.20;20.9;BR014612026
-2026-06-12;Apex/Futura;Lula;48.5;Romeu Zema;34.9;2.20;16.6;BR014612026
-2026-06-12;Apex/Futura;Lula;48.5;Tereza Cristina;29.2;2.20;22.2;BR014612026
-2026-06-14;CNT/MDA;Lula;49.3;Flávio Bolsonaro;36.8;2.20;13.9;BR042562026
-2026-06-14;Nexus/BTG Pactual;Lula;48.0;Ronaldo Caiado;39.0;2.00;13.0;BR066452026
-2026-06-14;Nexus/BTG Pactual;Lula;49.0;Flávio Bolsonaro;43.0;2.00;9.0;BR066452026
-2026-06-14;Nexus/BTG Pactual;Lula;49.0;Renan Santos;36.0;2.00;15.0;BR066452026
-2026-06-14;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;39.0;2.00;12.0;BR066452026
-2026-06-15;American Analytics;Lula;45.0;Flávio Bolsonaro;40.0;2.20;15.0;BR095212026
-2026-06-15;CNT/MDA;Jair Bolsonaro;43.9;Fernando Haddad;38.4;2.20;17.7;BR042562026
-2026-06-15;CNT/MDA;Jair Bolsonaro;43.9;Lula;41.4;2.20;14.7;BR042562026
-2026-06-15;CNT/MDA;Lula;41.1;Tarcísio de Freitas;40.4;2.20;18.5;BR042562026
-2026-06-15;CNT/MDA;Tarcísio de Freitas;39.0;Fernando Haddad;37.0;2.20;24.0;BR042562026
-2026-06-17;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR099562026
-2026-06-19;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;9.0;BR099562026
-2026-06-19;Datafolha;Lula;47.0;Ronaldo Caiado;41.0;2.00;12.0;BR099562026
-2026-06-20;Gerp;Flávio Bolsonaro;42.0;Lula;40.0;2.19;18.3;BR096572026
-2026-06-20;Gerp;Lula;39.0;Romeu Zema;36.0;2.19;25.7;BR096572026
-2026-06-20;Gerp;Lula;39.0;Ronaldo Caiado;38.0;2.19;23.1;BR096572026
-2026-06-20;Indexa;Lula;47.0;Flávio Bolsonaro;40.0;2.20;13.0;BR089442026
-2026-06-24;PoderData/Aya;Lula;43.0;Barbosa (DC);41.0;2.00;16.0;BR057222026
-2026-06-24;PoderData/Aya;Lula;45.0;Renan Santos;38.0;2.00;17.0;BR057222026
-2026-06-24;PoderData/Aya;Lula;45.0;Romeu Zema;42.0;2.00;13.0;BR057222026
-2026-06-24;PoderData/Aya;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR057222026
-2026-06-24;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR057222026
-2026-06-25;Vox Brasil;Lula;44.6;Ronaldo Caiado;40.8;2.15;14.6;BR066302026
-2026-06-25;Vox Brasil;Lula;45.3;Flávio Bolsonaro;42.8;2.15;11.9;BR066302026
-2026-06-25;Vox Brasil;Lula;45.5;Romeu Zema;41.3;2.15;13.2;BR066302026
-2026-06-25;Vox Brasil;Lula;49.7;Aécio Neves;22.1;2.15;28.2;BR066302026
-2026-06-28;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR085212026
-2026-06-28;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;39.0;2.00;14.0;BR085212026
-2026-06-28;Nexus/BTG Pactual;Lula;48.0;Renan Santos;36.0;2.00;16.0;BR085212026
-2026-06-28;Nexus/BTG Pactual;Lula;48.0;Romeu Zema;38.0;2.00;14.0;BR085212026
-2026-06-30;AtlasIntel;Alckmin;47.4;Flávio Bolsonaro;41.7;1.00;10.9;BR045822026
-2026-06-30;AtlasIntel;Fernando Haddad;46.4;Flávio Bolsonaro;42.8;1.00;10.7;BR045822026
-2026-06-30;AtlasIntel;Jair Bolsonaro;48.6;Lula;47.8;2.00;3.6;BR045822026
-2026-06-30;AtlasIntel;Lula;47.0;Eduardo Leite;23.9;2.00;29.0;BR045822026
-2026-06-30;AtlasIntel;Lula;47.3;Ratinho Júnior;39.0;2.00;13.7;BR045822026
-2026-06-30;AtlasIntel;Lula;47.6;Tarcísio de Freitas;46.9;2.00;5.5;BR045822026
-2026-06-30;AtlasIntel;Lula;47.8;Ronaldo Caiado;35.3;2.00;17.0;BR045822026
-2026-06-30;AtlasIntel;Lula;48.0;Michelle Bolsonaro;47.5;2.00;4.5;BR045822026
-2026-06-30;AtlasIntel;Lula;48.0;Romeu Zema;38.6;2.00;13.5;BR045822026
-2026-06-30;AtlasIntel;Lula;48.0;Ronaldo Caiado;39.0;1.00;13.1;BR045822026
-2026-06-30;AtlasIntel;Lula;48.2;Romeu Zema;38.5;1.00;13.3;BR045822026
-2026-06-30;AtlasIntel;Lula;48.6;Jair Bolsonaro;43.1;1.00;8.3;BR045822026
-2026-06-30;AtlasIntel;Lula;48.7;Michelle Bolsonaro;38.9;1.00;12.4;BR045822026
-2026-06-30;AtlasIntel;Lula;48.8;Flávio Bolsonaro;42.3;1.00;8.9;BR045822026
-2026-06-30;AtlasIntel;Lula;49.2;Renan Santos;29.8;1.00;21.9;BR045822026
-2026-07-06;Meio/Ideia;Lula;45.0;Barbosa (DC);23.0;2.50;32.0;BR056282026
-2026-07-06;Meio/Ideia;Lula;45.0;Flávio Bolsonaro;40.0;2.50;15.0;BR056282026
-2026-07-06;Meio/Ideia;Lula;45.0;Michelle Bolsonaro;36.0;2.50;19.0;BR056282026
-2026-07-06;Meio/Ideia;Lula;45.0;Renan Santos;33.0;2.50;22.0;BR056282026
-2026-07-06;Meio/Ideia;Lula;45.0;Romeu Zema;37.0;2.50;18.0;BR056282026
-2026-07-06;Meio/Ideia;Lula;45.0;Ronaldo Caiado;37.6;2.50;17.4;BR056282026
-2026-07-07;Gerp;Alckmin;44.0;Flávio Bolsonaro;34.0;2.20;21.0;BR030672026
-2026-07-07;Gerp;Flávio Bolsonaro;45.0;Fernando Haddad;32.0;2.20;23.0;BR030672026
-2026-07-07;Gerp;Flávio Bolsonaro;45.0;Lula;42.0;2.20;13.0;BR030672026
-2026-07-07;Gerp;Lula;40.0;Ronaldo Caiado;36.0;2.20;23.0;BR030672026
-2026-07-07;Gerp;Lula;41.0;Renan Santos;30.0;2.20;29.0;BR030672026
-2026-07-07;Gerp;Lula;41.0;Romeu Zema;36.0;2.20;23.0;BR030672026
-2026-07-07;Gerp;Lula;45.0;Michelle Bolsonaro;41.0;2.20;15.0;BR030672026
-2026-07-11;Apex/Futura;Lula;45.1;Ronaldo Caiado;38.9;2.20;15.9;BR072942026
-2026-07-11;Apex/Futura;Lula;46.0;Romeu Zema;38.1;2.20;15.9;BR072942026
-2026-07-11;Apex/Futura;Lula;46.1;Michelle Bolsonaro;44.3;2.20;9.6;BR072942026
-2026-07-11;Apex/Futura;Lula;46.3;Flávio Bolsonaro;46.1;2.20;7.6;BR072942026
-2026-07-11;Apex/Futura;Lula;46.4;Renan Santos;33.1;2.20;20.5;BR072942026
-2026-07-12;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR079812026
-2026-07-12;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR079812026
-2026-07-12;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;38.0;2.00;15.0;BR079812026
-2026-07-12;Nexus/BTG Pactual;Lula;49.0;Renan Santos;35.0;2.00;16.0;BR079812026
-2026-07-13;Genial/Quaest;Lula;45.0;Flávio Bolsonaro;37.0;2.00;18.0;BR071812026
-2026-07-13;Genial/Quaest;Lula;45.0;Renan Santos;33.0;2.00;22.0;BR071812026
-2026-07-13;Genial/Quaest;Lula;45.0;Romeu Zema;35.0;2.00;20.0;BR071812026
-2026-07-13;Genial/Quaest;Lula;45.0;Ronaldo Caiado;36.0;2.00;19.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;41.0;Eduardo Leite;36.0;2.00;23.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;41.0;Ratinho Júnior;36.0;2.00;23.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;41.0;Tarcísio de Freitas;37.0;2.00;23.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;42.0;Romeu Zema;33.0;2.00;25.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;42.0;Ronaldo Caiado;33.0;2.00;25.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;43.0;Eduardo Bolsonaro;33.0;2.00;24.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;43.0;Jair Bolsonaro;37.0;2.00;20.0;BR071812026
-2026-07-14;Genial/Quaest;Lula;43.0;Michelle Bolsonaro;36.0;2.00;18.0;BR071812026
-2026-07-15;PoderData/Aya;Lula;45.0;Flávio Bolsonaro;43.0;2.00;12.0;BR000592026
-2026-07-17;Gerp;Flávio Bolsonaro;46.0;Lula;45.0;2.19;9.0;BR050262026
-2026-07-17;Gerp;Lula;44.0;Romeu Zema;38.0;2.19;17.0;BR050262026
-2026-07-17;Gerp;Lula;44.0;Ronaldo Caiado;41.0;2.19;16.0;BR050262026
-2026-07-17;Gerp;Lula;45.0;Renan Santos;35.0;2.19;20.0;BR050262026
-2026-07-19;Indexa;Lula;45.0;Ronaldo Caiado;37.0;2.20;18.0;BR029042026
-2026-07-19;Indexa;Lula;46.0;Flávio Bolsonaro;39.0;2.20;15.0;BR029042026
-2026-07-19;Indexa;Lula;46.0;Romeu Zema;32.0;2.20;17.0;BR029042026
-2026-07-19;Indexa;Lula;47.0;Renan Santos;27.0;2.20;26.0;BR029042026
-2026-07-20;Real Time Big Data;Lula;44.0;Renan Santos;35.0;2.00;21.0;BR092472026
-2026-07-20;Real Time Big Data;Lula;44.0;Romeu Zema;38.0;2.00;18.0;BR092472026
-2026-07-20;Real Time Big Data;Lula;45.0;Flávio Bolsonaro;42.0;2.00;13.0;BR092472026
-2026-07-20;Real Time Big Data;Ronaldo Caiado;44.0;Lula;43.0;2.00;13.0;BR092472026
-2026-07-24;Datafolha;Lula;47.0;Ronaldo Caiado;40.0;2.00;13.0;BR011662026
-2026-07-24;Datafolha;Lula;48.0;Flávio Bolsonaro;43.0;2.00;10.0;BR011662026
-2026-07-24;Datafolha;Lula;48.0;Romeu Zema;40.0;2.00;12.0;BR011662026
-2026-07-26;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;43.0;2.00;12.0;BR014892026
-2026-07-26;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;42.0;2.00;12.0;BR014892026
-2026-07-26;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;43.0;2.00;10.0;BR014892026
-2026-07-26;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR014892026
-2026-07-27;AtlasIntel;Alckmin;45.8;Flávio Bolsonaro;42.7;1.00;11.5;BR086022026
-2026-07-27;AtlasIntel;Fernando Haddad;44.3;Flávio Bolsonaro;43.7;1.00;12.0;BR086022026
-2026-07-27;AtlasIntel;Lula;47.6;Renan Santos;30.2;1.00;22.2;BR086022026
-2026-07-27;AtlasIntel;Lula;48.2;Ronaldo Caiado;38.9;1.00;12.9;BR086022026
-2026-07-27;AtlasIntel;Lula;48.6;Romeu Zema;39.6;1.00;11.8;BR086022026
-2026-07-27;AtlasIntel;Lula;48.8;Michelle Bolsonaro;42.5;1.00;8.8;BR086022026
-2026-07-27;AtlasIntel;Lula;49.2;Flávio Bolsonaro;42.9;1.00;7.9;BR086022026
-2026-07-27;AtlasIntel;Lula;49.2;Jair Bolsonaro;43.9;1.00;6.9;BR086022026
-2026-07-28;Alfa Inteligência;Lula;45.0;Ronaldo Caiado;40.0;1.80;15.0;BR044882026
-2026-07-28;Alfa Inteligência;Lula;46.0;Renan Santos;32.0;1.80;22.0;BR044882026
-2026-07-28;Alfa Inteligência;Lula;46.0;Romeu Zema;37.0;1.80;15.0;BR044882026
-2026-07-28;Alfa Inteligência;Lula;48.0;Flávio Bolsonaro;41.0;1.80;11.0;BR044882026
-2026-07-28;AtlasIntel;Lula;49.6;Eduardo Leite;25.7;1.00;24.7;BR086022026
-2026-07-28;AtlasIntel;Lula;50.1;Jair Bolsonaro;46.3;1.00;3.6;BR086022026
-2026-07-28;AtlasIntel;Lula;50.3;Ronaldo Caiado;39.7;1.00;10.0;BR086022026
-2026-07-28;AtlasIntel;Lula;50.4;Tarcísio de Freitas;46.6;1.00;3.0;BR086022026
-2026-07-28;AtlasIntel;Lula;50.5;Ratinho Júnior;39.7;1.00;9.8;BR086022026
-2026-07-28;AtlasIntel;Lula;50.6;Michelle Bolsonaro;45.9;1.00;3.4;BR086022026
-2026-07-28;AtlasIntel;Lula;50.7;Romeu Zema;40.6;1.00;8.7;BR086022026
-2026-07-28;PoderData/Aya;Lula;44.0;Romeu Zema;42.0;2.00;13.0;BR078452026
-2026-07-28;PoderData/Aya;Lula;44.0;Ronaldo Caiado;43.0;2.00;13.0;BR078452026
-2026-07-28;PoderData/Aya;Lula;45.0;Renan Santos;37.0;2.00;19.0;BR078452026
-2026-07-28;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR078452026
-2026-07-28;Vox Brasil;Lula;46.8;Ronaldo Caiado;42.5;2.15;10.7;BR010842026
-2026-07-28;Vox Brasil;Lula;47.5;Flávio Bolsonaro;41.1;2.15;11.4;BR010842026
-2026-07-28;Vox Brasil;Lula;48.7;Romeu Zema;40.5;2.15;10.8;BR010842026
-2026-08-02;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;10.0;BR028742026
-2026-08-02;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;40.0;2.00;13.0;BR028742026
-2026-08-02;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;13.0;BR028742026
-2026-08-02;Nexus/BTG Pactual;Lula;47.0;Renan Santos;37.0;2.00;16.0;BR028742026
-2026-08-03;Genial/Quaest;Lula;44.0;Flávio Bolsonaro;39.0;2.00;17.0;BR065912026
-2026-08-03;Genial/Quaest;Lula;45.0;Renan Santos;35.0;2.00;20.0;BR065912026
-2026-08-03;Genial/Quaest;Lula;45.0;Ronaldo Caiado;37.0;2.00;18.0;BR065912026
-2026-08-03;Genial/Quaest;Lula;46.0;Romeu Zema;34.0;2.00;20.0;BR065912026
-2026-08-03;Meio/Ideia;Lula;48.0;Renan Santos;34.7;2.50;17.2;BR045792026
-2026-08-03;Meio/Ideia;Lula;48.5;Flávio Bolsonaro;43.0;2.50;8.5;BR045792026
-2026-08-03;Meio/Ideia;Lula;48.5;Romeu Zema;37.0;2.50;14.5;BR045792026
-2026-08-03;Meio/Ideia;Lula;48.5;Ronaldo Caiado;40.0;2.50;11.5;BR045792026
-2026-08-07;Apex/Futura;Lula;45.3;Ronaldo Caiado;39.2;2.20;15.4;BR081092026
-2026-08-07;Apex/Futura;Lula;46.5;Flávio Bolsonaro;44.0;2.20;9.5;BR081092026
-2026-08-07;Apex/Futura;Lula;46.5;Romeu Zema;39.8;2.20;13.6;BR081092026
-2026-08-07;Apex/Futura;Lula;47.3;Renan Santos;33.3;2.20;19.4;BR081092026
-2026-08-07;Palver;Lula;45.0;Ronaldo Caiado;38.0;3.00;16.0;BR065962026
-2026-08-07;Palver;Lula;46.0;Flávio Bolsonaro;46.0;3.00;8.0;BR065962026
-2026-08-07;Palver;Lula;46.0;Renan Santos;31.0;3.00;25.0;BR065962026
-2026-08-07;Palver;Lula;46.0;Romeu Zema;39.0;3.00;15.0;BR065962026
-2026-08-09;CNT/MDA;Lula;47.9;Ronaldo Caiado;35.9;2.20;16.2;BR069352026
-2026-08-09;CNT/MDA;Lula;48.0;Flávio Bolsonaro;39.1;2.20;12.9;BR069352026
-2026-08-09;CNT/MDA;Lula;48.5;Renan Santos;33.0;2.20;18.5;BR069352026
-2026-08-09;CNT/MDA;Lula;48.6;Cury (Avante);32.4;2.20;19.0;BR069352026
-2026-08-09;CNT/MDA;Lula;49.1;Romeu Zema;34.9;2.20;16.0;BR069352026
-2026-08-09;Nexus/BTG Pactual;Lula;46.0;Renan Santos;37.0;2.00;17.0;BR084282026
-2026-08-09;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;11.0;BR084282026
-2026-08-09;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR084282026
-2026-08-09;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR084282026
-2026-08-10;Gerp;Flávio Bolsonaro;45.0;Lula;43.0;2.00;12.0;BR080452026
-2026-08-12;PoderData/Aya;Lula;45.0;Renan Santos;37.0;2.00;17.0;BR068682026
-2026-08-12;PoderData/Aya;Lula;45.0;Romeu Zema;43.0;2.00;12.0;BR068682026
-2026-08-12;PoderData/Aya;Lula;45.0;Ronaldo Caiado;44.0;2.00;11.0;BR068682026
-2026-08-12;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR068682026
-2026-08-13;Genial/Quaest;Lula;43.0;Flávio Bolsonaro;40.0;2.00;17.0;BR067732026
-2026-08-13;Genial/Quaest;Lula;44.0;Renan Santos;36.0;2.00;20.0;BR067732026
-2026-08-13;Genial/Quaest;Lula;44.0;Ronaldo Caiado;37.0;2.00;19.0;BR067732026
-2026-08-13;Genial/Quaest;Lula;45.0;Romeu Zema;34.0;2.00;21.0;BR067732026
-2026-08-16;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR033172026
-2026-08-16;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;41.0;2.00;13.0;BR033172026
-2026-08-16;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR033172026
-2026-08-16;Nexus/BTG Pactual;Lula;47.0;Renan Santos;36.0;2.00;17.0;BR033172026
-2026-08-20;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;11.0;BR044962026
-2026-08-20;Datafolha;Lula;47.0;Renan Santos;37.0;2.00;16.0;BR044962026
-2026-08-20;Datafolha;Lula;47.0;Ronaldo Caiado;40.0;2.00;14.0;BR044962026
-2026-08-20;Datafolha;Lula;48.0;Romeu Zema;38.0;2.00;14.0;BR044962026
-2026-08-20;Veritá;Flávio Bolsonaro;47.3;Lula;42.0;2.00;10.7;BR040062026
-2026-08-20;Veritá;Lula;40.4;Ronaldo Caiado;23.7;2.00;35.9;BR040062026
-2026-08-20;Veritá;Lula;40.5;Renan Santos;16.2;2.00;33.3;BR040062026
-2026-08-20;Veritá;Lula;41.2;Romeu Zema;25.0;2.00;33.8;BR040062026
-2026-08-20;Veritá;Pablo Marçal;43.6;Lula;42.7;2.00;13.7;BR040062026
-2026-08-23;Indexa/Broadcast;Lula;44.0;Ronaldo Caiado;38.0;2.20;18.0;BR063662026
-2026-08-23;Indexa/Broadcast;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR063662026
-2026-08-23;Indexa/Broadcast;Lula;46.0;Flávio Bolsonaro;41.0;2.20;13.0;BR063662026
-2026-08-23;Indexa/Broadcast;Lula;46.0;Renan Santos;34.0;2.20;20.0;BR063662026
-2026-08-23;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR090282026
-2026-08-23;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;13.0;BR090282026
-2026-08-23;Nexus/BTG Pactual;Lula;47.0;Renan Santos;35.0;2.00;17.0;BR090282026
-2026-08-23;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR090282026
-2026-08-25;Gerp;Flávio Bolsonaro;47.0;Lula;42.0;2.00;11.0;BR035472026
-2026-08-26;PoderData/Aya;Lula;44.0;Renan Santos;37.0;2.00;19.0;BR049742026
-2026-08-26;PoderData/Aya;Lula;44.0;Romeu Zema;43.0;2.00;13.0;BR049742026
-2026-08-26;PoderData/Aya;Lula;45.0;Flávio Bolsonaro;44.0;2.00;11.0;BR049742026
-2026-08-26;PoderData/Aya;Ronaldo Caiado;44.0;Lula;43.0;2.00;13.0;BR049742026
-2026-08-27;Vox Brasil;Flávio Bolsonaro;45.1;Lula;44.5;2.15;10.4;BR055192026
-2026-08-27;Vox Brasil;Lula;45.5;Romeu Zema;39.3;2.15;15.2;BR055192026
-2026-08-27;Vox Brasil;Lula;45.5;Ronaldo Caiado;41.1;2.15;13.4;BR055192026
-2026-08-30;AtlasIntel;Lula;46.6;Ronaldo Caiado;41.0;2.00;12.3;BR079722026
-2026-08-30;AtlasIntel;Lula;46.8;Jair Bolsonaro;44.1;2.00;9.1;BR079722026
-2026-08-30;AtlasIntel;Lula;47.0;Romeu Zema;40.7;2.00;12.3;BR079722026
-2026-08-30;AtlasIntel;Lula;47.1;Flávio Bolsonaro;42.6;2.00;10.3;BR079722026
-2026-08-30;AtlasIntel;Lula;47.5;Renan Santos;26.0;2.00;26.6;BR079722026
-2026-08-30;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;44.0;2.00;11.0;BR089002026
-2026-08-30;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR089002026
-2026-08-30;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;41.0;2.00;13.0;BR089002026
-2026-08-30;Nexus/BTG Pactual;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR089002026
-2026-08-31;Real Time Big Data;Lula;43.0;Romeu Zema;40.0;2.00;17.0;BR034902026
-2026-08-31;Real Time Big Data;Lula;44.0;Flávio Bolsonaro;44.0;2.00;12.0;BR034902026
-2026-08-31;Real Time Big Data;Lula;44.0;Pablo Marçal;40.0;2.00;16.0;BR034902026
-2026-08-31;Real Time Big Data;Lula;44.0;Renan Santos;37.0;2.00;19.0;BR034902026
-2026-08-31;Real Time Big Data;Ronaldo Caiado;45.0;Lula;43.0;2.00;12.0;BR034902026
-2026-09-01;Apex/Futura;Lula;44.4;Ronaldo Caiado;42.5;2.20;13.1;BR027932026
-2026-09-01;Apex/Futura;Lula;45.6;Flávio Bolsonaro;45.2;2.20;9.2;BR027932026
-2026-09-01;Apex/Futura;Lula;46.6;Renan Santos;36.6;2.20;16.8;BR027932026
-2026-09-01;Apex/Futura;Lula;46.7;Romeu Zema;38.5;2.20;14.9;BR027932026
-2026-09-01;Genial/Quaest;Lula;40.0;Cury (Avante);34.0;2.00;26.0;BR070652026
-2026-09-01;Genial/Quaest;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR070652026
-2026-09-01;Genial/Quaest;Lula;42.0;Ronaldo Caiado;37.0;2.00;21.0;BR070652026
-2026-09-01;Genial/Quaest;Lula;43.0;Renan Santos;36.0;2.00;21.0;BR070652026
-2026-09-01;Genial/Quaest;Lula;44.0;Romeu Zema;33.0;2.00;23.0;BR070652026
-2026-09-02;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;10.0;BR036692026
-2026-09-02;Datafolha;Lula;46.0;Ronaldo Caiado;41.0;2.00;13.0;BR036692026
-2026-09-02;Datafolha;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR036692026
-2026-09-02;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;14.0;BR036692026
-2026-09-02;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;45.0;1.80;11.0;BR075612026
-2026-09-02;PoderData/Aya;Lula;44.0;Renan Santos;39.0;1.80;18.0;BR075612026
-2026-09-02;PoderData/Aya;Lula;44.0;Romeu Zema;42.0;1.80;14.0;BR075612026
-2026-09-02;PoderData/Aya;Lula;45.0;Ronaldo Caiado;42.0;1.80;13.0;BR075612026
-2026-09-04;Veritá;Flávio Bolsonaro;48.5;Lula;43.1;2.00;8.5;BR094262026
-2026-09-04;Veritá;Lula;35.6;Cury (Avante);27.0;2.00;37.4;BR094262026
-2026-09-04;Veritá;Lula;36.8;Ronaldo Caiado;24.9;2.00;38.2;BR094262026
-2026-09-04;Veritá;Lula;37.8;Renan Santos;19.3;2.00;42.8;BR094262026
-2026-09-04;Veritá;Lula;38.4;Pablo Marçal;28.6;2.00;33.0;BR094262026
-2026-09-06;Genial/Quaest;Lula;39.0;Cury (Avante);35.0;2.00;26.0;BR017202026
-2026-09-06;Genial/Quaest;Lula;41.0;Flávio Bolsonaro;41.0;2.00;18.0;BR017202026
-2026-09-06;Genial/Quaest;Lula;41.0;Ronaldo Caiado;38.0;2.00;21.0;BR017202026
-2026-09-06;Genial/Quaest;Lula;42.0;Renan Santos;37.0;2.00;21.0;BR017202026
-2026-09-06;Genial/Quaest;Lula;44.0;Romeu Zema;33.0;2.00;23.0;BR017202026
-2026-09-07;Meio/Ideia;Lula;46.0;Cury (Avante);40.9;2.50;13.1;BR079352026
-2026-09-07;Meio/Ideia;Lula;46.0;Flávio Bolsonaro;46.0;2.50;8.0;BR079352026
-2026-09-07;Meio/Ideia;Lula;46.0;Renan Santos;40.3;2.50;13.8;BR079352026
-2026-09-07;Meio/Ideia;Lula;46.0;Romeu Zema;38.0;2.50;16.0;BR079352026
-2026-09-07;Meio/Ideia;Lula;46.0;Ronaldo Caiado;42.0;2.50;12.0;BR079352026
-2026-09-07;Nexus/BTG Pactual;Cury (Avante);45.0;Lula;43.0;2.00;11.0;BR067902026
-2026-09-07;Nexus/BTG Pactual;Flávio Bolsonaro;46.0;Lula;45.0;2.00;9.0;BR067902026
-2026-09-07;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;43.0;2.00;11.0;BR067902026
-2026-09-07;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR067902026
-2026-09-07;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR067902026
-2026-09-07;Palver;Flávio Bolsonaro;46.0;Lula;44.0;3.00;10.0;BR054202026
-2026-09-07;Palver;Lula;42.0;Cury (Avante);30.0;3.00;27.0;BR054202026
-2026-09-07;Palver;Lula;43.0;Renan Santos;31.0;3.00;26.0;BR054202026
-2026-09-07;Palver;Lula;43.0;Romeu Zema;42.0;3.00;15.0;BR054202026
-2026-09-07;Palver;Lula;43.0;Ronaldo Caiado;40.0;3.00;18.0;BR054202026
-2026-09-08;Gerp;Flávio Bolsonaro;47.0;Lula;40.0;2.00;14.0;BR002512026
-2026-09-09;AtlasIntel;Flávio Bolsonaro;46.4;Lula;46.2;1.00;7.4;BR014522026
-2026-09-09;AtlasIntel;Lula;43.8;Cury (Avante);41.1;1.00;15.2;BR014522026
-2026-09-09;AtlasIntel;Lula;46.0;Renan Santos;33.8;1.00;20.2;BR014522026
-2026-09-09;AtlasIntel;Romeu Zema;46.2;Lula;46.0;1.00;7.7;BR014522026
-2026-09-09;AtlasIntel;Ronaldo Caiado;45.7;Lula;45.7;1.00;8.6;BR014522026
-2026-09-09;PoderData/Aya;Cury (Avante);44.0;Lula;43.0;1.80;13.0;BR049142026
-2026-09-09;PoderData/Aya;Flávio Bolsonaro;47.0;Lula;45.0;1.80;8.0;BR049142026
-2026-09-10;Apex/Futura;Flávio Bolsonaro;45.4;Lula;45.0;2.20;9.6;BR023222026
-2026-09-10;Apex/Futura;Lula;43.7;Ronaldo Caiado;42.8;2.20;13.6;BR023222026
-2026-09-10;Apex/Futura;Lula;46.0;Romeu Zema;40.5;2.20;13.5;BR023222026
-2026-09-10;Apex/Futura;Lula;46.1;Renan Santos;37.6;2.20;16.3;BR023222026
-2026-09-11;Datafolha;Lula;45.0;Cury (Avante);43.0;2.00;12.0;BR018332026
-2026-09-11;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;10.0;BR018332026
-2026-09-11;Datafolha;Lula;46.0;Ronaldo Caiado;41.0;2.00;12.0;BR018332026
-2026-09-11;Datafolha;Lula;48.0;Renan Santos;37.0;2.00;13.0;BR018332026
-2026-09-11;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR018332026
-2026-09-12;Veritá;Flávio Bolsonaro;43.9;Lula;41.5;3.50;14.5;BR080932026
-2026-09-13;CNT/MDA;Lula;45.3;Cury (Avante);38.4;2.20;16.3;BR069022026
-2026-09-13;CNT/MDA;Lula;46.4;Ronaldo Caiado;37.3;2.20;16.3;BR069022026
-2026-09-13;CNT/MDA;Lula;47.3;Flávio Bolsonaro;40.0;2.20;12.7;BR069022026
-2026-09-13;CNT/MDA;Lula;47.3;Renan Santos;33.9;2.20;18.8;BR069022026
-2026-09-13;CNT/MDA;Lula;47.7;Romeu Zema;34.5;2.20;17.8;BR069022026
-2026-09-13;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;40.0;2.00;18.0;BR036072026
-2026-09-13;Genial/Quaest;Lula;38.0;Cury (Avante);36.0;2.00;26.0;BR036072026
-2026-09-13;Genial/Quaest;Lula;41.0;Renan Santos;38.0;2.00;21.0;BR036072026
-2026-09-13;Genial/Quaest;Lula;41.0;Ronaldo Caiado;39.0;2.00;20.0;BR036072026
-2026-09-13;Genial/Quaest;Lula;45.0;Romeu Zema;33.0;2.00;22.0;BR036072026
-2026-09-13;Indexa;Lula;41.0;Cury (Avante);39.0;2.20;20.0;BR034822026
-2026-09-13;Indexa;Lula;43.0;Flávio Bolsonaro;42.0;2.20;15.0;BR034822026
-2026-09-13;Indexa;Lula;43.0;Ronaldo Caiado;39.0;2.20;18.0;BR034822026
-2026-09-13;Indexa;Lula;45.0;Renan Santos;35.0;2.20;20.0;BR034822026
-2026-09-13;Indexa;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR034822026
-2026-09-13;Nexus/BTG Pactual;Lula;45.0;Cury (Avante);42.0;2.00;13.0;BR040762026
-2026-09-13;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;46.0;2.00;7.0;BR040762026
-2026-09-13;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;41.0;2.00;12.0;BR040762026
-2026-09-13;Nexus/BTG Pactual;Lula;48.0;Renan Santos;37.0;2.00;15.0;BR040762026
-2026-09-13;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;38.0;2.00;12.0;BR040762026
-2026-09-14;AtlasIntel;Lula;49.9;Eduardo Leite;22.5;1.00;27.6;BR062212026
-2026-09-14;AtlasIntel;Lula;50.6;Tarcísio de Freitas;45.2;1.00;4.2;BR062212026
-2026-09-14;AtlasIntel;Lula;51.6;Ratinho Júnior;34.9;1.00;13.5;BR062212026
-2026-09-14;AtlasIntel;Lula;51.7;Romeu Zema;36.7;1.00;11.6;BR062212026
-2026-09-14;AtlasIntel;Lula;51.7;Ronaldo Caiado;34.0;1.00;14.3;BR062212026
-2026-09-14;AtlasIntel;Lula;51.8;Jair Bolsonaro;44.8;1.00;3.4;BR062212026
-2026-09-14;AtlasIntel;Lula;51.9;Michelle Bolsonaro;44.6;1.00;3.5;BR062212026
-2026-09-14;DataTrends;Flávio Bolsonaro;45.0;Lula;44.0;2.19;11.0;BR086912026
-2026-09-14;DataTrends;Lula;42.0;Cury (Avante);37.0;2.19;21.0;BR086912026
-2026-09-14;DataTrends;Lula;44.0;Ronaldo Caiado;41.0;2.19;15.0;BR086912026
-2026-09-14;DataTrends;Lula;45.0;Renan Santos;37.0;2.19;18.0;BR086912026
-2026-09-14;DataTrends;Lula;46.0;Romeu Zema;39.0;2.19;15.0;BR086912026
-2026-09-14;Genial/Quaest;Lula;40.0;Ciro Gomes;33.0;2.00;27.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;43.0;Tarcísio de Freitas;35.0;2.00;22.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;44.0;Ratinho Júnior;32.0;2.00;24.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;45.0;Eduardo Leite;26.0;2.00;29.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;45.0;Romeu Zema;32.0;2.00;24.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;46.0;Ronaldo Caiado;31.0;2.00;23.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;47.0;Eduardo Bolsonaro;29.0;2.00;24.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;47.0;Jair Bolsonaro;34.0;2.00;19.0;BR036072026
-2026-09-14;Genial/Quaest;Lula;47.0;Michelle Bolsonaro;32.0;2.00;21.0;BR036072026
-2026-09-15;Apex/Futura;Cury (Avante);44.8;Lula;41.5;2.20;13.8;BR007492026
-2026-09-15;Apex/Futura;Flávio Bolsonaro;48.1;Lula;43.7;2.20;8.2;BR007492026
-2026-09-15;Apex/Futura;Lula;44.5;Renan Santos;39.3;2.20;16.2;BR007492026
-2026-09-15;Apex/Futura;Lula;44.7;Romeu Zema;40.6;2.20;14.7;BR007492026
-2026-09-15;Apex/Futura;Ronaldo Caiado;45.1;Lula;41.9;2.20;13.0;BR007492026
-2026-09-15;Futura Inteligência;Eduardo Bolsonaro;43.1;Lula;42.5;2.20;14.4;BR007492026
-2026-09-15;Futura Inteligência;Jair Bolsonaro;46.1;Lula;42.0;2.20;11.9;BR007492026
-2026-09-15;Futura Inteligência;Michelle Bolsonaro;45.6;Lula;41.7;2.20;12.7;BR007492026
-2026-09-15;Futura Inteligência;Ratinho Júnior;42.4;Lula;40.5;2.20;17.1;BR007492026
-2026-09-15;Futura Inteligência;Tarcísio de Freitas;42.9;Alckmin;32.8;2.20;24.3;BR007492026
-2026-09-15;Futura Inteligência;Tarcísio de Freitas;44.4;Lula;40.7;2.20;14.9;BR007492026
-2026-09-15;Futura Inteligência;Tarcísio de Freitas;45.0;Fernando Haddad;28.8;2.20;26.2;BR007492026
-2026-09-16;AtlasIntel;Flávio Bolsonaro;47.2;Lula;46.8;1.00;6.0;BR062212026
-2026-09-16;AtlasIntel;Lula;45.6;Cury (Avante);37.8;1.00;16.6;BR062212026
-2026-09-16;AtlasIntel;Lula;46.0;Ronaldo Caiado;41.7;1.00;12.3;BR062212026
-2026-09-16;AtlasIntel;Lula;46.1;Renan Santos;29.7;1.00;24.2;BR062212026
-2026-09-16;AtlasIntel;Lula;46.3;Romeu Zema;43.7;1.00;10.1;BR062212026
-2026-09-16;Datafolha;Lula;44.0;Cury (Avante);44.0;2.00;11.0;BR040292026
-2026-09-16;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;9.0;BR040292026
-2026-09-16;Datafolha;Lula;46.0;Ronaldo Caiado;42.0;2.00;12.0;BR040292026
-2026-09-16;Datafolha;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR040292026
-2026-09-16;Datafolha;Lula;49.0;Romeu Zema;39.0;2.00;13.0;BR040292026
-2026-09-16;Gerp;Flávio Bolsonaro;50.0;Lula;43.0;2.00;7.0;BR005352026
-2026-09-16;PoderData/Aya;Cury (Avante);45.0;Lula;42.0;1.80;13.0;BR003602026
-2026-09-16;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;44.0;1.80;10.0;BR003602026
-2026-09-18;Palver;Flávio Bolsonaro;47.0;Lula;43.0;2.80;10.0;BR008602026
-2026-09-18;Palver;Lula;43.0;Cury (Avante);35.0;2.80;22.0;BR008602026
-2026-09-18;Palver;Lula;43.0;Renan Santos;34.0;2.80;23.0;BR008602026
-2026-09-18;Palver;Romeu Zema;44.0;Lula;43.0;2.80;12.0;BR008602026
-2026-09-18;Palver;Ronaldo Caiado;44.0;Lula;43.0;2.80;13.0;BR008602026
-2026-09-20;American Analytics;Lula;42.0;Cury (Avante);37.0;2.50;21.0;BR025872026
-2026-09-20;American Analytics;Lula;42.0;Ronaldo Caiado;40.0;2.50;18.0;BR025872026
-2026-09-20;American Analytics;Lula;43.0;Flávio Bolsonaro;43.0;2.50;14.0;BR025872026
-2026-09-20;American Analytics;Lula;43.0;Romeu Zema;38.0;2.50;19.0;BR025872026
-2026-09-20;American Analytics;Lula;44.0;Renan Santos;37.0;2.50;19.0;BR025872026
-2026-09-20;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;41.0;2.00;17.0;BR060042026
-2026-09-20;Genial/Quaest;Lula;39.0;Cury (Avante);35.0;2.00;26.0;BR060042026
-2026-09-20;Genial/Quaest;Lula;41.0;Renan Santos;38.0;2.00;21.0;BR060042026
-2026-09-20;Genial/Quaest;Lula;41.0;Ronaldo Caiado;39.0;2.00;20.0;BR060042026
-2026-09-20;Genial/Quaest;Lula;46.0;Romeu Zema;32.0;2.00;22.0;BR060042026
-2026-09-20;Nexus/BTG Pactual;Lula;44.0;Cury (Avante);43.0;2.00;13.0;BR004852026
-2026-09-20;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;8.0;BR004852026
-2026-09-20;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR004852026
-2026-09-20;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;41.0;2.00;12.0;BR004852026
-2026-09-20;Nexus/BTG Pactual;Ronaldo Caiado;45.0;Lula;45.0;2.00;10.0;BR004852026
-2026-09-22;AtlasIntel;Lula;46.2;Cury (Avante);39.4;1.00;14.4;BR047392026
-2026-09-22;AtlasIntel;Lula;46.5;Renan Santos;31.2;1.00;22.3;BR047392026
-2026-09-22;AtlasIntel;Lula;46.6;Ronaldo Caiado;44.0;1.00;9.4;BR047392026
-2026-09-22;AtlasIntel;Lula;47.6;Romeu Zema;42.2;1.00;10.2;BR047392026
-2026-09-22;AtlasIntel;Lula;47.7;Flávio Bolsonaro;47.4;1.00;4.9;BR047392026
-2026-09-23;Alfa Inteligência;Lula;42.0;Cury (Avante);39.0;1.80;19.0;BR025122026
-2026-09-23;Alfa Inteligência;Lula;43.0;Flávio Bolsonaro;43.0;1.80;14.0;BR025122026
-2026-09-23;Alfa Inteligência;Lula;43.0;Renan Santos;37.0;1.80;20.0;BR025122026
-2026-09-23;Alfa Inteligência;Lula;43.0;Ronaldo Caiado;42.0;1.80;15.0;BR025122026
-2026-09-23;Alfa Inteligência;Lula;46.0;Romeu Zema;39.0;1.80;15.0;BR025122026
-2026-09-23;Futura;Cury (Avante);46.3;Lula;41.0;2.20;12.7;BR052682026
-2026-09-23;Futura;Flávio Bolsonaro;49.4;Lula;43.7;2.20;11.2;BR052682026
-2026-09-23;Futura;Lula;43.8;Renan Santos;41.7;2.20;14.5;BR052682026
-2026-09-23;Futura;Romeu Zema;43.8;Lula;43.0;2.20;12.9;BR052682026
-2026-09-23;Futura;Ronaldo Caiado;46.5;Lula;42.4;2.20;11.0;BR052682026
-2026-09-23;Palver;Flávio Bolsonaro;48.0;Lula;45.0;1.80;7.0;BR095872026
-2026-09-23;Palver;Lula;44.0;Cury (Avante);36.0;1.80;20.0;BR095872026
-2026-09-23;Palver;Lula;44.0;Renan Santos;34.0;1.80;22.0;BR095872026
-2026-09-23;Palver;Lula;44.0;Ronaldo Caiado;42.0;1.80;14.0;BR095872026
-2026-09-23;Palver;Lula;45.0;Romeu Zema;43.0;1.80;12.0;BR095872026
-2026-09-23;PoderData/Aya;Cury (Avante);45.0;Lula;42.0;1.80;13.0;BR017392026
-2026-09-23;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;45.0;1.80;9.0;BR017392026
-2026-09-23;Real Time Big Data;Flávio Bolsonaro;45.0;Lula;44.0;2.00;11.0;BR042022026
-2026-09-23;Real Time Big Data;Lula;44.0;Cury (Avante);43.0;2.00;13.0;BR042022026
-2026-09-23;Real Time Big Data;Lula;44.0;Renan Santos;38.0;2.00;18.0;BR042022026
-2026-09-23;Real Time Big Data;Lula;45.0;Romeu Zema;39.0;2.00;16.0;BR042022026
-2026-09-23;Real Time Big Data;Ronaldo Caiado;44.0;Lula;44.0;2.00;12.0;BR042022026
-2026-09-24;Datafolha;Lula;46.0;Cury (Avante);43.0;2.00;10.0;BR003042026
-2026-09-24;Datafolha;Lula;46.0;Ronaldo Caiado;44.0;2.00;10.0;BR003042026
-2026-09-24;Datafolha;Lula;47.0;Flávio Bolsonaro;45.0;2.00;8.0;BR003042026
-2026-09-24;Datafolha;Lula;48.0;Renan Santos;39.0;2.00;14.0;BR003042026
-2026-09-24;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;12.0;BR003042026`;
+const RAW_D2T = `2026-01-11;Genial/Quaest;Lula;43.0;Ratinho Júnior;36.0;2.00;21.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;44.0;Ronaldo Caiado;33.0;2.00;23.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;44.0;Tarcísio de Freitas;39.0;2.00;17.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;45.0;Aldo Rebelo;27.0;2.00;28.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;45.0;Flávio Bolsonaro;38.0;2.00;17.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;46.0;Renan Santos;26.0;2.00;28.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-11;Genial/Quaest;Lula;46.0;Romeu Zema;31.0;2.00;23.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-01-12;Meio/Ideia;Lula;44.4;Tarcísio de Freitas;42.1;2.20;13.6;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;45.0;Eduardo Leite;23.0;2.20;32.1;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.0;Michelle Bolsonaro;39.0;2.20;15.1;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.0;Ratinho Júnior;37.0;2.20;17.1;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.2;Flávio Bolsonaro;36.0;2.20;17.8;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.3;Romeu Zema;36.1;2.20;17.8;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.3;Ronaldo Caiado;36.5;2.20;17.3;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-12;Meio/Ideia;Lula;46.5;Renan Santos;23.5;2.20;30.1;BR067312026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-01-19;Apex/Futura;Flávio Bolsonaro;37.5;Tarcísio de Freitas;34.7;2.20;27.8;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Flávio Bolsonaro;48.1;Lula;41.9;2.20;10.0;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Lula;41.9;Eduardo Leite;37.3;2.20;20.9;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Lula;42.8;Romeu Zema;40.5;2.20;16.7;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Ratinho Júnior;44.8;Lula;41.2;2.20;14.0;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Ronaldo Caiado;42.0;Lula;41.8;2.20;16.3;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-19;Apex/Futura;Tarcísio de Freitas;46.1;Lula;41.3;2.20;12.5;BR082332026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-01-20;AtlasIntel;Lula;48.0;Eduardo Leite;23.0;1.00;29.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Flávio Bolsonaro;45.0;1.00;6.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Jair Bolsonaro;46.0;1.00;5.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Michelle Bolsonaro;45.0;1.00;6.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Ratinho Júnior;39.0;1.00;12.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Romeu Zema;39.0;1.00;12.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Ronaldo Caiado;39.0;1.00;12.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-20;AtlasIntel;Lula;49.0;Tarcísio de Freitas;45.0;1.00;6.0;BR028042026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5418
+2026-01-28;Paraná Pesquisas;Lula;43.9;Jair Bolsonaro;41.9;2.20;14.3;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2020
+2026-01-28;Paraná Pesquisas;Lula;43.9;Tarcísio de Freitas;42.5;2.20;13.7;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-01-28;Paraná Pesquisas;Lula;44.7;Ratinho Júnior;38.9;2.20;16.4;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-01-28;Paraná Pesquisas;Lula;44.8;Flávio Bolsonaro;42.2;2.20;13.0;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-01-28;Paraná Pesquisas;Lula;45.4;Michelle Bolsonaro;38.7;2.20;15.8;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2020
+2026-01-28;Paraná Pesquisas;Lula;45.8;Tarcísio de Freitas;34.6;2.20;19.6;BR082542026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2020
+2026-02-02;Gerp;Lula;42.0;Ciro Gomes;36.0;2.24;22.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;45.0;Flávio Bolsonaro;45.0;2.24;10.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;45.0;Ratinho Júnior;41.0;2.24;14.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;46.0;Aldo Rebelo;30.0;2.24;24.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;47.0;Renan Santos;26.0;2.24;26.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;47.0;Romeu Zema;36.0;2.24;17.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Gerp;Lula;47.0;Ronaldo Caiado;34.0;2.24;19.0;BR045192026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-02-02;Meio/Ideia;Fernando Haddad;41.8;Flávio Bolsonaro;40.0;2.50;18.2;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;44.7;Tarcísio de Freitas;42.2;2.50;13.1;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.0;Aldo Rebelo;20.0;2.50;35.0;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.0;Michelle Bolsonaro;40.7;2.50;14.3;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.0;Ratinho Júnior;38.0;2.50;17.0;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.0;Romeu Zema;34.5;2.50;20.5;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.0;Ronaldo Caiado;34.0;2.50;21.0;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.4;Eduardo Leite;21.0;2.50;33.6;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.5;Renan Santos;26.0;2.50;28.5;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Lula;45.8;Flávio Bolsonaro;41.1;2.50;13.1;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-02;Meio/Ideia;Tarcísio de Freitas;44.5;Fernando Haddad;40.5;2.50;14.9;BR084252026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-02-07;Apex/Futura;Flávio Bolsonaro;40.1;Tarcísio de Freitas;35.0;2.20;24.9;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Flávio Bolsonaro;48.2;Lula;42.4;2.20;9.4;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Lula;42.7;Eduardo Leite;38.5;2.20;18.8;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Lula;43.1;Ronaldo Caiado;42.3;2.20;14.6;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Lula;43.3;Romeu Zema;42.4;2.20;14.3;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Ratinho Júnior;45.2;Lula;42.1;2.20;12.6;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-07;Apex/Futura;Tarcísio de Freitas;47.4;Lula;41.4;2.20;11.2;BR022762026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-02-09;Genial/Quaest;Lula;42.0;Eduardo Leite;28.0;2.00;30.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;42.0;Ronaldo Caiado;32.0;2.00;26.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;43.0;Flávio Bolsonaro;38.0;2.00;19.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;43.0;Ratinho Júnior;35.0;2.00;22.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;43.0;Romeu Zema;32.0;2.00;25.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;44.0;Aldo Rebelo;25.0;2.00;31.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-09;Genial/Quaest;Lula;44.0;Renan Santos;25.0;2.00;31.0;BR002492026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-02-24;AtlasIntel;Flávio Bolsonaro;46.3;Lula;46.2;1.00;7.5;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;45.2;Eduardo Leite;24.5;1.00;30.3;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;45.5;Ratinho Júnior;39.0;1.00;15.5;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;45.7;Ronaldo Caiado;37.6;1.00;16.7;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;46.0;Romeu Zema;41.7;1.00;12.3;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;47.3;Jair Bolsonaro;45.4;1.00;7.3;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Lula;47.5;Michelle Bolsonaro;44.7;1.00;7.8;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-24;AtlasIntel;Tarcísio de Freitas;47.1;Lula;45.9;1.00;7.0;BR076002026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4986
+2026-02-25;Paraná Pesquisas;Flávio Bolsonaro;44.4;Lula;43.8;2.20;11.9;BR079742026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-02-25;Paraná Pesquisas;Lula;43.6;Ratinho Júnior;39.7;2.20;16.7;BR079742026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-02-25;Paraná Pesquisas;Lula;45.3;Ronaldo Caiado;36.2;2.20;18.4;BR079742026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-03-02;Real Time Big Data;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;43.0;Ratinho Júnior;39.0;2.00;18.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;44.0;Romeu Zema;35.0;2.00;21.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;45.0;Ronaldo Caiado;36.0;2.00;19.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;46.0;Eduardo Leite;35.0;2.00;19.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;51.0;Aldo Rebelo;19.0;2.00;30.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Real Time Big Data;Lula;51.0;Renan Santos;18.0;2.00;31.0;BR093532026;95;P;REAL TIME MIDIA LTDA;2000
+2026-03-02;Vetor/Arrow;Flávio Bolsonaro;49.0;Lula;40.4;1.30;10.5;BR037422026;95;P;VETOR ARROW INSTITUTO DE PESQUISA E OPINIAO LTDA;9000
+2026-03-05;Datafolha;Flávio Bolsonaro;43.0;Fernando Haddad;41.0;2.00;15.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Lula;45.0;Ratinho Júnior;41.0;2.00;15.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Lula;45.0;Tarcísio de Freitas;42.0;2.00;13.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Lula;46.0;Eduardo Leite;34.0;2.00;20.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Lula;46.0;Ronaldo Caiado;36.0;2.00;18.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-05;Datafolha;Ratinho Júnior;40.0;Fernando Haddad;40.0;2.00;20.0;BR037152026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-03-06;Apex/Futura;Flávio Bolsonaro;48.8;Lula;40.5;2.20;10.7;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-06;Apex/Futura;Lula;41.1;Eduardo Leite;37.1;2.20;21.8;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-06;Apex/Futura;Lula;42.5;Romeu Zema;40.5;2.20;17.0;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-06;Apex/Futura;Ratinho Júnior;45.5;Lula;41.0;2.20;13.1;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-06;Apex/Futura;Ronaldo Caiado;41.2;Lula;41.1;2.20;17.7;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-06;Apex/Futura;Tarcísio de Freitas;45.5;Lula;41.4;2.20;13.1;BR066072026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-03-09;Genial/Quaest;Lula;41.0;Flávio Bolsonaro;41.0;2.00;18.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;42.0;Eduardo Leite;26.0;2.00;32.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;42.0;Ratinho Júnior;33.0;2.00;25.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;43.0;Renan Santos;24.0;2.00;33.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;44.0;Aldo Rebelo;23.0;2.00;33.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;44.0;Romeu Zema;34.0;2.00;22.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-09;Genial/Quaest;Lula;44.0;Ronaldo Caiado;32.0;2.00;24.0;BR058092026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-03-10;Meio/Ideia;Lula;46.0;Romeu Zema;38.0;2.50;16.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;46.0;Ronaldo Caiado;37.0;2.50;16.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;46.0;Tarcísio de Freitas;45.0;2.50;9.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;47.0;Aldo Rebelo;19.0;2.50;34.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;47.0;Eduardo Leite;29.0;2.50;24.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;47.0;Flávio Bolsonaro;45.0;2.50;7.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;47.0;Ratinho Júnior;41.0;2.50;13.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-10;Meio/Ideia;Lula;47.0;Renan Santos;25.0;2.50;28.0;BR003862026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-03-11;Alfa Inteligência;Lula;41.0;Flávio Bolsonaro;38.0;3.10;21.0;BR031652026;95;P;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;1000
+2026-03-23;AtlasIntel;Flávio Bolsonaro;47.6;Lula;46.6;1.00;5.8;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Jair Bolsonaro;47.4;Lula;46.6;1.00;6.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Lula;45.5;Eduardo Leite;22.7;1.00;31.8;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Lula;46.1;Ratinho Júnior;38.7;1.00;15.2;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Lula;46.2;Ronaldo Caiado;36.7;1.00;17.1;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Lula;46.6;Romeu Zema;43.7;1.00;9.8;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Michelle Bolsonaro;47.0;Lula;46.8;1.00;6.2;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-23;AtlasIntel;Tarcísio de Freitas;47.2;Lula;46.3;1.00;6.5;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5028
+2026-03-24;AtlasIntel;Jair Bolsonaro;48.0;Lula;46.0;1.00;6.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-24;AtlasIntel;Lula;44.0;Romeu Zema;25.0;1.00;31.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-24;AtlasIntel;Lula;46.0;Eduardo Leite;36.0;1.00;18.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-24;AtlasIntel;Lula;47.0;Ronaldo Caiado;37.0;1.00;16.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-24;AtlasIntel;Pablo Marçal;51.0;Lula;46.0;1.00;3.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-24;AtlasIntel;Tarcísio de Freitas;47.0;Lula;46.0;1.00;7.0;BR042272026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4659
+2026-03-25;Gerp;Flávio Bolsonaro;48.0;Lula;45.0;2.24;8.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-25;Gerp;Lula;39.0;Ciro Gomes;38.0;2.24;23.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-25;Gerp;Lula;41.0;Eduardo Leite;35.0;2.24;24.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-25;Gerp;Lula;44.0;Ronaldo Caiado;37.0;2.24;19.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-25;Gerp;Lula;45.0;Romeu Zema;41.0;2.24;14.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-25;Gerp;Ratinho Júnior;42.0;Lula;42.0;2.24;16.0;BR028462026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-03-28;Paraná Pesquisas;Flávio Bolsonaro;45.2;Lula;44.1;2.20;10.7;BR008732026;95;P;INSTITUTO PARANA DE PESQUISAS E ANALISE DE CONSUMIDOR LTDA;2080
+2026-03-29;Nexus/BTG Pactual;Lula;46.0;Eduardo Leite;36.0;2.00;18.0;BR078752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-03-29;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;46.0;2.00;7.0;BR078752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-03-29;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;40.0;2.00;14.0;BR078752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-03-29;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;41.0;2.00;13.0;BR078752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-04-04;Veritá;Flávio Bolsonaro;42.8;Lula;38.4;1.00;23.2;BR024762026;95;P;INSTITUTO VERITA LTDA;40500
+2026-04-07;Meio/Ideia;Flávio Bolsonaro;45.8;Lula;45.5;2.50;8.7;BR006052026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-04-07;Meio/Ideia;Lula;44.7;Romeu Zema;38.7;2.50;16.6;BR006052026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-04-07;Meio/Ideia;Lula;45.0;Renan Santos;26.4;2.50;28.6;BR006052026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-04-07;Meio/Ideia;Lula;45.0;Ronaldo Caiado;39.0;2.50;16.0;BR006052026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-04-07;Meio/Ideia;Lula;46.0;Aldo Rebelo;22.6;2.50;31.4;BR006052026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-04-09;Datafolha;Flávio Bolsonaro;46.0;Lula;45.0;2.00;9.0;BR037702026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-04-09;Datafolha;Lula;45.0;Romeu Zema;42.0;2.00;13.0;BR037702026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-04-09;Datafolha;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR037702026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-04-11;Apex/Futura;Flávio Bolsonaro;48.0;Lula;42.6;2.20;9.4;BR082822026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-04-11;Apex/Futura;Flávio Bolsonaro;48.3;Fernando Haddad;34.8;2.20;16.9;BR082822026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-04-11;Apex/Futura;Lula;43.9;Ronaldo Caiado;38.8;2.20;17.3;BR082822026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-04-11;Apex/Futura;Lula;44.8;Romeu Zema;38.0;2.20;17.1;BR082822026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-04-12;CNT/MDA;Lula;44.4;Ronaldo Caiado;32.7;2.20;22.9;BR028472026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-04-12;CNT/MDA;Lula;44.9;Flávio Bolsonaro;40.2;2.20;14.9;BR028472026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-04-12;CNT/MDA;Lula;45.0;Renan Santos;28.3;2.20;26.7;BR028472026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-04-12;CNT/MDA;Lula;45.2;Romeu Zema;31.6;2.20;23.2;BR028472026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-04-12;CNT/MDA;Lula;45.4;Aldo Rebelo;29.1;2.20;25.5;BR028472026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-04-13;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;40.0;2.00;18.0;BR092852026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-04-13;Genial/Quaest;Lula;43.0;Romeu Zema;36.0;2.00;21.0;BR092852026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-04-13;Genial/Quaest;Lula;43.0;Ronaldo Caiado;35.0;2.00;22.0;BR092852026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-04-13;Genial/Quaest;Lula;44.0;Cury (Avante);23.0;2.00;33.0;BR092852026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-04-13;Genial/Quaest;Lula;44.0;Renan Santos;24.0;2.00;32.0;BR092852026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-04-24;AtlasIntel;Lula;45.0;Ronaldo Caiado;36.3;1.00;18.7;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Lula;45.3;Eduardo Leite;24.2;1.00;30.5;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Lula;45.6;Romeu Zema;39.5;1.00;14.8;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Lula;46.6;Michelle Bolsonaro;46.1;1.00;7.3;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Lula;47.2;Ratinho Júnior;34.9;1.00;17.9;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Lula;48.5;Jair Bolsonaro;46.4;1.00;5.2;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-24;AtlasIntel;Tarcísio de Freitas;46.7;Lula;46.7;1.00;6.6;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5419
+2026-04-26;Nexus/BTG Pactual;Lula;45.0;Romeu Zema;41.0;2.00;14.0;BR010752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2028
+2026-04-26;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;41.0;2.00;13.0;BR010752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2028
+2026-04-26;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR010752026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2028
+2026-04-27;AtlasIntel;Flávio Bolsonaro;47.5;Alckmin;45.9;1.00;6.6;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Flávio Bolsonaro;47.8;Lula;47.5;1.00;4.7;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Flávio Bolsonaro;48.1;Fernando Haddad;44.3;1.00;7.6;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Lula;46.8;Ronaldo Caiado;42.2;1.00;11.0;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Lula;47.1;Renan Santos;29.5;1.00;23.5;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Lula;47.4;Romeu Zema;46.5;1.00;6.1;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-04-27;AtlasIntel;Lula;48.0;Jair Bolsonaro;46.8;1.00;5.2;BR079922026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5008
+2026-05-04;Real Time Big Data;Flávio Bolsonaro;44.0;Lula;43.0;2.00;13.0;BR036272026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-04;Real Time Big Data;Lula;43.0;Ciro Gomes;43.0;2.00;14.0;BR036272026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-04;Real Time Big Data;Lula;43.0;Romeu Zema;39.0;2.00;18.0;BR036272026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-04;Real Time Big Data;Lula;43.0;Ronaldo Caiado;42.0;2.00;15.0;BR036272026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-04;Real Time Big Data;Lula;48.0;Renan Santos;24.0;2.00;28.0;BR036272026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-05;Meio/Ideia;Flávio Bolsonaro;45.3;Lula;44.7;2.50;10.0;BR053562026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-05;Meio/Ideia;Lula;44.0;Romeu Zema;39.0;2.50;17.0;BR053562026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-05;Meio/Ideia;Lula;44.7;Ronaldo Caiado;40.0;2.50;15.3;BR053562026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-08;Apex/Futura;Flávio Bolsonaro;46.9;Lula;44.4;2.20;8.6;BR036782026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-08;Apex/Futura;Flávio Bolsonaro;47.8;Fernando Haddad;36.2;2.20;16.0;BR036782026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-08;Apex/Futura;Lula;41.4;Ciro Gomes;37.8;2.20;20.8;BR036782026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-08;Apex/Futura;Lula;45.1;Ronaldo Caiado;36.9;2.20;17.9;BR036782026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-08;Apex/Futura;Lula;46.0;Romeu Zema;37.8;2.20;15.3;BR036782026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-11;Genial/Quaest;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR035982026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-05-11;Genial/Quaest;Lula;44.0;Romeu Zema;37.0;2.00;17.0;BR035982026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-05-11;Genial/Quaest;Lula;44.0;Ronaldo Caiado;35.0;2.00;21.0;BR035982026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-05-11;Genial/Quaest;Lula;45.0;Renan Santos;28.0;2.00;27.0;BR035982026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-05-12;Gerp;Ciro Gomes;40.0;Lula;38.0;2.24;22.0;BR033692026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-12;Gerp;Flávio Bolsonaro;50.0;Lula;43.0;2.24;7.0;BR033692026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-12;Gerp;Lula;43.0;Romeu Zema;41.0;2.24;16.0;BR033692026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-12;Gerp;Lula;43.0;Ronaldo Caiado;39.0;2.24;18.0;BR033692026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-12;Gerp;Lula;44.0;Pablo Marçal;37.0;2.24;19.0;BR033692026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-12;Vox Brasil;Flávio Bolsonaro;43.8;Lula;40.2;2.15;16.0;BR024232026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-12;Vox Brasil;Lula;42.9;Ronaldo Caiado;32.5;2.15;24.6;BR024232026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-12;Vox Brasil;Lula;43.1;Romeu Zema;34.3;2.15;22.6;BR024232026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-12;Vox Brasil;Lula;44.4;Renan Santos;26.2;2.15;29.4;BR024232026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-14;Datafolha;Lula;45.0;Flávio Bolsonaro;45.0;2.00;10.0;BR002902026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-14;Datafolha;Lula;46.0;Romeu Zema;40.0;2.00;14.0;BR002902026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-14;Datafolha;Lula;46.0;Ronaldo Caiado;39.0;2.00;15.0;BR002902026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-18;AtlasIntel;Lula;47.5;Ronaldo Caiado;38.5;1.00;14.0;BR069392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5032
+2026-05-18;AtlasIntel;Lula;47.8;Renan Santos;28.4;1.00;23.8;BR069392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5032
+2026-05-18;AtlasIntel;Lula;47.8;Romeu Zema;37.6;1.00;14.6;BR069392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5032
+2026-05-18;AtlasIntel;Lula;48.9;Flávio Bolsonaro;41.8;1.00;9.3;BR069392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5032
+2026-05-18;Vetor/Arrow;Lula;50.7;Flávio Bolsonaro;38.3;1.00;11.0;BR093012026;95;P;VETOR ARROW INSTITUTO DE PESQUISA E OPINIAO LTDA;9000
+2026-05-19;Vox Brasil;Lula;46.8;Flávio Bolsonaro;38.1;2.15;15.1;BR024162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-19;Vox Brasil;Lula;47.8;Ronaldo Caiado;34.1;2.15;18.1;BR024162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-19;Vox Brasil;Lula;48.5;Romeu Zema;36.3;2.15;15.2;BR024162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-05-20;Apex/Futura;Lula;47.6;Ronaldo Caiado;36.5;2.20;15.9;BR065292026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-20;Apex/Futura;Lula;47.7;Flávio Bolsonaro;42.2;2.20;10.2;BR065292026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-20;Apex/Futura;Lula;47.9;Michelle Bolsonaro;41.6;2.20;10.6;BR065292026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-20;Apex/Futura;Lula;48.3;Romeu Zema;35.9;2.20;15.8;BR065292026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-05-21;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;11.0;BR074892026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-21;Datafolha;Lula;48.0;Michelle Bolsonaro;43.0;2.00;9.0;BR074892026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-21;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR074892026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-21;Datafolha;Lula;48.0;Ronaldo Caiado;39.0;2.00;13.0;BR074892026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-05-21;Gerp;Flávio Bolsonaro;47.0;Lula;44.0;2.20;9.0;BR079712026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-21;Gerp;Lula;41.0;Ciro Gomes;31.0;2.20;28.0;BR079712026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-21;Gerp;Lula;44.0;Ronaldo Caiado;32.0;2.20;23.0;BR079712026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-21;Gerp;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR079712026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-05-24;Indexa;Flávio Bolsonaro;40.0;Alckmin;35.0;2.20;25.0;BR021542026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-05-24;Indexa;Flávio Bolsonaro;40.0;Fernando Haddad;36.0;2.20;24.0;BR021542026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-05-24;Indexa;Lula;46.0;Flávio Bolsonaro;41.0;2.20;10.0;BR021542026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-05-24;Indexa;Lula;47.0;Romeu Zema;37.0;2.20;16.0;BR021542026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-05-24;Indexa;Lula;47.0;Ronaldo Caiado;39.0;2.20;14.0;BR021542026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-05-24;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;40.0;2.00;13.0;BR041932026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2045
+2026-05-24;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;43.0;2.00;10.0;BR041932026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2045
+2026-05-24;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;38.0;2.00;13.0;BR041932026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2045
+2026-05-26;Veritá;Flávio Bolsonaro;53.2;Lula;46.8;2.00;;BR042762026;95;P;INSTITUTO VERITA LTDA;3330
+2026-05-27;Meio/Ideia;Fernando Haddad;42.0;Flávio Bolsonaro;41.5;2.50;16.5;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Aécio Neves;25.0;2.50;29.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Barbosa (DC);26.0;2.50;28.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Michelle Bolsonaro;40.0;2.50;14.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Renan Santos;31.0;2.50;23.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Romeu Zema;37.0;2.50;17.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Ronaldo Caiado;40.0;2.50;14.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.0;Tereza Cristina;27.0;2.50;27.0;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-27;Meio/Ideia;Lula;46.5;Flávio Bolsonaro;41.4;2.50;12.2;BR029182026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-05-28;PoderData/Aya;Lula;43.0;Barbosa (DC);41.0;2.00;16.0;BR048822026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-05-28;PoderData/Aya;Lula;45.0;Renan Santos;36.0;2.00;19.0;BR048822026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-05-28;PoderData/Aya;Lula;45.0;Romeu Zema;41.0;2.00;15.0;BR048822026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-05-28;PoderData/Aya;Lula;45.0;Ronaldo Caiado;41.0;2.00;15.0;BR048822026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-05-28;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;42.0;2.00;12.0;BR048822026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-05-30;Real Time Big Data;Lula;43.0;Romeu Zema;40.0;2.00;17.0;BR058642026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-30;Real Time Big Data;Lula;45.0;Flávio Bolsonaro;40.0;2.00;15.0;BR058642026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-30;Real Time Big Data;Lula;46.0;Renan Santos;30.0;2.00;24.0;BR058642026;95;P;REAL TIME MIDIA LTDA;2000
+2026-05-30;Real Time Big Data;Ronaldo Caiado;43.0;Lula;43.0;2.00;14.0;BR058642026;95;P;REAL TIME MIDIA LTDA;2000
+2026-06-05;Gerp;Flávio Bolsonaro;44.7;Lula;39.1;2.24;16.2;BR017922026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-05;Gerp;Lula;38.9;Ronaldo Caiado;33.8;2.24;27.3;BR017922026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-05;Gerp;Lula;39.2;Romeu Zema;34.5;2.24;26.3;BR017922026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-06;Vox Brasil;Lula;46.3;Romeu Zema;42.5;2.15;11.2;BR080162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-06;Vox Brasil;Lula;46.5;Ronaldo Caiado;44.9;2.15;8.6;BR080162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-06;Vox Brasil;Lula;47.8;Flávio Bolsonaro;41.3;2.15;10.9;BR080162026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-08;Genial/Quaest;Lula;44.0;Flávio Bolsonaro;38.0;2.00;18.0;BR076612026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-06-08;Genial/Quaest;Lula;45.0;Renan Santos;31.0;2.00;24.0;BR076612026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-06-08;Genial/Quaest;Lula;45.0;Romeu Zema;35.0;2.00;20.0;BR076612026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-06-08;Genial/Quaest;Lula;45.0;Ronaldo Caiado;35.0;2.00;20.0;BR076612026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-06-10;Alfa Inteligência;Lula;41.0;Barbosa (DC);34.0;2.60;25.0;BR034962026;95;P;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;1400
+2026-06-10;Alfa Inteligência;Lula;44.0;Flávio Bolsonaro;41.0;2.60;15.0;BR034962026;95;P;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;1400
+2026-06-10;Alfa Inteligência;Lula;44.0;Renan Santos;26.0;2.60;30.0;BR034962026;95;P;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;1400
+2026-06-10;Alfa Inteligência;Lula;44.0;Ronaldo Caiado;38.0;2.60;17.0;BR034962026;95;P;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;1400
+2026-06-12;Apex/Futura;Flávio Bolsonaro;43.9;Fernando Haddad;38.9;2.20;17.2;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;45.0;Ronaldo Caiado;36.3;2.20;18.7;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;48.0;Michelle Bolsonaro;42.4;2.20;9.6;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;48.1;Flávio Bolsonaro;42.9;2.20;10.0;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;48.3;Renan Santos;30.8;2.20;20.9;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;48.5;Romeu Zema;34.9;2.20;16.6;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-12;Apex/Futura;Lula;48.5;Tereza Cristina;29.2;2.20;22.2;BR014612026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-06-14;CNT/MDA;Lula;49.3;Flávio Bolsonaro;36.8;2.20;13.9;BR042562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-06-14;Nexus/BTG Pactual;Lula;48.0;Ronaldo Caiado;39.0;2.00;13.0;BR066452026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2017
+2026-06-14;Nexus/BTG Pactual;Lula;49.0;Flávio Bolsonaro;43.0;2.00;9.0;BR066452026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2017
+2026-06-14;Nexus/BTG Pactual;Lula;49.0;Renan Santos;36.0;2.00;15.0;BR066452026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2017
+2026-06-14;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;39.0;2.00;12.0;BR066452026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2017
+2026-06-15;American Analytics;Lula;45.0;Flávio Bolsonaro;40.0;2.20;15.0;BR095212026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-06-15;CNT/MDA;Jair Bolsonaro;43.9;Fernando Haddad;38.4;2.20;17.7;BR042562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-06-15;CNT/MDA;Jair Bolsonaro;43.9;Lula;41.4;2.20;14.7;BR042562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-06-15;CNT/MDA;Lula;41.1;Tarcísio de Freitas;40.4;2.20;18.5;BR042562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-06-15;CNT/MDA;Tarcísio de Freitas;39.0;Fernando Haddad;37.0;2.20;24.0;BR042562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-06-17;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR099562026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-06-19;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;9.0;BR099562026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-06-19;Datafolha;Lula;47.0;Ronaldo Caiado;41.0;2.00;12.0;BR099562026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-06-20;Gerp;Flávio Bolsonaro;42.0;Lula;40.0;2.19;18.3;BR096572026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-20;Gerp;Lula;39.0;Romeu Zema;36.0;2.19;25.7;BR096572026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-20;Gerp;Lula;39.0;Ronaldo Caiado;38.0;2.19;23.1;BR096572026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-06-20;Indexa;Lula;47.0;Flávio Bolsonaro;40.0;2.20;13.0;BR089442026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-06-24;PoderData/Aya;Lula;43.0;Barbosa (DC);41.0;2.00;16.0;BR057222026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-06-24;PoderData/Aya;Lula;45.0;Renan Santos;38.0;2.00;17.0;BR057222026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-06-24;PoderData/Aya;Lula;45.0;Romeu Zema;42.0;2.00;13.0;BR057222026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-06-24;PoderData/Aya;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR057222026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-06-24;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR057222026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-06-25;Vox Brasil;Lula;44.6;Ronaldo Caiado;40.8;2.15;14.6;BR066302026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-25;Vox Brasil;Lula;45.3;Flávio Bolsonaro;42.8;2.15;11.9;BR066302026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-25;Vox Brasil;Lula;45.5;Romeu Zema;41.3;2.15;13.2;BR066302026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-25;Vox Brasil;Lula;49.7;Aécio Neves;22.1;2.15;28.2;BR066302026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-06-28;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR085212026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2009
+2026-06-28;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;39.0;2.00;14.0;BR085212026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2009
+2026-06-28;Nexus/BTG Pactual;Lula;48.0;Renan Santos;36.0;2.00;16.0;BR085212026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2009
+2026-06-28;Nexus/BTG Pactual;Lula;48.0;Romeu Zema;38.0;2.00;14.0;BR085212026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2009
+2026-06-30;AtlasIntel;Alckmin;47.4;Flávio Bolsonaro;41.7;1.00;10.9;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Fernando Haddad;46.4;Flávio Bolsonaro;42.8;1.00;10.7;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Jair Bolsonaro;48.6;Lula;47.8;2.00;3.6;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;47.0;Eduardo Leite;23.9;2.00;29.0;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;47.3;Ratinho Júnior;39.0;2.00;13.7;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;47.6;Tarcísio de Freitas;46.9;2.00;5.5;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;47.8;Ronaldo Caiado;35.3;2.00;17.0;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;48.0;Michelle Bolsonaro;47.5;2.00;4.5;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;48.0;Romeu Zema;38.6;2.00;13.5;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2621
+2026-06-30;AtlasIntel;Lula;48.0;Ronaldo Caiado;39.0;1.00;13.1;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Lula;48.2;Romeu Zema;38.5;1.00;13.3;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Lula;48.6;Jair Bolsonaro;43.1;1.00;8.3;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Lula;48.7;Michelle Bolsonaro;38.9;1.00;12.4;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Lula;48.8;Flávio Bolsonaro;42.3;1.00;8.9;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-06-30;AtlasIntel;Lula;49.2;Renan Santos;29.8;1.00;21.9;BR045822026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;4999
+2026-07-06;Meio/Ideia;Lula;45.0;Barbosa (DC);23.0;2.50;32.0;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-06;Meio/Ideia;Lula;45.0;Flávio Bolsonaro;40.0;2.50;15.0;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-06;Meio/Ideia;Lula;45.0;Michelle Bolsonaro;36.0;2.50;19.0;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-06;Meio/Ideia;Lula;45.0;Renan Santos;33.0;2.50;22.0;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-06;Meio/Ideia;Lula;45.0;Romeu Zema;37.0;2.50;18.0;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-06;Meio/Ideia;Lula;45.0;Ronaldo Caiado;37.6;2.50;17.4;BR056282026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2000
+2026-07-07;Gerp;Alckmin;44.0;Flávio Bolsonaro;34.0;2.20;21.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Flávio Bolsonaro;45.0;Fernando Haddad;32.0;2.20;23.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Flávio Bolsonaro;45.0;Lula;42.0;2.20;13.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Lula;40.0;Ronaldo Caiado;36.0;2.20;23.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Lula;41.0;Renan Santos;30.0;2.20;29.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Lula;41.0;Romeu Zema;36.0;2.20;23.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-07;Gerp;Lula;45.0;Michelle Bolsonaro;41.0;2.20;15.0;BR030672026;95;C;GERP MERCADOLOGIA LTDA;2000
+2026-07-11;Apex/Futura;Lula;45.1;Ronaldo Caiado;38.9;2.20;15.9;BR072942026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-07-11;Apex/Futura;Lula;46.0;Romeu Zema;38.1;2.20;15.9;BR072942026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-07-11;Apex/Futura;Lula;46.1;Michelle Bolsonaro;44.3;2.20;9.6;BR072942026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-07-11;Apex/Futura;Lula;46.3;Flávio Bolsonaro;46.1;2.20;7.6;BR072942026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-07-11;Apex/Futura;Lula;46.4;Renan Santos;33.1;2.20;20.5;BR072942026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-07-12;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR079812026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-07-12;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR079812026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-07-12;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;38.0;2.00;15.0;BR079812026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-07-12;Nexus/BTG Pactual;Lula;49.0;Renan Santos;35.0;2.00;16.0;BR079812026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-07-13;Genial/Quaest;Lula;45.0;Flávio Bolsonaro;37.0;2.00;18.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-13;Genial/Quaest;Lula;45.0;Renan Santos;33.0;2.00;22.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-13;Genial/Quaest;Lula;45.0;Romeu Zema;35.0;2.00;20.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-13;Genial/Quaest;Lula;45.0;Ronaldo Caiado;36.0;2.00;19.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;41.0;Eduardo Leite;36.0;2.00;23.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;41.0;Ratinho Júnior;36.0;2.00;23.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;41.0;Tarcísio de Freitas;37.0;2.00;23.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;42.0;Romeu Zema;33.0;2.00;25.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;42.0;Ronaldo Caiado;33.0;2.00;25.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;43.0;Eduardo Bolsonaro;33.0;2.00;24.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;43.0;Jair Bolsonaro;37.0;2.00;20.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-14;Genial/Quaest;Lula;43.0;Michelle Bolsonaro;36.0;2.00;18.0;BR071812026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-07-15;PoderData/Aya;Lula;45.0;Flávio Bolsonaro;43.0;2.00;12.0;BR000592026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-07-17;Gerp;Flávio Bolsonaro;46.0;Lula;45.0;2.19;9.0;BR050262026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-07-17;Gerp;Lula;44.0;Romeu Zema;38.0;2.19;17.0;BR050262026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-07-17;Gerp;Lula;44.0;Ronaldo Caiado;41.0;2.19;16.0;BR050262026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-07-17;Gerp;Lula;45.0;Renan Santos;35.0;2.19;20.0;BR050262026;95;P;GERP MERCADOLOGIA LTDA;2000
+2026-07-19;Indexa;Lula;45.0;Ronaldo Caiado;37.0;2.20;18.0;BR029042026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-07-19;Indexa;Lula;46.0;Flávio Bolsonaro;39.0;2.20;15.0;BR029042026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-07-19;Indexa;Lula;46.0;Romeu Zema;32.0;2.20;17.0;BR029042026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-07-19;Indexa;Lula;47.0;Renan Santos;27.0;2.20;26.0;BR029042026;95;P;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-07-20;Real Time Big Data;Lula;44.0;Renan Santos;35.0;2.00;21.0;BR092472026;95;P;REAL TIME MIDIA LTDA;2000
+2026-07-20;Real Time Big Data;Lula;44.0;Romeu Zema;38.0;2.00;18.0;BR092472026;95;P;REAL TIME MIDIA LTDA;2000
+2026-07-20;Real Time Big Data;Lula;45.0;Flávio Bolsonaro;42.0;2.00;13.0;BR092472026;95;P;REAL TIME MIDIA LTDA;2000
+2026-07-20;Real Time Big Data;Ronaldo Caiado;44.0;Lula;43.0;2.00;13.0;BR092472026;95;P;REAL TIME MIDIA LTDA;2000
+2026-07-24;Datafolha;Lula;47.0;Ronaldo Caiado;40.0;2.00;13.0;BR011662026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-07-24;Datafolha;Lula;48.0;Flávio Bolsonaro;43.0;2.00;10.0;BR011662026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-07-24;Datafolha;Lula;48.0;Romeu Zema;40.0;2.00;12.0;BR011662026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2004
+2026-07-26;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;43.0;2.00;12.0;BR014892026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2004
+2026-07-26;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;42.0;2.00;12.0;BR014892026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2004
+2026-07-26;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;43.0;2.00;10.0;BR014892026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2004
+2026-07-26;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR014892026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2004
+2026-07-27;AtlasIntel;Alckmin;45.8;Flávio Bolsonaro;42.7;1.00;11.5;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Fernando Haddad;44.3;Flávio Bolsonaro;43.7;1.00;12.0;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;47.6;Renan Santos;30.2;1.00;22.2;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;48.2;Ronaldo Caiado;38.9;1.00;12.9;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;48.6;Romeu Zema;39.6;1.00;11.8;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;48.8;Michelle Bolsonaro;42.5;1.00;8.8;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;49.2;Flávio Bolsonaro;42.9;1.00;7.9;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-27;AtlasIntel;Lula;49.2;Jair Bolsonaro;43.9;1.00;6.9;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5021
+2026-07-28;Alfa Inteligência;Lula;45.0;Ronaldo Caiado;40.0;1.80;15.0;BR044882026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-07-28;Alfa Inteligência;Lula;46.0;Renan Santos;32.0;1.80;22.0;BR044882026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-07-28;Alfa Inteligência;Lula;46.0;Romeu Zema;37.0;1.80;15.0;BR044882026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-07-28;Alfa Inteligência;Lula;48.0;Flávio Bolsonaro;41.0;1.80;11.0;BR044882026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-07-28;AtlasIntel;Lula;49.6;Eduardo Leite;25.7;1.00;24.7;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.1;Jair Bolsonaro;46.3;1.00;3.6;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.3;Ronaldo Caiado;39.7;1.00;10.0;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.4;Tarcísio de Freitas;46.6;1.00;3.0;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.5;Ratinho Júnior;39.7;1.00;9.8;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.6;Michelle Bolsonaro;45.9;1.00;3.4;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;AtlasIntel;Lula;50.7;Romeu Zema;40.6;1.00;8.7;BR086022026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7334
+2026-07-28;PoderData/Aya;Lula;44.0;Romeu Zema;42.0;2.00;13.0;BR078452026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-07-28;PoderData/Aya;Lula;44.0;Ronaldo Caiado;43.0;2.00;13.0;BR078452026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-07-28;PoderData/Aya;Lula;45.0;Renan Santos;37.0;2.00;19.0;BR078452026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-07-28;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;43.0;2.00;11.0;BR078452026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-07-28;Vox Brasil;Lula;46.8;Ronaldo Caiado;42.5;2.15;10.7;BR010842026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-07-28;Vox Brasil;Lula;47.5;Flávio Bolsonaro;41.1;2.15;11.4;BR010842026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-07-28;Vox Brasil;Lula;48.7;Romeu Zema;40.5;2.15;10.8;BR010842026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-08-02;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;10.0;BR028742026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-08-02;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;40.0;2.00;13.0;BR028742026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-08-02;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;13.0;BR028742026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-08-02;Nexus/BTG Pactual;Lula;47.0;Renan Santos;37.0;2.00;16.0;BR028742026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-08-03;Genial/Quaest;Lula;44.0;Flávio Bolsonaro;39.0;2.00;17.0;BR065912026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-03;Genial/Quaest;Lula;45.0;Renan Santos;35.0;2.00;20.0;BR065912026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-03;Genial/Quaest;Lula;45.0;Ronaldo Caiado;37.0;2.00;18.0;BR065912026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-03;Genial/Quaest;Lula;46.0;Romeu Zema;34.0;2.00;20.0;BR065912026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-03;Meio/Ideia;Lula;48.0;Renan Santos;34.7;2.50;17.2;BR045792026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-08-03;Meio/Ideia;Lula;48.5;Flávio Bolsonaro;43.0;2.50;8.5;BR045792026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-08-03;Meio/Ideia;Lula;48.5;Romeu Zema;37.0;2.50;14.5;BR045792026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-08-03;Meio/Ideia;Lula;48.5;Ronaldo Caiado;40.0;2.50;11.5;BR045792026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-08-07;Apex/Futura;Lula;45.3;Ronaldo Caiado;39.2;2.20;15.4;BR081092026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-08-07;Apex/Futura;Lula;46.5;Flávio Bolsonaro;44.0;2.20;9.5;BR081092026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-08-07;Apex/Futura;Lula;46.5;Romeu Zema;39.8;2.20;13.6;BR081092026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-08-07;Apex/Futura;Lula;47.3;Renan Santos;33.3;2.20;19.4;BR081092026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-08-07;Palver;Lula;45.0;Ronaldo Caiado;38.0;3.00;16.0;BR065962026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-08-07;Palver;Lula;46.0;Flávio Bolsonaro;46.0;3.00;8.0;BR065962026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-08-07;Palver;Lula;46.0;Renan Santos;31.0;3.00;25.0;BR065962026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-08-07;Palver;Lula;46.0;Romeu Zema;39.0;3.00;15.0;BR065962026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-08-09;CNT/MDA;Lula;47.9;Ronaldo Caiado;35.9;2.20;16.2;BR069352026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-08-09;CNT/MDA;Lula;48.0;Flávio Bolsonaro;39.1;2.20;12.9;BR069352026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-08-09;CNT/MDA;Lula;48.5;Renan Santos;33.0;2.20;18.5;BR069352026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-08-09;CNT/MDA;Lula;48.6;Cury (Avante);32.4;2.20;19.0;BR069352026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-08-09;CNT/MDA;Lula;49.1;Romeu Zema;34.9;2.20;16.0;BR069352026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-08-09;Nexus/BTG Pactual;Lula;46.0;Renan Santos;37.0;2.00;17.0;BR084282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2001
+2026-08-09;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;11.0;BR084282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2001
+2026-08-09;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR084282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2001
+2026-08-09;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR084282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2001
+2026-08-10;Gerp;Flávio Bolsonaro;45.0;Lula;43.0;2.00;12.0;BR080452026;95;P;GERP MERCADOLOGIA LTDA;2400
+2026-08-12;PoderData/Aya;Lula;45.0;Renan Santos;37.0;2.00;17.0;BR068682026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-12;PoderData/Aya;Lula;45.0;Romeu Zema;43.0;2.00;12.0;BR068682026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-12;PoderData/Aya;Lula;45.0;Ronaldo Caiado;44.0;2.00;11.0;BR068682026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-12;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR068682026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-13;Genial/Quaest;Lula;43.0;Flávio Bolsonaro;40.0;2.00;17.0;BR067732026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-13;Genial/Quaest;Lula;44.0;Renan Santos;36.0;2.00;20.0;BR067732026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-13;Genial/Quaest;Lula;44.0;Ronaldo Caiado;37.0;2.00;19.0;BR067732026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-13;Genial/Quaest;Lula;45.0;Romeu Zema;34.0;2.00;21.0;BR067732026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-08-16;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;42.0;2.00;13.0;BR033172026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-08-16;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;41.0;2.00;13.0;BR033172026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-08-16;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;44.0;2.00;9.0;BR033172026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-08-16;Nexus/BTG Pactual;Lula;47.0;Renan Santos;36.0;2.00;17.0;BR033172026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-08-20;Datafolha;Lula;47.0;Flávio Bolsonaro;43.0;2.00;11.0;BR044962026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2058
+2026-08-20;Datafolha;Lula;47.0;Renan Santos;37.0;2.00;16.0;BR044962026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2058
+2026-08-20;Datafolha;Lula;47.0;Ronaldo Caiado;40.0;2.00;14.0;BR044962026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2058
+2026-08-20;Datafolha;Lula;48.0;Romeu Zema;38.0;2.00;14.0;BR044962026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2058
+2026-08-20;Veritá;Flávio Bolsonaro;47.3;Lula;42.0;2.00;10.7;BR040062026;95;P;INSTITUTO VERITA LTDA;3840
+2026-08-20;Veritá;Lula;40.4;Ronaldo Caiado;23.7;2.00;35.9;BR040062026;95;P;INSTITUTO VERITA LTDA;3840
+2026-08-20;Veritá;Lula;40.5;Renan Santos;16.2;2.00;33.3;BR040062026;95;P;INSTITUTO VERITA LTDA;3840
+2026-08-20;Veritá;Lula;41.2;Romeu Zema;25.0;2.00;33.8;BR040062026;95;P;INSTITUTO VERITA LTDA;3840
+2026-08-20;Veritá;Pablo Marçal;43.6;Lula;42.7;2.00;13.7;BR040062026;95;P;INSTITUTO VERITA LTDA;3840
+2026-08-23;Indexa/Broadcast;Lula;44.0;Ronaldo Caiado;38.0;2.20;18.0;BR063662026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-08-23;Indexa/Broadcast;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR063662026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-08-23;Indexa/Broadcast;Lula;46.0;Flávio Bolsonaro;41.0;2.20;13.0;BR063662026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-08-23;Indexa/Broadcast;Lula;46.0;Renan Santos;34.0;2.20;20.0;BR063662026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-08-23;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR090282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2006
+2026-08-23;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;42.0;2.00;13.0;BR090282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2006
+2026-08-23;Nexus/BTG Pactual;Lula;47.0;Renan Santos;35.0;2.00;17.0;BR090282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2006
+2026-08-23;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR090282026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2006
+2026-08-25;Gerp;Flávio Bolsonaro;47.0;Lula;42.0;2.00;11.0;BR035472026;95;C;GERP MERCADOLOGIA LTDA;2400
+2026-08-26;PoderData/Aya;Lula;44.0;Renan Santos;37.0;2.00;19.0;BR049742026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-26;PoderData/Aya;Lula;44.0;Romeu Zema;43.0;2.00;13.0;BR049742026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-26;PoderData/Aya;Lula;45.0;Flávio Bolsonaro;44.0;2.00;11.0;BR049742026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-26;PoderData/Aya;Ronaldo Caiado;44.0;Lula;43.0;2.00;13.0;BR049742026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2400
+2026-08-27;Vox Brasil;Flávio Bolsonaro;45.1;Lula;44.5;2.15;10.4;BR055192026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-08-27;Vox Brasil;Lula;45.5;Romeu Zema;39.3;2.15;15.2;BR055192026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-08-27;Vox Brasil;Lula;45.5;Ronaldo Caiado;41.1;2.15;13.4;BR055192026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100
+2026-08-30;AtlasIntel;Lula;46.6;Ronaldo Caiado;41.0;2.00;12.3;BR079722026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5014
+2026-08-30;AtlasIntel;Lula;46.8;Jair Bolsonaro;44.1;2.00;9.1;BR079722026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5014
+2026-08-30;AtlasIntel;Lula;47.0;Romeu Zema;40.7;2.00;12.3;BR079722026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5014
+2026-08-30;AtlasIntel;Lula;47.1;Flávio Bolsonaro;42.6;2.00;10.3;BR079722026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5014
+2026-08-30;AtlasIntel;Lula;47.5;Renan Santos;26.0;2.00;26.6;BR079722026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5014
+2026-08-30;Nexus/BTG Pactual;Lula;45.0;Ronaldo Caiado;44.0;2.00;11.0;BR089002026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2005
+2026-08-30;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;9.0;BR089002026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2005
+2026-08-30;Nexus/BTG Pactual;Lula;46.0;Romeu Zema;41.0;2.00;13.0;BR089002026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2005
+2026-08-30;Nexus/BTG Pactual;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR089002026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2005
+2026-08-31;Real Time Big Data;Lula;43.0;Romeu Zema;40.0;2.00;17.0;BR034902026;95;P;REAL TIME MIDIA LTDA;2000
+2026-08-31;Real Time Big Data;Lula;44.0;Flávio Bolsonaro;44.0;2.00;12.0;BR034902026;95;P;REAL TIME MIDIA LTDA;2000
+2026-08-31;Real Time Big Data;Lula;44.0;Pablo Marçal;40.0;2.00;16.0;BR034902026;95;P;REAL TIME MIDIA LTDA;2000
+2026-08-31;Real Time Big Data;Lula;44.0;Renan Santos;37.0;2.00;19.0;BR034902026;95;P;REAL TIME MIDIA LTDA;2000
+2026-08-31;Real Time Big Data;Ronaldo Caiado;45.0;Lula;43.0;2.00;12.0;BR034902026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-01;Apex/Futura;Lula;44.4;Ronaldo Caiado;42.5;2.20;13.1;BR027932026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-01;Apex/Futura;Lula;45.6;Flávio Bolsonaro;45.2;2.20;9.2;BR027932026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-01;Apex/Futura;Lula;46.6;Renan Santos;36.6;2.20;16.8;BR027932026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-01;Apex/Futura;Lula;46.7;Romeu Zema;38.5;2.20;14.9;BR027932026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-01;Genial/Quaest;Lula;40.0;Cury (Avante);34.0;2.00;26.0;BR070652026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-01;Genial/Quaest;Lula;42.0;Flávio Bolsonaro;41.0;2.00;17.0;BR070652026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-01;Genial/Quaest;Lula;42.0;Ronaldo Caiado;37.0;2.00;21.0;BR070652026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-01;Genial/Quaest;Lula;43.0;Renan Santos;36.0;2.00;21.0;BR070652026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-01;Genial/Quaest;Lula;44.0;Romeu Zema;33.0;2.00;23.0;BR070652026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-02;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;10.0;BR036692026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-02;Datafolha;Lula;46.0;Ronaldo Caiado;41.0;2.00;13.0;BR036692026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-02;Datafolha;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR036692026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-02;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;14.0;BR036692026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-02;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;45.0;1.80;11.0;BR075612026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-02;PoderData/Aya;Lula;44.0;Renan Santos;39.0;1.80;18.0;BR075612026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-02;PoderData/Aya;Lula;44.0;Romeu Zema;42.0;1.80;14.0;BR075612026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-02;PoderData/Aya;Lula;45.0;Ronaldo Caiado;42.0;1.80;13.0;BR075612026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-04;Veritá;Flávio Bolsonaro;48.5;Lula;43.1;2.00;8.5;BR094262026;95;P;INSTITUTO VERITA LTDA;3804
+2026-09-04;Veritá;Lula;35.6;Cury (Avante);27.0;2.00;37.4;BR094262026;95;P;INSTITUTO VERITA LTDA;3804
+2026-09-04;Veritá;Lula;36.8;Ronaldo Caiado;24.9;2.00;38.2;BR094262026;95;P;INSTITUTO VERITA LTDA;3804
+2026-09-04;Veritá;Lula;37.8;Renan Santos;19.3;2.00;42.8;BR094262026;95;P;INSTITUTO VERITA LTDA;3804
+2026-09-04;Veritá;Lula;38.4;Pablo Marçal;28.6;2.00;33.0;BR094262026;95;P;INSTITUTO VERITA LTDA;3804
+2026-09-06;Genial/Quaest;Lula;39.0;Cury (Avante);35.0;2.00;26.0;BR017202026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-06;Genial/Quaest;Lula;41.0;Flávio Bolsonaro;41.0;2.00;18.0;BR017202026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-06;Genial/Quaest;Lula;41.0;Ronaldo Caiado;38.0;2.00;21.0;BR017202026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-06;Genial/Quaest;Lula;42.0;Renan Santos;37.0;2.00;21.0;BR017202026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-06;Genial/Quaest;Lula;44.0;Romeu Zema;33.0;2.00;23.0;BR017202026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-07;Meio/Ideia;Lula;46.0;Cury (Avante);40.9;2.50;13.1;BR079352026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-09-07;Meio/Ideia;Lula;46.0;Flávio Bolsonaro;46.0;2.50;8.0;BR079352026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-09-07;Meio/Ideia;Lula;46.0;Renan Santos;40.3;2.50;13.8;BR079352026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-09-07;Meio/Ideia;Lula;46.0;Romeu Zema;38.0;2.50;16.0;BR079352026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-09-07;Meio/Ideia;Lula;46.0;Ronaldo Caiado;42.0;2.50;12.0;BR079352026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;1500
+2026-09-07;Nexus/BTG Pactual;Cury (Avante);45.0;Lula;43.0;2.00;11.0;BR067902026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-09-07;Nexus/BTG Pactual;Flávio Bolsonaro;46.0;Lula;45.0;2.00;9.0;BR067902026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-09-07;Nexus/BTG Pactual;Lula;46.0;Ronaldo Caiado;43.0;2.00;11.0;BR067902026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-09-07;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR067902026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-09-07;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;40.0;2.00;13.0;BR067902026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2002
+2026-09-07;Palver;Flávio Bolsonaro;46.0;Lula;44.0;3.00;10.0;BR054202026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-07;Palver;Lula;42.0;Cury (Avante);30.0;3.00;27.0;BR054202026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-07;Palver;Lula;43.0;Renan Santos;31.0;3.00;26.0;BR054202026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-07;Palver;Lula;43.0;Romeu Zema;42.0;3.00;15.0;BR054202026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-07;Palver;Lula;43.0;Ronaldo Caiado;40.0;3.00;18.0;BR054202026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-08;Gerp;Flávio Bolsonaro;47.0;Lula;40.0;2.00;14.0;BR002512026;95;P;GERP MERCADOLOGIA LTDA;2400
+2026-09-09;AtlasIntel;Flávio Bolsonaro;46.4;Lula;46.2;1.00;7.4;BR014522026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000
+2026-09-09;AtlasIntel;Lula;43.8;Cury (Avante);41.1;1.00;15.2;BR014522026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000
+2026-09-09;AtlasIntel;Lula;46.0;Renan Santos;33.8;1.00;20.2;BR014522026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000
+2026-09-09;AtlasIntel;Romeu Zema;46.2;Lula;46.0;1.00;7.7;BR014522026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000
+2026-09-09;AtlasIntel;Ronaldo Caiado;45.7;Lula;45.7;1.00;8.6;BR014522026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000
+2026-09-09;PoderData/Aya;Cury (Avante);44.0;Lula;43.0;1.80;13.0;BR049142026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-09;PoderData/Aya;Flávio Bolsonaro;47.0;Lula;45.0;1.80;8.0;BR049142026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-10;Apex/Futura;Flávio Bolsonaro;45.4;Lula;45.0;2.20;9.6;BR023222026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-10;Apex/Futura;Lula;43.7;Ronaldo Caiado;42.8;2.20;13.6;BR023222026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-10;Apex/Futura;Lula;46.0;Romeu Zema;40.5;2.20;13.5;BR023222026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-10;Apex/Futura;Lula;46.1;Renan Santos;37.6;2.20;16.3;BR023222026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-11;Datafolha;Lula;45.0;Cury (Avante);43.0;2.00;12.0;BR018332026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-11;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;10.0;BR018332026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-11;Datafolha;Lula;46.0;Ronaldo Caiado;41.0;2.00;12.0;BR018332026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-11;Datafolha;Lula;48.0;Renan Santos;37.0;2.00;13.0;BR018332026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-11;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;13.0;BR018332026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-12;Veritá;Flávio Bolsonaro;43.9;Lula;41.5;3.50;14.5;BR080932026;95;P;INSTITUTO VERITA LTDA;40500
+2026-09-13;CNT/MDA;Lula;45.3;Cury (Avante);38.4;2.20;16.3;BR069022026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-09-13;CNT/MDA;Lula;46.4;Ronaldo Caiado;37.3;2.20;16.3;BR069022026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-09-13;CNT/MDA;Lula;47.3;Flávio Bolsonaro;40.0;2.20;12.7;BR069022026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-09-13;CNT/MDA;Lula;47.3;Renan Santos;33.9;2.20;18.8;BR069022026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-09-13;CNT/MDA;Lula;47.7;Romeu Zema;34.5;2.20;17.8;BR069022026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2002
+2026-09-13;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;40.0;2.00;18.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-13;Genial/Quaest;Lula;38.0;Cury (Avante);36.0;2.00;26.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-13;Genial/Quaest;Lula;41.0;Renan Santos;38.0;2.00;21.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-13;Genial/Quaest;Lula;41.0;Ronaldo Caiado;39.0;2.00;20.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-13;Genial/Quaest;Lula;45.0;Romeu Zema;33.0;2.00;22.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-13;Indexa;Lula;41.0;Cury (Avante);39.0;2.20;20.0;BR034822026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-09-13;Indexa;Lula;43.0;Flávio Bolsonaro;42.0;2.20;15.0;BR034822026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-09-13;Indexa;Lula;43.0;Ronaldo Caiado;39.0;2.20;18.0;BR034822026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-09-13;Indexa;Lula;45.0;Renan Santos;35.0;2.20;20.0;BR034822026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-09-13;Indexa;Lula;45.0;Romeu Zema;34.0;2.20;21.0;BR034822026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2000
+2026-09-13;Nexus/BTG Pactual;Lula;45.0;Cury (Avante);42.0;2.00;13.0;BR040762026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-09-13;Nexus/BTG Pactual;Lula;47.0;Flávio Bolsonaro;46.0;2.00;7.0;BR040762026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-09-13;Nexus/BTG Pactual;Lula;47.0;Ronaldo Caiado;41.0;2.00;12.0;BR040762026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-09-13;Nexus/BTG Pactual;Lula;48.0;Renan Santos;37.0;2.00;15.0;BR040762026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-09-13;Nexus/BTG Pactual;Lula;49.0;Romeu Zema;38.0;2.00;12.0;BR040762026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2003
+2026-09-14;AtlasIntel;Lula;49.9;Eduardo Leite;22.5;1.00;27.6;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;50.6;Tarcísio de Freitas;45.2;1.00;4.2;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;51.6;Ratinho Júnior;34.9;1.00;13.5;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;51.7;Romeu Zema;36.7;1.00;11.6;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;51.7;Ronaldo Caiado;34.0;1.00;14.3;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;51.8;Jair Bolsonaro;44.8;1.00;3.4;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;AtlasIntel;Lula;51.9;Michelle Bolsonaro;44.6;1.00;3.5;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;7291
+2026-09-14;DataTrends;Flávio Bolsonaro;45.0;Lula;44.0;2.19;11.0;BR086912026;95;P;INSTITUTO DATATRENDS LTDA;2000
+2026-09-14;DataTrends;Lula;42.0;Cury (Avante);37.0;2.19;21.0;BR086912026;95;P;INSTITUTO DATATRENDS LTDA;2000
+2026-09-14;DataTrends;Lula;44.0;Ronaldo Caiado;41.0;2.19;15.0;BR086912026;95;P;INSTITUTO DATATRENDS LTDA;2000
+2026-09-14;DataTrends;Lula;45.0;Renan Santos;37.0;2.19;18.0;BR086912026;95;P;INSTITUTO DATATRENDS LTDA;2000
+2026-09-14;DataTrends;Lula;46.0;Romeu Zema;39.0;2.19;15.0;BR086912026;95;P;INSTITUTO DATATRENDS LTDA;2000
+2026-09-14;Genial/Quaest;Lula;40.0;Ciro Gomes;33.0;2.00;27.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;43.0;Tarcísio de Freitas;35.0;2.00;22.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;44.0;Ratinho Júnior;32.0;2.00;24.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;45.0;Eduardo Leite;26.0;2.00;29.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;45.0;Romeu Zema;32.0;2.00;24.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;46.0;Ronaldo Caiado;31.0;2.00;23.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;47.0;Eduardo Bolsonaro;29.0;2.00;24.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;47.0;Jair Bolsonaro;34.0;2.00;19.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-14;Genial/Quaest;Lula;47.0;Michelle Bolsonaro;32.0;2.00;21.0;BR036072026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-15;Apex/Futura;Cury (Avante);44.8;Lula;41.5;2.20;13.8;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Apex/Futura;Flávio Bolsonaro;48.1;Lula;43.7;2.20;8.2;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Apex/Futura;Lula;44.5;Renan Santos;39.3;2.20;16.2;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Apex/Futura;Lula;44.7;Romeu Zema;40.6;2.20;14.7;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Apex/Futura;Ronaldo Caiado;45.1;Lula;41.9;2.20;13.0;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Eduardo Bolsonaro;43.1;Lula;42.5;2.20;14.4;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Jair Bolsonaro;46.1;Lula;42.0;2.20;11.9;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Michelle Bolsonaro;45.6;Lula;41.7;2.20;12.7;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Ratinho Júnior;42.4;Lula;40.5;2.20;17.1;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Tarcísio de Freitas;42.9;Alckmin;32.8;2.20;24.3;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Tarcísio de Freitas;44.4;Lula;40.7;2.20;14.9;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-15;Futura Inteligência;Tarcísio de Freitas;45.0;Fernando Haddad;28.8;2.20;26.2;BR007492026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-16;AtlasIntel;Flávio Bolsonaro;47.2;Lula;46.8;1.00;6.0;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5018
+2026-09-16;AtlasIntel;Lula;45.6;Cury (Avante);37.8;1.00;16.6;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5018
+2026-09-16;AtlasIntel;Lula;46.0;Ronaldo Caiado;41.7;1.00;12.3;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5018
+2026-09-16;AtlasIntel;Lula;46.1;Renan Santos;29.7;1.00;24.2;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5018
+2026-09-16;AtlasIntel;Lula;46.3;Romeu Zema;43.7;1.00;10.1;BR062212026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5018
+2026-09-16;Datafolha;Lula;44.0;Cury (Avante);44.0;2.00;11.0;BR040292026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-16;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;9.0;BR040292026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-16;Datafolha;Lula;46.0;Ronaldo Caiado;42.0;2.00;12.0;BR040292026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-16;Datafolha;Lula;47.0;Renan Santos;38.0;2.00;15.0;BR040292026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-16;Datafolha;Lula;49.0;Romeu Zema;39.0;2.00;13.0;BR040292026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-16;Gerp;Flávio Bolsonaro;50.0;Lula;43.0;2.00;7.0;BR005352026;95;P;GERP MERCADOLOGIA LTDA;2400
+2026-09-16;PoderData/Aya;Cury (Avante);45.0;Lula;42.0;1.80;13.0;BR003602026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-16;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;44.0;1.80;10.0;BR003602026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-18;Palver;Flávio Bolsonaro;47.0;Lula;43.0;2.80;10.0;BR008602026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-18;Palver;Lula;43.0;Cury (Avante);35.0;2.80;22.0;BR008602026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-18;Palver;Lula;43.0;Renan Santos;34.0;2.80;23.0;BR008602026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-18;Palver;Romeu Zema;44.0;Lula;43.0;2.80;12.0;BR008602026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-18;Palver;Ronaldo Caiado;44.0;Lula;43.0;2.80;13.0;BR008602026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000
+2026-09-20;American Analytics;Lula;42.0;Cury (Avante);37.0;2.50;21.0;BR025872026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-09-20;American Analytics;Lula;42.0;Ronaldo Caiado;40.0;2.50;18.0;BR025872026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-09-20;American Analytics;Lula;43.0;Flávio Bolsonaro;43.0;2.50;14.0;BR025872026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-09-20;American Analytics;Lula;43.0;Romeu Zema;38.0;2.50;19.0;BR025872026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-09-20;American Analytics;Lula;44.0;Renan Santos;37.0;2.50;19.0;BR025872026;95;C;AMERICAN ANALYTICS DO BRASIL CONSULTORIA LTDA;2000
+2026-09-20;Genial/Quaest;Flávio Bolsonaro;42.0;Lula;41.0;2.00;17.0;BR060042026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-20;Genial/Quaest;Lula;39.0;Cury (Avante);35.0;2.00;26.0;BR060042026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-20;Genial/Quaest;Lula;41.0;Renan Santos;38.0;2.00;21.0;BR060042026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-20;Genial/Quaest;Lula;41.0;Ronaldo Caiado;39.0;2.00;20.0;BR060042026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-20;Genial/Quaest;Lula;46.0;Romeu Zema;32.0;2.00;22.0;BR060042026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004
+2026-09-20;Nexus/BTG Pactual;Lula;44.0;Cury (Avante);43.0;2.00;13.0;BR004852026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-09-20;Nexus/BTG Pactual;Lula;46.0;Flávio Bolsonaro;45.0;2.00;8.0;BR004852026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-09-20;Nexus/BTG Pactual;Lula;47.0;Renan Santos;39.0;2.00;15.0;BR004852026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-09-20;Nexus/BTG Pactual;Lula;47.0;Romeu Zema;41.0;2.00;12.0;BR004852026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-09-20;Nexus/BTG Pactual;Ronaldo Caiado;45.0;Lula;45.0;2.00;10.0;BR004852026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2000
+2026-09-22;AtlasIntel;Lula;46.2;Cury (Avante);39.4;1.00;14.4;BR047392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5015
+2026-09-22;AtlasIntel;Lula;46.5;Renan Santos;31.2;1.00;22.3;BR047392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5015
+2026-09-22;AtlasIntel;Lula;46.6;Ronaldo Caiado;44.0;1.00;9.4;BR047392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5015
+2026-09-22;AtlasIntel;Lula;47.6;Romeu Zema;42.2;1.00;10.2;BR047392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5015
+2026-09-22;AtlasIntel;Lula;47.7;Flávio Bolsonaro;47.4;1.00;4.9;BR047392026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5015
+2026-09-23;Alfa Inteligência;Lula;42.0;Cury (Avante);39.0;1.80;19.0;BR025122026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-09-23;Alfa Inteligência;Lula;43.0;Flávio Bolsonaro;43.0;1.80;14.0;BR025122026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-09-23;Alfa Inteligência;Lula;43.0;Renan Santos;37.0;1.80;20.0;BR025122026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-09-23;Alfa Inteligência;Lula;43.0;Ronaldo Caiado;42.0;1.80;15.0;BR025122026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-09-23;Alfa Inteligência;Lula;46.0;Romeu Zema;39.0;1.80;15.0;BR025122026;95;C;ALFA INTELIGENCIA E SERVICOS DE SOFTWARE E OPINIAO S/A;2700
+2026-09-23;Futura;Cury (Avante);46.3;Lula;41.0;2.20;12.7;BR052682026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-23;Futura;Flávio Bolsonaro;49.4;Lula;43.7;2.20;11.2;BR052682026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-23;Futura;Lula;43.8;Renan Santos;41.7;2.20;14.5;BR052682026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-23;Futura;Romeu Zema;43.8;Lula;43.0;2.20;12.9;BR052682026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-23;Futura;Ronaldo Caiado;46.5;Lula;42.4;2.20;11.0;BR052682026;95;C;100% CIDADES PARTICIPACOES LTDA;2000
+2026-09-23;Palver;Flávio Bolsonaro;48.0;Lula;45.0;1.80;7.0;BR095872026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;3000
+2026-09-23;Palver;Lula;44.0;Cury (Avante);36.0;1.80;20.0;BR095872026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;3000
+2026-09-23;Palver;Lula;44.0;Renan Santos;34.0;1.80;22.0;BR095872026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;3000
+2026-09-23;Palver;Lula;44.0;Ronaldo Caiado;42.0;1.80;14.0;BR095872026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;3000
+2026-09-23;Palver;Lula;45.0;Romeu Zema;43.0;1.80;12.0;BR095872026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;3000
+2026-09-23;PoderData/Aya;Cury (Avante);45.0;Lula;42.0;1.80;13.0;BR017392026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-23;PoderData/Aya;Flávio Bolsonaro;46.0;Lula;45.0;1.80;9.0;BR017392026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;3000
+2026-09-23;Real Time Big Data;Flávio Bolsonaro;45.0;Lula;44.0;2.00;11.0;BR042022026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-23;Real Time Big Data;Lula;44.0;Cury (Avante);43.0;2.00;13.0;BR042022026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-23;Real Time Big Data;Lula;44.0;Renan Santos;38.0;2.00;18.0;BR042022026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-23;Real Time Big Data;Lula;45.0;Romeu Zema;39.0;2.00;16.0;BR042022026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-23;Real Time Big Data;Ronaldo Caiado;44.0;Lula;44.0;2.00;12.0;BR042022026;95;P;REAL TIME MIDIA LTDA;2000
+2026-09-24;Datafolha;Lula;46.0;Cury (Avante);43.0;2.00;10.0;BR003042026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-24;Datafolha;Lula;46.0;Ronaldo Caiado;44.0;2.00;10.0;BR003042026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-24;Datafolha;Lula;47.0;Flávio Bolsonaro;45.0;2.00;8.0;BR003042026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-24;Datafolha;Lula;48.0;Renan Santos;39.0;2.00;14.0;BR003042026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002
+2026-09-24;Datafolha;Lula;48.0;Romeu Zema;39.0;2.00;12.0;BR003042026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002`;
 const RAW_INST = `VERITA;409;46967458.20;774220;197;345;41;2026-03-12;2026-09-23
 REAL TIME BIG DATA;222;8473000.00;376000;113;187;0;2026-01-29;2026-09-25
 Quaest Pesquisas, Consultoria E Projetos Ltda.;187;32387128.04;209148;100;0;0;2026-01-08;2026-09-23
@@ -3255,9 +3256,10 @@ const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split
 const V1 = V1TUDO.filter(r => !r.nr);
 const VNR = V1TUDO.filter(r => r.nr);
 // 8º campo: indecisos, brancos e nulos do mesmo cenário (carga antiga não tem)
-// 9º campo: número de registro da pesquisa no TSE
-const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg] = l.split(';');
-  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null, reg: reg || ''}; });
+// campos 9–13: registro no TSE, nível de confiança, contratação (P/C), empresa registrada, amostra
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg,conf,ct,emp,qt] = l.split(';');
+  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null,
+          reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || '', qt: qt ? +qt : null}; });
 const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
   return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
 const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
@@ -4508,8 +4510,8 @@ const CONTADOR_DATA  = '';
   D2.forEach(r => {
     if (!r.reg) return;
     const k = r.ds + '|' + r.i, o = mapa.get(k);
-    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: '', ct: '', n: AMOSTRA.get(k) ?? null, m: r.m, conf: null});
-    else if (!o.reg) o.reg = r.reg;
+    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: r.emp, ct: r.ct, n: r.qt ?? AMOSTRA.get(k) ?? null, m: r.m, conf: r.conf});
+    else if (!o.reg) Object.assign(o, {reg: r.reg, emp: o.emp || r.emp, ct: o.ct || r.ct, conf: o.conf ?? r.conf});
     else if (!o.reg.split(',').includes(r.reg)) o.reg += ',' + r.reg;
   });
   const lista = [...mapa.values()].filter(o => o.reg);
