@@ -115,5 +115,8 @@ do claude.ai.
 - Linhas com `revisar = true` nos seeds esperam confirmação humana.
 - O 1º turno só usa cenários com a lista oficial de candidatos; cenários hipotéticos ficam nos
   duelos de 2º turno, marcados na tela.
-- Consumo do warehouse depende da cota da Free Edition do Databricks; se ela estourar, a carga
-  falha e o painel fica com o último dado bom.
+- Consumo do warehouse depende da cota diária da Free Edition do Databricks. Para poupar: as
+  checagens rodam só `dbt run` do que depende da Wikipédia (testes só na carga completa) e, se a
+  cota estourar, o dia fica marcado no cache do Actions e as checagens seguintes nem ligam o
+  Databricks até o dia virar (UTC). O painel fica com o último dado bom. O auto stop do
+  warehouse inicial (10 min) não é editável na Free Edition.

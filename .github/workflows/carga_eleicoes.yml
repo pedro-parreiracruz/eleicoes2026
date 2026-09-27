@@ -33,6 +33,11 @@ concurrency:
 permissions:
   contents: read
 
+# shell explicito = bash com pipefail: sem isso, `comando | tee saida.log` esconderia a falha
+defaults:
+  run:
+    shell: bash
+
 jobs:
   # Impressao digital da tabela da Wikipedia (sem Databricks) e comparacao com a da ultima
   # carga bem-sucedida, guardada no cache do Actions com a chave wiki-<hash>. Achou a chave =
@@ -44,7 +49,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       hash: ${{ steps.impressao.outputs.hash }}
-      mudou: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      mudou: ${{ steps.cache.outputs.cache-hit != 'true' && steps.cota.outputs.cache-hit != 'true' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -69,9 +74,23 @@ jobs:
           key: wiki-${{ steps.impressao.outputs.hash }}
           lookup-only: true
 
+      - name: Dia de hoje (UTC)
+        id: hoje
+        run: echo "dia=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Cota do Databricks ja esgotou hoje?
+        id: cota
+        uses: actions/cache/restore@v6
+        with:
+          path: .cota_esgotada
+          key: cota-esgotada-${{ steps.hoje.outputs.dia }}
+          lookup-only: true
+
       - name: Resultado
         run: |
-          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+          if [ "${{ steps.cota.outputs.cache-hit }}" = "true" ]; then
+            echo "::notice title=Cota esgotada::A cota do Databricks acabou hoje; checagem pulada ate o dia virar (UTC)"
+          elif [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
             echo "::notice title=Sem novidade::Tabela da Wikipedia igual a da ultima carga"
           else
             echo "::notice title=Novidade::Tabela da Wikipedia mudou (${{ steps.impressao.outputs.linhas }} linhas)"
@@ -135,7 +154,27 @@ jobs:
           DATABRICKS_SCHEMA: ${{ vars.DATABRICKS_SCHEMA || 'raw_eleicoes' }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           FONTES: intencao_voto_2026
-        run: python ingestion/carga_raw.py
+        run: python ingestion/carga_raw.py 2>&1 | tee saida.log
+
+      # Cota diaria da Free Edition esgotada: marca o dia (UTC) no cache do Actions e as
+      # checagens seguintes nem ligam o Databricks ate o dia virar. A carga completa das
+      # 05:17 ignora a marca e tenta sempre.
+      - name: Cota do Databricks esgotada?
+        id: cota
+        if: failure()
+        run: |
+          if grep -qiE "could not be processed by the warehouse|cannot create the resource|exhausted|quota" saida.log 2>/dev/null; then
+            date -u > .cota_esgotada
+            echo "dia=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Cota do Databricks esgotada::checagens desligadas ate o fim do dia (UTC); o painel fica com o ultimo dado bom"
+          fi
+
+      - name: Lembrar cota esgotada
+        if: failure() && steps.cota.outputs.dia != ''
+        uses: actions/cache/save@v6
+        with:
+          path: .cota_esgotada
+          key: cota-esgotada-${{ steps.cota.outputs.dia }}
 
   # Transformacao. Roda dbt Core contra o mesmo warehouse da carga, com o profile em ci/profiles.yml.
   # Nao depende de job configurado no dbt Platform (a UI do dbt continua servindo para explorar/editar).
@@ -169,18 +208,39 @@ jobs:
         run: dbt deps
 
       - name: dbt debug
-        run: dbt debug --target prod
+        run: dbt debug --target prod 2>&1 | tee saida.log
 
-      # build = seeds + snapshots + models + testes, na ordem do DAG
-      # Na checagem, so o que depende da Wikipedia (poupa a cota diaria da Free Edition);
-      # na carga completa e no disparo manual, o projeto inteiro
+      # Carga completa e disparo manual: dbt build do projeto inteiro (seeds + snapshots +
+      # modelos + testes, na ordem do DAG). Checagem a cada 3 horas: so `dbt run` do que
+      # depende da Wikipedia, sem testes (os testes sao `warn` e gravam tabelas em dq_falhas;
+      # rodam uma vez por dia na carga completa). Tudo para poupar a cota da Free Edition.
       - name: dbt build
         run: |
           if [ "${{ github.event.schedule }}" = "7 9-21/3 * * *" ]; then
-            dbt build --target prod --select stg_wikipedia__intencao_voto_2026+
+            dbt run --target prod --select stg_wikipedia__intencao_voto_2026+ 2>&1 | tee -a saida.log
           else
-            dbt build --target prod
+            dbt build --target prod 2>&1 | tee -a saida.log
           fi
+
+      # Cota diaria da Free Edition esgotada: marca o dia (UTC) no cache do Actions e as
+      # checagens seguintes nem ligam o Databricks ate o dia virar. A carga completa das
+      # 05:17 ignora a marca e tenta sempre.
+      - name: Cota do Databricks esgotada?
+        id: cota
+        if: failure()
+        run: |
+          if grep -qiE "could not be processed by the warehouse|cannot create the resource|exhausted|quota" saida.log 2>/dev/null; then
+            date -u > .cota_esgotada
+            echo "dia=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Cota do Databricks esgotada::checagens desligadas ate o fim do dia (UTC); o painel fica com o ultimo dado bom"
+          fi
+
+      - name: Lembrar cota esgotada
+        if: failure() && steps.cota.outputs.dia != ''
+        uses: actions/cache/save@v6
+        with:
+          path: .cota_esgotada
+          key: cota-esgotada-${{ steps.cota.outputs.dia }}
 
       - name: Guardar artefatos (manifest, run_results)
         if: always()
