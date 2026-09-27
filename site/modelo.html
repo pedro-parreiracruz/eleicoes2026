@@ -113,6 +113,7 @@
   .ressalva.registros { border-left-color: var(--muted); }
   .ressalva.registros .sinal { color: var(--muted); }
   .ressalva.registros #tab-registros td { white-space: nowrap; }
+  #tab-registros th:nth-child(-n+5), #tab-registros td:nth-child(-n+5) { text-align: left; }
   .aviso-legal { margin: var(--e3) 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 110ch; }
   .ressalva { margin-top: var(--e4); border: 1px solid var(--hair); border-left: 2px solid var(--warn);
               border-radius: var(--r); background: rgba(176,120,0,.08); }
@@ -769,9 +770,10 @@ const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split
 const V1 = V1TUDO.filter(r => !r.nr);
 const VNR = V1TUDO.filter(r => r.nr);
 // 8º campo: indecisos, brancos e nulos do mesmo cenário (carga antiga não tem)
-// 9º campo: número de registro da pesquisa no TSE
-const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg] = l.split(';');
-  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null, reg: reg || ''}; });
+// campos 9–13: registro no TSE, nível de confiança, contratação (P/C), empresa registrada, amostra
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg,conf,ct,emp,qt] = l.split(';');
+  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null,
+          reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || '', qt: qt ? +qt : null}; });
 const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
   return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
 const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
@@ -2022,8 +2024,8 @@ const CONTADOR_DATA  = '__CONTADOR_DATA__';
   D2.forEach(r => {
     if (!r.reg) return;
     const k = r.ds + '|' + r.i, o = mapa.get(k);
-    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: '', ct: '', n: AMOSTRA.get(k) ?? null, m: r.m, conf: null});
-    else if (!o.reg) o.reg = r.reg;
+    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: r.emp, ct: r.ct, n: r.qt ?? AMOSTRA.get(k) ?? null, m: r.m, conf: r.conf});
+    else if (!o.reg) Object.assign(o, {reg: r.reg, emp: o.emp || r.emp, ct: o.ct || r.ct, conf: o.conf ?? r.conf});
     else if (!o.reg.split(',').includes(r.reg)) o.reg += ',' + r.reg;
   });
   const lista = [...mapa.values()].filter(o => o.reg);

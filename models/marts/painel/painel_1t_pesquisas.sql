@@ -19,7 +19,7 @@ with base as (
 ),
 l as (
     select *,
-           concat_ws(';', dt_fim_campo, nm_instituto, cast(qt_amostra as string), cast(pc_margem_erro as string),
+           concat_ws(';', dt_fim_campo, nm_instituto, coalesce(cast(qt_amostra as string), ''), coalesce(cast(pc_margem_erro as string), ''),
                      nr_protocolo_registro, coalesce(cast(pc_nivel_confianca as string), ''),
                      tp_contratacao, nm_empresa_registro) as linha
     from base

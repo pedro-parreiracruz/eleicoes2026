@@ -117,7 +117,11 @@ duelo as (
   select date_format(f.dt_fim_campo,'yyyy-MM-dd') as d, f.inst_ok, max(f.pc_margem_erro) as margem,
          max(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as hi,
          min(struct(cast(f.pc_intencao_voto as double) as v, f.nm_candidato as nm)) as lo,
-         max(nr2.ind) as ind, max(f.nr_protocolo_registro) as reg
+         max(nr2.ind) as ind, max(f.nr_protocolo_registro) as reg,
+         coalesce(cast(max(f.pc_nivel_confianca) as string), '') as conf,
+         case when max(f.tp_contratacao) = 'Própria' then 'P' else 'C' end as ct,
+         replace(max(f.nm_empresa_registro), ';', ',') as emp,
+         coalesce(cast(max(f.qt_amostra) as string), '') as qt
   from f join c using (id_cenario) left join nr2 on nr2.id_cenario = f.id_cenario
   where c.n = 2 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
   group by f.id_cenario, date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok
@@ -134,7 +138,7 @@ select
   cast(greatest(1, coalesce((select percentile_approx(dias, 0.5) from cad where dias > 0), 7)) as string) as cadencia,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok,
-              cast(max(f.qt_amostra) as string), cast(max(f.pc_margem_erro) as string),
+              coalesce(cast(max(f.qt_amostra) as string), ''), coalesce(cast(max(f.pc_margem_erro) as string), ''),
               array_join(array_sort(collect_set(f.nr_protocolo_registro)), ','),
               coalesce(cast(max(f.pc_nivel_confianca) as string), ''),
               case when max(f.tp_contratacao) = 'Própria' then 'P' else 'C' end,
@@ -154,7 +158,7 @@ select
      order by 1)) as b_v1t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', d, inst_ok, hi.nm, cast(hi.v as string), lo.nm, cast(lo.v as string),
-              cast(margem as string), coalesce(cast(round(ind,2) as string), ''), reg) as l
+              coalesce(cast(margem as string), ''), coalesce(cast(round(ind,2) as string), ''), reg, conf, ct, emp, qt) as l
      from duelo order by d, inst_ok, hi.nm)) as b_d2t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', nm_instituto, cast(count(*) as string), cast(round(sum(vr_pesquisa),2) as string),
