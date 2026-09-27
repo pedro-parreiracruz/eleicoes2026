@@ -102,6 +102,23 @@ de acessos e como o painel é republicado. `site/modelo.html` é o painel em si,
 (`__P1T__`, `__D2T__`…) que o `gerar.py` preenche; ele é a mesma página publicada no artifact
 do claude.ai.
 
+## Metodologia das médias
+
+A mesma explicação aparece no painel, em "Como as médias são calculadas".
+
+- Só entram pesquisas com registro localizado no TSE (`painel_registro_tse`).
+- 1º turno: só cenários em que todos os nomes têm candidatura registrada; vários cenários da
+  mesma pesquisa viram a média deles.
+- Cada pesquisa é reescalada proporcionalmente para somar 100% (os institutos arredondam cada
+  número e a soma publicada varia de ~97% a ~107%). Indecisos, brancos, nulos e "outros" são uma
+  fatia só. Os blocos do HTML guardam o número como publicado; a reescala é feita na página.
+- Linha do tempo: média simples das pesquisas com fim de campo no mesmo dia, sem peso por
+  amostra, método ou instituto; candidato ausente de uma pesquisa conta zero nela, para o dia
+  fechar 100%. Série com mais de 14 dias: linha cheia = média móvel centrada de 5 pontos.
+- Barras: média das pesquisas do período em que o candidato aparece, com faixa mínimo–máximo.
+- 2º turno: simulações de dois nomes, reescaladas para 100% com indecisos/brancos/nulos (sem
+  esse dado, a diferença para 100% conta como indecisos); média simples por dia.
+
 ## Limitações conhecidas
 
 - **Só entram pesquisas registradas no TSE** (Lei 9.504/97, art. 33). A Wikipédia não traz o
