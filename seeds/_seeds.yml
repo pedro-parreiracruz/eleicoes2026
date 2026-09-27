@@ -41,3 +41,16 @@ seeds:
     columns:
       - name: nm_candidato
         data_tests: [unique, not_null]
+
+  - name: instituto_registro_tse
+    description: >
+      Como achar cada instituto do painel (inst_ok, nome vindo da Wikipedia) no registro de
+      pesquisas do TSE: chave_tse e uma expressao regular procurada no nome da empresa
+      registrada, em minusculas, sem acento e sem espaco/pontuacao. Parcerias entram pela
+      empresa que registra (Genial/Quaest -> quaest; Apex/Futura -> futura ou 100cidades,
+      a 100% Cidades Participacoes). Instituto sem linha aqui usa o proprio nome normalizado.
+    columns:
+      - name: inst_ok
+        data_tests: [unique, not_null]
+      - name: chave_tse
+        data_tests: [not_null]

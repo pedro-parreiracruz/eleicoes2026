@@ -104,6 +104,12 @@ do claude.ai.
 
 ## Limitações conhecidas
 
+- **Só entram pesquisas registradas no TSE** (Lei 9.504/97, art. 33). A Wikipédia não traz o
+  número de registro, então `painel_registro_tse` casa cada pesquisa com o PesqEle por instituto
+  (seed `instituto_registro_tse`), período de campo (±3 dias) e amostra; o painel lista o
+  registro, a empresa, a contratação e o nível de confiança de cada uma. Pesquisa sem registro
+  localizado fica de fora (inclusive as de 2025, anteriores ao registro obrigatório).
+
 - A Wikipédia não informa o ano do campo: a regra usa o ano da carga e volta um ano se a data
   cair no futuro.
 - Linhas com `revisar = true` nos seeds esperam confirmação humana.

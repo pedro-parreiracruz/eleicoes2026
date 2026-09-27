@@ -9,7 +9,37 @@ version: 2
 # gerar.py cai sozinho na consulta antiga quando a checagem dele reprovar os blocos.
 
 models:
+  - name: painel_registro_tse
+    description: >
+      Uma linha por pesquisa da Wikipedia com registro localizado no TSE (PesqEle 2026):
+      numero do registro, empresa registrada, tipo de contratacao e nivel de confianca.
+      Casamento por instituto (seed instituto_registro_tse), periodo de campo (+-3 dias) e
+      amostra; ver o cabecalho do SQL. Pesquisa fora daqui nao entra no painel.
+    columns:
+      - name: id_pesquisa
+        data_tests:
+          - unique: {config: {severity: warn}}
+          - not_null: {config: {severity: warn}}
+      - name: nr_protocolo_registro
+        description: Numero de registro no TSE (ex. BR037702026).
+        data_tests:
+          - not_null: {config: {severity: warn}}
+      - name: nr_distancia
+        description: Dias de diferenca no inicio + no fim do campo, + 4 se a amostra difere mais de 5%.
+      - name: pc_nivel_confianca
+        description: Nivel de confianca declarado no plano amostral registrado (em %).
+
   - name: painel_votos
+    description: >
+      painel_votos_todos so com as pesquisas registradas no TSE (inner join com
+      painel_registro_tse), mais nr_protocolo_registro, nm_empresa_registro,
+      tp_contratacao e pc_nivel_confianca.
+    columns:
+      - name: nr_protocolo_registro
+        data_tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: painel_votos_todos
     description: >
       fct_intencao_voto + nome de instituto limpo (inst_ok, sem markup da Wikipedia e com
       grafias da mesma empresa unificadas) + perfil do cenario: qt_candidatos_cenario e

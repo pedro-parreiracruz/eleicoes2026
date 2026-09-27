@@ -110,6 +110,9 @@
 
   /* ---------- ressalva do topo ----------
      Fechada por padrão: ocupa uma linha e não empurra gráfico nenhum. Aberta, explica. */
+  .ressalva.registros { border-left-color: var(--muted); }
+  .ressalva.registros .sinal { color: var(--muted); }
+  .ressalva.registros #tab-registros td { white-space: nowrap; }
   .aviso-legal { margin: var(--e3) 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 110ch; }
   .ressalva { margin-top: var(--e4); border: 1px solid var(--hair); border-left: 2px solid var(--warn);
               border-radius: var(--r); background: rgba(176,120,0,.08); }
@@ -589,8 +592,22 @@ const CAPA_LINKS = [
 
   <!-- aviso fixo: o painel agrega pesquisas de terceiros; não é pesquisa própria -->
   <p class="aviso-legal" id="aviso-legal">Este painel reúne pesquisas de intenção de voto já divulgadas pelos
-    institutos; não é pesquisa própria. As médias são agregações dessas pesquisas, não um novo levantamento.
-    Cada pesquisa pertence ao instituto que a realizou.</p>
+    institutos e registradas no Tribunal Superior Eleitoral (Lei 9.504/97, art. 33); não é pesquisa própria.
+    Só entram pesquisas cujo registro foi localizado no sistema do TSE: o número de registro de cada uma, com
+    empresa, contratação, amostra, margem de erro e nível de confiança, está na lista logo abaixo. As médias são
+    agregações dessas pesquisas, não um novo levantamento. Cada pesquisa pertence ao instituto que a realizou.</p>
+
+  <!-- registro de cada pesquisa usada (dados do PesqEle/TSE casados com a Wikipédia) -->
+  <details class="ressalva registros" id="registros">
+    <summary><span class="sinal">&#9432;</span><span id="registros-tit">Registro no TSE de cada pesquisa usada</span><span class="mais">ver lista</span></summary>
+    <div>
+      <p>Cada linha é uma pesquisa usada no painel, com os dados do registro no TSE (sistema PesqEle).
+        <b>Contratação</b>: “própria” quando o instituto pagou a pesquisa; “contratada” quando foi paga por
+        terceiro, cujo nome consta no registro — consulte pelo número no PesqEle. Amostra e margem são as
+        divulgadas; o nível de confiança é o declarado no plano amostral registrado.</p>
+      <div id="tab-registros"></div>
+    </div>
+  </details>
 
   <nav class="abas" role="tablist">
     <button type="button" role="tab" data-aba="t1" aria-selected="true">1º turno</button>
@@ -644,7 +661,7 @@ const CAPA_LINKS = [
   <div id="painel"></div>
 
   <footer>
-    <p>Agregação de pesquisas de intenção de voto divulgadas pelos institutos; não é pesquisa própria · <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">Metodologia e código do projeto no GitHub</a></p>
+    <p>Agregação de pesquisas de intenção de voto divulgadas pelos institutos e registradas no TSE; não é pesquisa própria · <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">Metodologia e código do projeto no GitHub</a></p>
   </footer>
 </div>
 
@@ -742,8 +759,9 @@ const iniciais = nome => { const p = nx(nome).replace(/\(.*?\)/g,'').trim().spli
   return semAcento((p[0][0] + (p.length>1 ? p[p.length-1][0] : '')).toUpperCase()); };
 
 // ---------------------------------------------------------------- parsing
-const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m] = l.split(';');
-  return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null}; });
+// campos 5–8: registro(s) no TSE, nível de confiança, contratação (P/C), empresa registrada
+const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m,reg,conf,ct,emp] = l.split(';');
+  return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null, reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || ''}; });
 // 5º campo (C/N) separa candidato de não-resposta (indecisos, brancos, nulos, outros);
 // carga antiga não tem o campo e tudo vira candidato, como era antes
 const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split(';');
@@ -751,8 +769,9 @@ const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split
 const V1 = V1TUDO.filter(r => !r.nr);
 const VNR = V1TUDO.filter(r => r.nr);
 // 8º campo: indecisos, brancos e nulos do mesmo cenário (carga antiga não tem)
-const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr] = l.split(';');
-  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null}; });
+// 9º campo: número de registro da pesquisa no TSE
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg] = l.split(';');
+  return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null, reg: reg || ''}; });
 const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
   return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
 const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
@@ -1994,6 +2013,31 @@ const CONTADOR_DATA  = '__CONTADOR_DATA__';
     .then(d => { const n = (typeof d.value === 'number') ? d.value : d.total;
                  if (typeof n === 'number') mostra(n, ''); })
     .catch(function () {});   // contador fora do ar nunca atrapalha o painel
+})();
+
+// ---------------------------------------------------------------- registro no TSE
+(function () {
+  const mapa = new Map();
+  P1.forEach(p => mapa.set(p.ds + '|' + p.i, {d: p.d, i: p.i, reg: p.reg, emp: p.emp, ct: p.ct, n: p.n, m: p.m, conf: p.conf}));
+  D2.forEach(r => {
+    if (!r.reg) return;
+    const k = r.ds + '|' + r.i, o = mapa.get(k);
+    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: '', ct: '', n: AMOSTRA.get(k) ?? null, m: r.m, conf: null});
+    else if (!o.reg) o.reg = r.reg;
+    else if (!o.reg.split(',').includes(r.reg)) o.reg += ',' + r.reg;
+  });
+  const lista = [...mapa.values()].filter(o => o.reg);
+  if (!lista.length) { $('registros').hidden = true; return; }
+  $('registros-tit').textContent = `Registro no TSE de cada pesquisa usada (${lista.length} pesquisas)`;
+  const mostra = () => tabela($('tab-registros'), [
+      {t:'Fim do campo', ini: -1, f: v => dBR(new Date(v))}, {t:'Instituto'},
+      {t:'Registro TSE', f: v => v.split(',').join('<br>')}, {t:'Empresa registrada'}, {t:'Contratação'},
+      {t:'Amostra', f: v => v ? ni(v) : '—'}, {t:'Margem', f: v => v ? '±' + nd(v) + ' p.p.' : '—'},
+      {t:'Confiança', f: v => v ? v + '%' : '—'}],
+    lista.map(o => [+o.d, o.i, o.reg, o.emp || '—', o.ct === 'P' ? 'Própria' : o.ct === 'C' ? 'Contratada' : '—',
+                    o.n || 0, o.m || 0, o.conf || 0]), 'registros');
+  // monta a tabela só quando a lista é aberta (são centenas de linhas)
+  $('registros').addEventListener('toggle', () => { if ($('registros').open) mostra(); });
 })();
 
 // ---------------------------------------------------------------- ressalva do topo
