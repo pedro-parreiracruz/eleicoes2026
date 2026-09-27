@@ -124,6 +124,11 @@
   /* ---------- ressalva do topo ----------
      Fechada por padrão: ocupa uma linha e não empurra gráfico nenhum. Aberta, explica. */
   .ressalva.registros { border-left-color: var(--muted); }
+  .ressalva.registros ul { margin: var(--e1) 0 0; padding-left: 1.2em; }
+  .ressalva.registros li { margin: 0 0 var(--e1); }
+  .ressalva.registros a { color: inherit; }
+  .fonte-graf { margin: var(--e3) 0 0; padding-top: var(--e2); border-top: 1px solid var(--hair);
+    font-size: 11px; line-height: 1.45; color: var(--muted); }
   .ressalva.registros .sinal { color: var(--muted); }
   .ressalva.registros #tab-registros td { white-space: nowrap; }
   #tab-registros th:nth-child(-n+5), #tab-registros td:nth-child(-n+5) { text-align: left; }
@@ -608,8 +613,9 @@ const CAPA_LINKS = [
   <p class="aviso-legal" id="aviso-legal">Este painel reúne pesquisas de intenção de voto já divulgadas pelos
     institutos e registradas no Tribunal Superior Eleitoral (Lei 9.504/97, art. 33); não é pesquisa própria.
     Só entram pesquisas cujo registro foi localizado no sistema do TSE: o número de registro de cada uma, com
-    empresa, contratação, amostra, margem de erro e nível de confiança, está na lista logo abaixo. As médias são
-    agregações dessas pesquisas, não um novo levantamento. Cada pesquisa pertence ao instituto que a realizou.</p>
+    empresa, contratação, período de campo, amostra, margem de erro e nível de confiança, está na lista logo
+    abaixo. As médias são agregações dessas pesquisas, não um novo levantamento; as regras de cálculo estão em
+    “Como as médias são calculadas”. Cada pesquisa pertence ao instituto que a realizou.</p>
 
   <!-- registro de cada pesquisa usada (dados do PesqEle/TSE casados com a Wikipédia) -->
   <details class="ressalva registros" id="registros">
@@ -618,8 +624,41 @@ const CAPA_LINKS = [
       <p>Cada linha é uma pesquisa usada no painel, com os dados do registro no TSE (sistema PesqEle).
         <b>Contratação</b>: “própria” quando o instituto pagou a pesquisa; “contratada” quando foi paga por
         terceiro, cujo nome consta no registro — consulte pelo número no PesqEle. Amostra e margem são as
-        divulgadas; o nível de confiança é o declarado no plano amostral registrado.</p>
+        divulgadas; o nível de confiança é o declarado no plano amostral registrado. Questionário, plano
+        amostral e contratante de cada uma: <a href="https://pesqele-divulgacao.tse.jus.br/app/pesquisa/listar.xhtml"
+        target="_blank" rel="noopener">consulta pública do PesqEle</a>, pelo número de registro.</p>
       <div id="tab-registros"></div>
+    </div>
+  </details>
+
+  <!-- metodologia: como cada número do painel é calculado (mesmas regras do código) -->
+  <details class="ressalva registros" id="metodo">
+    <summary><span class="sinal">&#8721;</span><span>Como as médias são calculadas</span><span class="mais">ver regras</span></summary>
+    <div>
+      <ul>
+        <li><b>Fonte.</b> Resultados divulgados pelos institutos, compilados na página de pesquisas da Wikipédia e
+          ligados ao registro no TSE (PesqEle) por instituto, período de campo (até 3 dias de diferença) e amostra.
+          Pesquisa sem registro localizado não entra em nenhum número.</li>
+        <li><b>1º turno.</b> Só cenários em que todos os nomes testados têm candidatura registrada. Se uma pesquisa
+          tem mais de um cenário assim, vale a média deles.</li>
+        <li><b>Soma de 100%.</b> Cada pesquisa é reescalada proporcionalmente para somar exatamente 100%, porque os
+          institutos arredondam cada número (e “menos de 1%” costuma aparecer como 1) e a soma publicada varia de
+          cerca de 97% a 107%. Indecisos, brancos, nulos e “outros” entram juntos como uma fatia só. Os números como
+          publicados estão no registro de cada pesquisa.</li>
+        <li><b>Linha do tempo.</b> Média simples das pesquisas que terminaram o campo no mesmo dia, sem peso por
+          amostra, método de coleta ou instituto; candidato ausente de uma pesquisa conta zero nela, para o dia
+          fechar 100%. Com mais de 14 dias na série, a linha cheia é a média móvel centrada de 5 pontos (dois dias
+          com pesquisa antes e dois depois); a linha clara é o valor do dia.</li>
+        <li><b>Barras.</b> Média de todas as pesquisas do período em que o candidato aparece; a faixa vai do menor
+          ao maior resultado, e a margem é a média das margens informadas.</li>
+        <li><b>2º turno.</b> Simulações com exatamente dois nomes. Cada simulação é reescalada para 100% junto com
+          indecisos, brancos e nulos (quando o instituto não os informa, a diferença para 100% conta como
+          indecisos) e o dia é a média simples das simulações.</li>
+        <li><b>Candidatura indeferida.</b> O nome continua aparecendo enquanto houver pesquisa com ele, com
+          ⚠, linha pontilhada e barra apagada.</li>
+        <li><b>Código.</b> Tudo está nos modelos <code>painel_*</code> e no <code>site/modelo.html</code> do
+          <a href="https://github.com/pedro-parreiracruz/eleicoes2026" target="_blank" rel="noopener">repositório público</a>.</li>
+      </ul>
     </div>
   </details>
 
@@ -3247,19 +3286,32 @@ const iniciais = nome => { const p = nx(nome).replace(/\(.*?\)/g,'').trim().spli
 
 // ---------------------------------------------------------------- parsing
 // campos 5–8: registro(s) no TSE, nível de confiança, contratação (P/C), empresa registrada
-const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m,reg,conf,ct,emp] = l.split(';');
-  return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null, reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || ''}; });
+const P1 = RAW_P1T.trim().split('\n').map(l => { const [d,i,n,m,reg,conf,ct,emp,ini] = l.split(';');
+  return {d: pd(d), ds: d, i, n: n? +n : null, m: m? +m : null, reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || '', ini: ini || ''}; });
 // 5º campo (C/N) separa candidato de não-resposta (indecisos, brancos, nulos, outros);
 // carga antiga não tem o campo e tudo vira candidato, como era antes
 const V1TUDO = RAW_V1T.trim().split('\n').map(l => { const [d,i,c,v,t] = l.split(';');
   const [nome, part] = c.split('|'); return {d: pd(d), ds: d, i, nome, part, v: +v, nr: t === 'N'}; });
+// Cada pesquisa é reescalada para somar exatamente 100%: os institutos arredondam cada
+// número (e "<1%" costuma virar 1), então a soma publicada vai de ~97% a ~107%.
+// vPub guarda o número como publicado.
+{ const tot = new Map();
+  V1TUDO.forEach(r => { const k = r.ds + '|' + r.i; tot.set(k, (tot.get(k) || 0) + r.v); });
+  V1TUDO.forEach(r => { const t = tot.get(r.ds + '|' + r.i); r.vPub = r.v; if (t > 0) r.v = r.v * 100 / t; }); }
 const V1 = V1TUDO.filter(r => !r.nr);
 const VNR = V1TUDO.filter(r => r.nr);
 // 8º campo: indecisos, brancos e nulos do mesmo cenário (carga antiga não tem)
 // campos 9–13: registro no TSE, nível de confiança, contratação (P/C), empresa registrada, amostra
-const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg,conf,ct,emp,qt] = l.split(';');
+// campo 14: início do campo
+const D2 = RAW_D2T.trim().split('\n').map(l => { const [d,i,a,va,b,vb,m,nr,reg,conf,ct,emp,qt,ini] = l.split(';');
   return {d: pd(d), ds: d, i, a, va: +va, b, vb: +vb, m: m? +m : null, nr: nr ? +nr : null,
-          reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || '', qt: qt ? +qt : null}; });
+          reg: reg || '', conf: conf ? +conf : null, ct: ct || '', emp: emp || '', qt: qt ? +qt : null, ini: ini || ''}; });
+// duelo também fecha 100%: o que falta para 100 sem indecisos informados vira indecisos;
+// depois os três são reescalados juntos (vaPub/vbPub guardam o publicado)
+D2.forEach(r => {
+  if (r.nr == null && r.va + r.vb < 100) r.nr = 100 - r.va - r.vb;
+  const t = r.va + r.vb + (r.nr || 0); r.vaPub = r.va; r.vbPub = r.vb;
+  if (t > 0) { r.va *= 100 / t; r.vb *= 100 / t; if (r.nr != null) r.nr *= 100 / t; } });
 const INST = RAW_INST.trim().split('\n').map(l => { const [nm,qt,vr,ent,pres,prop,al,d1,d2] = l.split(';');
   return {nm, qt:+qt, vr:+vr, ent:+ent, pres:+pres, prop:+prop, al:+al, d1, d2}; });
 const IMES = RAW_INSTMES.trim().split('\n').map(l => { const [m,nm,qt,vr] = l.split(';');
@@ -3526,8 +3578,28 @@ function dica(tip, host, x, y, html) {
 }
 const semDica = tip => { tip.style.opacity = '0'; };
 // regra fixa: no tooltip o maior percentual vem sempre acima do menor
+// arredonda para 1 casa pelo maior resto: a soma dos números escritos fecha no total exato
+function fecha100(vals) {
+  const t = vals.map(v => v * 10), base = t.map(Math.floor);
+  let falta = Math.round(t.reduce((a, b) => a + b, 0)) - base.reduce((a, b) => a + b, 0);
+  t.map((v, i) => [v - base[i], i]).sort((a, b) => b[0] - a[0])
+    .forEach(([, i]) => { if (falta > 0) { base[i]++; falta--; } });
+  return base.map(v => v / 10);
+}
+// rodapé da dica das linhas: "Demais" (quem não está desenhado) + Total 100,0%
+function fechoDica(m, itens, noGrafico) {
+  let total = 0; m.forEach(v => { total += v; });
+  const mostr = itens.reduce((a, i) => a + i.v, 0), demais = Math.max(0, total - mostr);
+  const arr = fecha100([...itens.map(i => i.v), demais]);
+  itens.forEach((i, k) => { i.txt = nd(arr[k]); });
+  const vistos = new Set(itens.map(i => i.nome));
+  const ocultos = [...noGrafico].some(n => m.has(n) && !vistos.has(n));
+  const dem = arr[arr.length - 1];
+  return (dem > 0 || ocultos ? `<div class="row"><span>${ocultos ? 'Demais e ocultos' : 'Demais candidatos'}</span><span class="num">${nd(dem)}%</span></div>` : '') +
+    `<div class="row" style="border-top:1px solid var(--hair);margin-top:4px;padding-top:4px"><span><b style="display:inline;margin:0">Total</b></span><span class="num">${nd(arr.reduce((a, b) => a + b, 0))}%</span></div>`;
+}
 const linhasDica = itens => itens.slice().sort((a,b) => b.v - a.v).map(i =>
-  `<div class="row"><span><i class="sw" style="background:${i.cor}"></i>${nx(i.nome)}</span><span class="num">${nd(i.v)}%</span></div>`).join('');
+  `<div class="row"><span><i class="sw" style="background:${i.cor}"></i>${nx(i.nome)}</span><span class="num">${i.txt ?? nd(i.v)}%</span></div>`).join('');
 
 // ---------------------------------------------------------------- avatar
 // hachura para barras que reciclam matiz: a cor sozinha não basta, a textura separa
@@ -3725,8 +3797,8 @@ function desenhaLinhas(host, tip, series, opts) {
       if (p) { nn = Math.max(nn, p.n || 0); marcas[i].setAttribute('cx', X(+p.d)); marcas[i].setAttribute('cy', Y(p.v));
         marcas[i].setAttribute('opacity', 1); itens.push({nome: s.nome, v: p.v, cor: s.cor}); }
       else marcas[i].setAttribute('opacity', 0); });
-    dica(tip, host, tx, Y(yT)+30, `<b>${dBR(melhor.d)}</b>${linhasDica(itens)}` +
-      (opts.extraDica ? opts.extraDica(melhor.d) : '') +
+    const extra = opts.extraDica ? opts.extraDica(melhor.d, itens) : '';
+    dica(tip, host, tx, Y(yT)+30, `<b>${dBR(melhor.d)}</b>${linhasDica(itens)}` + extra +
       (nn ? `<div class="n">${nn} pesquisa${nn>1?'s':''} no dia</div>` : ''));
   };
   const some = () => { cruz.setAttribute('opacity', 0);
@@ -3817,7 +3889,10 @@ function desenhaBarras(host, tip, dados, opts) {
       g.appendChild(lb);
       ajustes.push({lb, av, cy: yB + bh/2});
       const largS = Math.max(2, X(d.media)-padL);
-      g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: d.cor || corDe(d.nome)}));
+      // candidatura indeferida: barra apagada, para não pesar igual às outras
+      g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: d.cor || corDe(d.nome),
+        opacity: SITUACAO[d.nome] ? 0.35 : 1, stroke: SITUACAO[d.nome] ? css('--warn') : 'none',
+        'stroke-dasharray': SITUACAO[d.nome] ? '3 2' : 'none'}));
       const hxS = d.cor ? null : hachuraDe(hid, d.nome);
       if (hxS) g.appendChild(svgEl('rect', {x: padL, y: yB, width: largS, height: bh, rx: 2, fill: hxS}));
       const t = svgEl('text', {x: X(d.media)+10, y: yB+bh-2, class:'vallabel'});
@@ -4027,33 +4102,26 @@ function painelT1(anima) {
     </section>`;
 
   const topN = res.slice(0, N_LINHAS()).map(r => r.nome);
-  const s = serieDiaria(rows, topN);
-  const series = topN.map(n => ({nome: n, cor: corDe(n), traco: tracoDe(n), pts: s[n], on: !st.off.has(n)}));
+  // Média do dia com ausência = 0: cada pesquisa soma 100% (ver normalização no topo),
+  // então todo dia também soma 100% — candidatos + indecisos/brancos/nulos.
+  const diaVet = new Map(), pesqDia = new Map();
+  [...rows, ...fatNR().map(r => ({...r, nome: NOME_NR}))].forEach(r => {
+    const m = diaVet.get(+r.d) || new Map(); m.set(r.nome, (m.get(r.nome) || 0) + r.v); diaVet.set(+r.d, m);
+    const p = pesqDia.get(+r.d) || new Set(); p.add(r.i); pesqDia.set(+r.d, p); });
+  diaVet.forEach((m, d) => { const n = pesqDia.get(d).size; m.forEach((v, k) => m.set(k, v / n)); });
+  const diasOrd = [...diaVet.keys()].sort((a, b) => a - b);
+  const ptsDe = nome => diasOrd.filter(d => diaVet.get(d).has(nome))
+    .map(d => ({d: new Date(d), v: diaVet.get(d).get(nome), n: pesqDia.get(d).size}));
+  const s = Object.fromEntries(topN.map(n => [n, ptsDe(n)]));
+  const series = topN.map(n => ({nome: n, cor: corDe(n), traco: SITUACAO[n] ? '2 3' : tracoDe(n), pts: s[n], on: !st.off.has(n)}));
   // indecisos, brancos e nulos entram como uma linha só, cinza e tracejada: não é
   // candidato, mas é a fatia que decide a eleição
-  const psNR = porPesquisaNR(fatNR());
-  if (psNR.length) {
-    const porDiaNR = new Map();
-    psNR.forEach(x => { const a = porDiaNR.get(x.ds) || {d: x.d, s: 0, n: 0}; a.s += x.v; a.n++; porDiaNR.set(x.ds, a); });
-    const ptsNR = [...porDiaNR.values()].sort((a, b) => a.d - b.d).map(a => ({d: a.d, v: a.s/a.n, n: a.n}));
-    if (ptsNR.length) series.push({nome: NOME_NR, cor: css('--muted'), traco: '5 4', pts: ptsNR, on: !st.off.has(NOME_NR)});
-  }
+  const ptsNR = ptsDe(NOME_NR);
+  if (ptsNR.length) series.push({nome: NOME_NR, cor: css('--muted'), traco: '5 4', pts: ptsNR, on: !st.off.has(NOME_NR)});
   const resBarra = nr ? [...res, nr] : res;
-  // dica: quem ficou fora do gráfico entra como "Demais candidatos", e o total do dia fecha
-  // a conta (média do dia de cada nome, somada). Não fecha 100% quando o próprio instituto
-  // não publica tudo ou arredonda cada número.
-  const mediaDia = new Map();
-  [...rows, ...fatNR().map(r => ({...r, nome: NOME_NR}))].forEach(r => {
-    const m = mediaDia.get(+r.d) || new Map(); const a = m.get(r.nome) || {s: 0, n: 0};
-    a.s += r.v; a.n++; m.set(r.nome, a); mediaDia.set(+r.d, m); });
+  // dica: quem não está desenhado entra como "Demais candidatos" e o total fecha 100,0%
   const noGrafico = new Set([...topN, NOME_NR]);
-  const extraDica = d => {
-    const m = mediaDia.get(+d); if (!m) return '';
-    let demais = 0, total = 0;
-    m.forEach((a, nome) => { const v = a.s / a.n; total += v; if (!noGrafico.has(nome)) demais += v; });
-    return `<div class="row"><span>Demais candidatos</span><span class="num">${nd(demais)}%</span></div>` +
-           `<div class="row" style="border-top:1px solid var(--hair);margin-top:4px;padding-top:4px"><span><b style="display:inline;margin:0">Total</b></span><span class="num">${nd(total)}%</span></div>`;
-  };
+  const extraDica = (d, itens) => { const m = diaVet.get(+d); return m ? fechoDica(m, itens, noGrafico) : ''; };
 
   if (st.tabela) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
@@ -4076,6 +4144,7 @@ function painelT1(anima) {
   const vies = viesDeCasa(rows);
   desenhaVies($('p-vies'), $('tip-vies'), vies, anima);
   legenda($('leg-vies'), vies.foco.map(f => ({nome: f, cor: corDe(f), on: true})), false);
+  carimbaFontes();
   contaNumeros();
 }
 
@@ -4136,12 +4205,17 @@ function painelT2(anima) {
 
   const porDia = new Map();
   doDuelo.forEach(r => { const A = r.a === par[0] ? r.va : r.vb, B = r.a === par[0] ? r.vb : r.va;
-    const a = porDia.get(r.ds) || {d: r.d, sa:0, sb:0, n:0}; a.sa += A; a.sb += B; a.n++; porDia.set(r.ds, a); });
+    const a = porDia.get(r.ds) || {d: r.d, sa:0, sb:0, snr:0, n:0}; a.sa += A; a.sb += B; a.snr += r.nr || 0; a.n++; porDia.set(r.ds, a); });
   const dias = [...porDia.values()].sort((x,y) => x.d - y.d);
   const series = [
     {nome: par[0], cor: corDe(par[0]), traco: tracoDe(par[0]), on: true, pts: dias.map(x => ({d:x.d, v:x.sa/x.n, n:x.n}))},
     {nome: par[1], cor: corDe(par[1]), traco: tracoDe(par[1]), on: true, pts: dias.map(x => ({d:x.d, v:x.sb/x.n, n:x.n}))}
   ].sort((x,y) => (y.pts.length?y.pts[y.pts.length-1].v:0) - (x.pts.length?x.pts[x.pts.length-1].v:0));
+  // indecisos, brancos e nulos do duelo: com eles o dia fecha 100%
+  if (dias.some(x => x.snr > 0))
+    series.push({nome: NOME_NR, cor: css('--muted'), traco: '5 4', on: true, pts: dias.map(x => ({d:x.d, v:x.snr/x.n, n:x.n}))});
+  const vetDia2 = new Map(dias.map(x => [+x.d, new Map([[par[0], x.sa/x.n], [par[1], x.sb/x.n], [NOME_NR, x.snr/x.n]])]));
+  const extraDica2 = (d, itens) => { const m = vetDia2.get(+d); return m ? fechoDica(m, itens, new Set([...par, NOME_NR])) : ''; };
 
   if (st.tabela) {
     $('p-linha').hidden = true; $('leg-linha').hidden = true; $('tab-linha').hidden = false;
@@ -4159,10 +4233,11 @@ function painelT2(anima) {
         const vh = Math.max(c.va, c.vb), vl = Math.min(c.va, c.vb);
         return [hi+' × '+lo, vh, vl, vh-vl, c.nr, c.n, '', hi, lo]; }), 'barra2');
   } else {
-    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, faixa: true});
+    desenhaLinhas($('p-linha'), $('tip-linha'), series, {anima, faixa: true, extraDica: extraDica2});
     legenda($('leg-linha'), series, false);
     desenhaBarras($('p-barra'), $('tip-barra'), lista, {anima, par: true});
   }
+  carimbaFontes();
   contaNumeros();
   document.querySelectorAll('[data-hipot]').forEach(bt => bt.onclick = () => {
     st.hipot = bt.dataset.hipot === '1'; desenha(true);
@@ -4503,27 +4578,44 @@ const CONTADOR_DATA  = '';
     .catch(function () {});   // contador fora do ar nunca atrapalha o painel
 })();
 
+// ---------------------------------------------------------------- fonte colada nos gráficos
+// vai junto em qualquer print do card: de onde vêm os números e onde estão registro, margem,
+// período e nível de confiança de cada pesquisa
+function carimbaFontes() {
+  const FONTE_GRAF = 'Fonte: média de pesquisas de intenção de voto registradas no TSE (Lei 9.504/97, art. 33), ' +
+    'calculada por pedro-parreiracruz.github.io/eleicoes2026 — não é pesquisa própria. Número de registro, ' +
+    'instituto, período de campo, amostra, margem de erro e nível de confiança de cada pesquisa: lista ' +
+    '“Registro no TSE de cada pesquisa usada”, no topo da página.';
+  document.querySelectorAll('#painel section.card').forEach(c => {
+    if (!c.querySelector('.plot') || c.querySelector('.fonte-graf')) return;
+    const p = document.createElement('p'); p.className = 'fonte-graf'; p.textContent = FONTE_GRAF;
+    c.appendChild(p); });
+}
+
 // ---------------------------------------------------------------- registro no TSE
 (function () {
   const mapa = new Map();
-  P1.forEach(p => mapa.set(p.ds + '|' + p.i, {d: p.d, i: p.i, reg: p.reg, emp: p.emp, ct: p.ct, n: p.n, m: p.m, conf: p.conf}));
+  P1.forEach(p => mapa.set(p.ds + '|' + p.i, {d: p.d, i: p.i, ini: p.ini, reg: p.reg, emp: p.emp, ct: p.ct, n: p.n, m: p.m, conf: p.conf}));
   D2.forEach(r => {
     if (!r.reg) return;
     const k = r.ds + '|' + r.i, o = mapa.get(k);
-    if (!o) mapa.set(k, {d: r.d, i: r.i, reg: r.reg, emp: r.emp, ct: r.ct, n: r.qt ?? AMOSTRA.get(k) ?? null, m: r.m, conf: r.conf});
+    if (!o) mapa.set(k, {d: r.d, i: r.i, ini: r.ini, reg: r.reg, emp: r.emp, ct: r.ct, n: r.qt ?? AMOSTRA.get(k) ?? null, m: r.m, conf: r.conf});
     else if (!o.reg) Object.assign(o, {reg: r.reg, emp: o.emp || r.emp, ct: o.ct || r.ct, conf: o.conf ?? r.conf});
     else if (!o.reg.split(',').includes(r.reg)) o.reg += ',' + r.reg;
   });
   const lista = [...mapa.values()].filter(o => o.reg);
   if (!lista.length) { $('registros').hidden = true; return; }
   $('registros-tit').textContent = `Registro no TSE de cada pesquisa usada (${lista.length} pesquisas)`;
+  // BR003042026 -> BR-00304/2026, o formato em que o PesqEle mostra e busca
+  const fmtReg = r => /^[A-Z]{2}\d{9}$/.test(r) ? `${r.slice(0, 2)}-${r.slice(2, 7)}/${r.slice(7)}` : r;
+  const dCurta = s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '';
   const mostra = () => tabela($('tab-registros'), [
-      {t:'Fim do campo', ini: -1, f: v => dBR(new Date(v))}, {t:'Instituto'},
-      {t:'Registro TSE', f: v => v.split(',').join('<br>')}, {t:'Empresa registrada'}, {t:'Contratação'},
+      {t:'Período de campo', ini: -1, f: (v, r) => (r[8] ? dCurta(r[8]) + ' a ' : '') + dBR(new Date(v))}, {t:'Instituto'},
+      {t:'Registro TSE', f: v => v.split(',').map(fmtReg).join('<br>')}, {t:'Empresa registrada'}, {t:'Contratação'},
       {t:'Amostra', f: v => v ? ni(v) : '—'}, {t:'Margem', f: v => v ? '±' + nd(v) + ' p.p.' : '—'},
-      {t:'Confiança', f: v => v ? v + '%' : '—'}],
+      {t:'Confiança', f: v => v ? v + '%' : '—'}, {t:'Início', oculta: true}],
     lista.map(o => [+o.d, o.i, o.reg, o.emp || '—', o.ct === 'P' ? 'Própria' : o.ct === 'C' ? 'Contratada' : '—',
-                    o.n || 0, o.m || 0, o.conf || 0]), 'registros');
+                    o.n || 0, o.m || 0, o.conf || 0, o.ini || '']), 'registros');
   // monta a tabela só quando a lista é aberta (são centenas de linhas)
   $('registros').addEventListener('toggle', () => { if ($('registros').open) mostra(); });
 })();
