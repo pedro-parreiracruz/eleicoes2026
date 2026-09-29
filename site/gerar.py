@@ -294,6 +294,30 @@ def conferir(dados):
         sys.exit("instituto com markup sobrando: " + ", ".join(sorted(set(sujos))[:5]))
 
 
+def datas_dos_blocos(dados):
+    """Pesquisa mais recente e inicio de campo tirados das linhas que o painel mostra.
+
+    Vale para as tres fontes (dbt, consulta antiga, despejo): se a consulta trouxer uma data
+    que nao e de nenhuma pesquisa dos blocos (aconteceu em 29/09/2026, com um cenario fora do
+    painel), o chip "Pesquisa mais recente" mostraria um dia sem pesquisa na tela.
+    """
+    fim_ini = []
+    for bloco, pos_ini in (("b_p1t", 8), ("b_d2t", 13)):
+        for linha in (dados.get(bloco) or "").splitlines():
+            campos = linha.split(";")
+            if campos and re.match(r"^\d{4}-\d{2}-\d{2}$", campos[0]):
+                ini = campos[pos_ini] if len(campos) > pos_ini else ""
+                fim_ini.append((campos[0], ini if re.match(r"^\d{4}-\d{2}-\d{2}$", ini) else campos[0]))
+    if not fim_ini:
+        return
+    recente = max(f for f, _ in fim_ini)
+    inicio = max(i for f, i in fim_ini if f == recente)
+    for chave, valor in (("campo_recente", recente), ("campo_inicio", inicio)):
+        if str(dados.get(chave) or "")[:10] != valor:
+            print(f"::notice title=Data ajustada pelos blocos::{chave} {dados.get(chave)!r} -> {valor!r}")
+        dados[chave] = valor
+
+
 def montar(dados, contador_url):
     modelo = MODELO.read_text(encoding="utf-8")
     troca = {m: str(dados[c]) for m, c in CAMPOS.items()}
@@ -351,6 +375,7 @@ def main():
             fonte = "consulta (fallback)"
             dados = do_warehouse(CONSULTA_LEGADA)
             conferir(dados)
+    datas_dos_blocos(dados)
     pagina = montar(dados, args.contador.strip())
 
     saida = pathlib.Path(args.saida)
