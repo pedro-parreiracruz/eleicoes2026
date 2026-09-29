@@ -17,7 +17,7 @@ GitHub Actions (servidores do GitHub; horários de Brasília)
   06:07 a 18:07, a cada 3 horas  checagem
          ingestion/verificar_wikipedia.py: a tabela de pesquisas mudou desde a última carga?
          não -> para aí, sem ligar o Databricks
-         sim -> carrega a Wikipédia, roda o dbt e republica o painel
+         sim -> carrega a Wikipédia, dbt run do que depende dela (sem testes) e republica
 ```
 
 Nada depende de máquina ligada: tudo roda nos servidores do GitHub. A carga fica **fora** do
@@ -32,7 +32,7 @@ policy", testado em 17/09/2026 para cdn.tse.jus.br, dadosabertos.tse.jus.br e pt
   publicar_site.yml       gera docs/index.html a partir dos modelos painel_* e publica
 ingestion/
   carga_raw.py            baixa TSE e Wikipédia e grava as tabelas cruas (tudo string)
-  verificar_wikipedia.py  impressão digital da tabela da Wikipédia (checagem horária)
+  verificar_wikipedia.py  impressão digital da tabela da Wikipédia (checagem a cada 3 horas)
 ci/profiles.yml           profile do dbt usado pelo Actions
 seeds/                    de-para de institutos e candidatos; candidatos registrados no TSE
 macros/                   limpeza (tse_texto, br_decimal, sem_notas...) e nome de schema
@@ -118,6 +118,9 @@ A mesma explicação aparece no painel, em "Como as médias são calculadas".
 - Barras: média das pesquisas do período em que o candidato aparece, com faixa mínimo–máximo.
 - 2º turno: simulações de dois nomes, reescaladas para 100% com indecisos/brancos/nulos (sem
   esse dado, a diferença para 100% conta como indecisos); média simples por dia.
+- "Pesquisa mais recente" (chip do topo) e o início de campo dela saem só das pesquisas que o
+  painel mostra (`painel_1t_pesquisas` e `painel_2t_duelos`, conferidas de novo no
+  `site/gerar.py`); cenário que não entra em nenhum gráfico não mexe nessa data.
 
 ## Limitações conhecidas
 
