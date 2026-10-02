@@ -335,6 +335,10 @@ def montar(dados, contador_url):
         troca["__CONTADOR_GET__"] = ""
     # no site o número vem vivo a cada visita; o total gravado é só o caminho que o
     # artifact usa, e lá quem preenche é a tarefa diária
+    # conferencia dos planos de governo no TSE (workflow verificar_propostas.yml)
+    prop_tse = pathlib.Path(__file__).with_name("propostas_tse.json")
+    troca["__PROPTSE__"] = (json.dumps(json.loads(prop_tse.read_text(encoding="utf-8")), ensure_ascii=False)
+                            .replace("</", "<\\/") if prop_tse.exists() else '{"alteracoes":[]}')
     troca["__CONTADOR_TOTAL__"] = "0"
     troca["__CONTADOR_DATA__"] = ""
     for marcador, valor in troca.items():

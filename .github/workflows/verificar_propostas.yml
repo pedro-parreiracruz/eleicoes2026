@@ -1,0 +1,64 @@
+# Confere a cada 3 horas se algum candidato trocou o plano de governo no TSE
+# (DivulgaCandContas). Nao usa o Databricks. Se algo mudou: grava site/propostas_tse.json,
+# abre uma issue no repositorio (o GitHub avisa por e-mail) e republica o painel, que passa
+# a mostrar o aviso e o link para a versao nova ate o resumo ser refeito.
+name: Planos de governo (TSE)
+
+on:
+  schedule:
+    - cron: "37 9-21/3 * * *"   # 06:37 a 18:37 de Brasilia
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: propostas
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verificar:
+    name: Conferir planos no TSE
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install "curl_cffi>=0.7"
+
+      - name: Conferir
+        id: v
+        run: python ingestion/verificar_propostas.py
+
+      - name: Gravar resultado
+        if: steps.v.outputs.mudou == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/propostas_tse.json
+          git commit -m "propostas: conferência no TSE mudou"
+          git pull --rebase -q
+          git push -q
+
+      - name: Abrir issue
+        if: steps.v.outputs.mudou == 'true' && steps.v.outputs.alertas != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Plano de governo mudou no TSE ($(date -u +%d/%m))" --body-file alerta_propostas.md
+
+      - name: Republicar painel
+        if: steps.v.outputs.mudou == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publicar_site.yml
