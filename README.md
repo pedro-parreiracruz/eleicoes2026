@@ -30,9 +30,11 @@ policy", testado em 17/09/2026 para cdn.tse.jus.br, dadosabertos.tse.jus.br e pt
 .github/workflows/
   carga_eleicoes.yml      carga diária, checagem a cada 3 horas e dbt build
   publicar_site.yml       gera docs/index.html a partir dos modelos painel_* e publica
+  verificar_propostas.yml confere a cada 3 horas se algum plano de governo mudou no TSE
 ingestion/
   carga_raw.py            baixa TSE e Wikipédia e grava as tabelas cruas (tudo string)
   verificar_wikipedia.py  impressão digital da tabela da Wikipédia (checagem a cada 3 horas)
+  verificar_propostas.py  compara o PDF de plano de governo lido no painel com o do TSE
 ci/profiles.yml           profile do dbt usado pelo Actions
 seeds/                    de-para de institutos e candidatos; candidatos registrados no TSE
 macros/                   limpeza (tse_texto, br_decimal, sem_notas...) e nome de schema
@@ -121,6 +123,15 @@ A mesma explicação aparece no painel, em "Como as médias são calculadas".
 - "Pesquisa mais recente" (chip do topo) e o início de campo dela saem só das pesquisas que o
   painel mostra (`painel_1t_pesquisas` e `painel_2t_duelos`, conferidas de novo no
   `site/gerar.py`); cenário que não entra em nenhum gráfico não mexe nessa data.
+
+## Planos de governo
+
+O resumo da aba Propostas (constante `PROP` em `site/modelo.html`) é feito por gente, a partir
+do PDF que cada candidatura protocolou no TSE (DivulgaCandContas, arquivo do tipo 5). O workflow
+`verificar_propostas.yml` (06:37 a 18:37, a cada 3 horas, sem Databricks) compara o PDF lido com
+o que o TSE mostra. Se mudou, grava `site/propostas_tse.json`, abre uma issue e republica: o painel
+passa a mostrar o aviso "nova versão no TSE, resumo em revisão" e o link para o PDF novo até o
+resumo ser refeito.
 
 ## Limitações conhecidas
 
