@@ -1853,7 +1853,7 @@ function painelProp() {
     ['2026-09-27', 'Debate Record + Estadão', 'Confirmado.'],
     ['2026-10-01', 'Debate TV Globo, após o Jornal Nacional', 'Confirmado.'],
     ['2026-10-04', '1º turno', ''],
-    ['2026-10-25', '2º turno, se houver', '']
+    ['2026-10-25', '2º turno', 'Flávio Bolsonaro e Lula, os dois mais votados no 1º turno.']
   ].map(([d, t, o]) => ({d: pd(d), t, o}));
   const ordem = c => SLOT[c.n] ?? 99;
   const cands = PROP.cands.slice().sort((a, b) => ordem(a) - ordem(b));
@@ -2193,8 +2193,13 @@ function carimbaFontes() {
     ? `Último dia de campo registrado: ${instRec.length} ${instRec.length > 1 ? 'institutos' : 'instituto'}.` : '';
 
   const hoje = new Date(); hoje.setHours(0,0,0,0);
-  const dias = Math.round((new Date('2026-10-04T00:00:00') - hoje)/864e5);
-  $('prazo').innerHTML = dias > 0 ? `<b>${dias}</b> dias para o 1º turno` : '1º turno em 04/10/2026';
+  // contagem para o próximo turno; depois de 04/10 o chip passa a contar para o 2º turno
+  const faltam = d => Math.round((new Date(d + 'T00:00:00') - hoje)/864e5);
+  const d1 = faltam('2026-10-04'), d2 = faltam('2026-10-25');
+  $('prazo').innerHTML = d1 > 0 ? `<b>${d1}</b> dia${d1 > 1 ? 's' : ''} para o 1º turno`
+    : d1 === 0 ? '<b>1º turno hoje</b>'
+    : d2 > 0 ? `<b>${d2}</b> dia${d2 > 1 ? 's' : ''} para o 2º turno (25/10)`
+    : d2 === 0 ? '<b>2º turno hoje</b>' : '2º turno em 25/10/2026';
 })();
 
 let rt;
