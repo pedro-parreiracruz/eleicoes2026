@@ -721,10 +721,10 @@ const CAPA_LINKS = [
 <script>
 // ================================================================ DADOS: INICIO
 // Bloco substituído pela atualização automática. Origem: workspace.marts (Databricks) via dbt.
-const CARGA_UTC = '2026-10-01T15:27:08Z';
-const CAMPO_MAIS_RECENTE = '2026-09-30';
-const CAMPO_INICIO = '2026-09-26';      // início de campo da pesquisa mais recente
-const CADENCIA_DIAS = 2;        // mediana de dias entre inícios de campo
+const CARGA_UTC = '2026-10-05T12:47:19Z';
+const CAMPO_MAIS_RECENTE = '2026-10-03';
+const CAMPO_INICIO = '2026-10-03';      // início de campo da pesquisa mais recente
+const CADENCIA_DIAS = 1;        // mediana de dias entre inícios de campo
 const RAW_P1T = `2026-08-02;Nexus/BTG Pactual;2002;2.00;BR028742026;95;C;NEXUS PESQUISA E INTELIGENCIA DE DADOS LTDA;2026-07-31
 2026-08-03;Genial/Quaest;2004;2.00;BR065912026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2026-07-31
 2026-08-03;Meio/Ideia;1500;2.50;BR045792026;95;C;BOAS IDEIAS INTELIGENCIA EM PESQUISA E ESTRATEGIA DIGITAL LTDA;2026-07-31
@@ -791,7 +791,15 @@ const RAW_P1T = `2026-08-02;Nexus/BTG Pactual;2002;2.00;BR028742026;95;C;NEXUS P
 2026-09-28;Vox Brasil;2100;2.15;BR008952026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2026-09-26
 2026-09-29;Futura;2000;2.20;BR011222026;95;C;100% CIDADES PARTICIPACOES LTDA;2026-09-25
 2026-09-29;Indexa;2000;2.20;BR006982026;95;C;INSTITUTO INDEXA PESQUISAS LTDA;2026-09-27
-2026-09-30;Real Time Big Data;2000;2.00;BR095032026;95;P;REAL TIME MIDIA LTDA;2026-09-26`;
+2026-09-30;Real Time Big Data;2000;2.00;BR095032026;95;P;REAL TIME MIDIA LTDA;2026-09-26
+2026-10-01;Datafolha;2506;2.00;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2026-09-28
+2026-10-01;Palver;5000;4.00;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;2026-09-30
+2026-10-01;Vox Brasil;2100;2.15;BR001482026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2026-09-29
+2026-10-02;AtlasIntel;5000;1.00;BR009992026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;2026-09-27
+2026-10-02;Gerp;2400;2.04;BR005092026;95;P;GERP MERCADOLOGIA LTDA;2026-09-30
+2026-10-02;PoderData/Aya;4000;1.50;BR035192026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;2026-09-30
+2026-10-03;Datafolha;4006;2.00;BR017082026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2026-10-01
+2026-10-03;Futura;2000;2.20;BR024312026;95;C;100% CIDADES PARTICIPACOES LTDA;2026-09-29`;
 const RAW_V1T = `2026-08-02;Nexus/BTG Pactual;Costa|PCB;0.0;C
 2026-08-02;Nexus/BTG Pactual;Cury (Avante)|Avante;1.0;C
 2026-08-02;Nexus/BTG Pactual;Dias|PSTU;0.0;C
@@ -1526,13 +1534,20 @@ const RAW_V1T = `2026-08-02;Nexus/BTG Pactual;Costa|PCB;0.0;C
 2026-09-24;Datafolha;Romeu Zema|NOVO;1.0;C
 2026-09-24;Datafolha;Ronaldo Caiado|PSD;4.0;C
 2026-09-24;Datafolha;Samara|UP;1.0;C
-2026-09-25;Veritá;Cury (Avante)|Avante;4.25;C
-2026-09-25;Veritá;Flávio Bolsonaro|PL;45.14;C
-2026-09-25;Veritá;Lula|PT;44.65;C
-2026-09-25;Veritá;Renan Santos|MISSÃO;2.39;C
-2026-09-25;Veritá;Romeu Zema|NOVO;0.46;C
-2026-09-25;Veritá;Ronaldo Caiado|PSD;2.16;C
-2026-09-25;Veritá;Samara|UP;0.22;C
+2026-09-25;Veritá;Avalanche|PRTB;0.1;C
+2026-09-25;Veritá;Clariana|DC;0.3;C
+2026-09-25;Veritá;Costa|PCB;0.1;C
+2026-09-25;Veritá;Cury (Avante)|Avante;4.2;C
+2026-09-25;Veritá;Dias|PSTU;0.1;C
+2026-09-25;Veritá;Flávio Bolsonaro|PL;44.3;C
+2026-09-25;Veritá;Grassi|Democrata;0.0;C
+2026-09-25;Veritá;Indecisos e Absentos|?;1.9;N
+2026-09-25;Veritá;Lula|PT;43.8;C
+2026-09-25;Veritá;Pimenta|PCO;0.1;C
+2026-09-25;Veritá;Renan Santos|MISSÃO;2.3;C
+2026-09-25;Veritá;Romeu Zema|NOVO;0.5;C
+2026-09-25;Veritá;Ronaldo Caiado|PSD;2.1;C
+2026-09-25;Veritá;Samara|UP;0.2;C
 2026-09-27;Genial/Quaest;Avalanche|PRTB;0.0;C
 2026-09-27;Genial/Quaest;Clariana|DC;0.0;C
 2026-09-27;Genial/Quaest;Costa|PCB;0.0;C
@@ -1672,7 +1687,115 @@ const RAW_V1T = `2026-08-02;Nexus/BTG Pactual;Costa|PCB;0.0;C
 2026-09-30;Real Time Big Data;Renan Santos|MISSÃO;4.0;C
 2026-09-30;Real Time Big Data;Romeu Zema|NOVO;1.0;C
 2026-09-30;Real Time Big Data;Ronaldo Caiado|PSD;3.0;C
-2026-09-30;Real Time Big Data;Samara|UP;1.0;C`;
+2026-09-30;Real Time Big Data;Samara|UP;1.0;C
+2026-10-01;Datafolha;Clariana|DC;0.0;C
+2026-10-01;Datafolha;Costa|PCB;0.0;C
+2026-10-01;Datafolha;Cury (Avante)|Avante;4.0;C
+2026-10-01;Datafolha;Dias|PSTU;0.0;C
+2026-10-01;Datafolha;Flávio Bolsonaro|PL;38.0;C
+2026-10-01;Datafolha;Grassi|Democrata;1.0;C
+2026-10-01;Datafolha;Indecisos e Absentos|?;7.0;N
+2026-10-01;Datafolha;Lula|PT;42.0;C
+2026-10-01;Datafolha;Outros|?;0.0;N
+2026-10-01;Datafolha;Pimenta|PCO;0.0;C
+2026-10-01;Datafolha;Renan Santos|MISSÃO;3.0;C
+2026-10-01;Datafolha;Romeu Zema|NOVO;1.0;C
+2026-10-01;Datafolha;Ronaldo Caiado|PSD;3.0;C
+2026-10-01;Datafolha;Samara|UP;1.0;C
+2026-10-01;Palver;Clariana|DC;0.0;C
+2026-10-01;Palver;Costa|PCB;0.0;C
+2026-10-01;Palver;Cury (Avante)|Avante;1.0;C
+2026-10-01;Palver;Dias|PSTU;0.0;C
+2026-10-01;Palver;Flávio Bolsonaro|PL;47.0;C
+2026-10-01;Palver;Grassi|Democrata;0.0;C
+2026-10-01;Palver;Indecisos e Absentos|?;0.0;N
+2026-10-01;Palver;Lula|PT;43.0;C
+2026-10-01;Palver;Outros|?;0.0;N
+2026-10-01;Palver;Pimenta|PCO;0.0;C
+2026-10-01;Palver;Renan Santos|MISSÃO;7.0;C
+2026-10-01;Palver;Romeu Zema|NOVO;0.0;C
+2026-10-01;Palver;Ronaldo Caiado|PSD;1.0;C
+2026-10-01;Palver;Samara|UP;0.0;C
+2026-10-01;Vox Brasil;Clariana|DC;0.0;C
+2026-10-01;Vox Brasil;Costa|PCB;0.2;C
+2026-10-01;Vox Brasil;Cury (Avante)|Avante;1.2;C
+2026-10-01;Vox Brasil;Dias|PSTU;0.0;C
+2026-10-01;Vox Brasil;Flávio Bolsonaro|PL;41.2;C
+2026-10-01;Vox Brasil;Grassi|Democrata;0.0;C
+2026-10-01;Vox Brasil;Indecisos e Absentos|?;10.2;N
+2026-10-01;Vox Brasil;Lula|PT;40.4;C
+2026-10-01;Vox Brasil;Outros|?;0.0;N
+2026-10-01;Vox Brasil;Pimenta|PCO;0.0;C
+2026-10-01;Vox Brasil;Renan Santos|MISSÃO;2.2;C
+2026-10-01;Vox Brasil;Romeu Zema|NOVO;1.3;C
+2026-10-01;Vox Brasil;Ronaldo Caiado|PSD;3.3;C
+2026-10-01;Vox Brasil;Samara|UP;0.0;C
+2026-10-02;AtlasIntel;Clariana|DC;0.9;C
+2026-10-02;AtlasIntel;Costa|PCB;0.9;C
+2026-10-02;AtlasIntel;Cury (Avante)|Avante;2.1;C
+2026-10-02;AtlasIntel;Dias|PSTU;0.9;C
+2026-10-02;AtlasIntel;Flávio Bolsonaro|PL;44.1;C
+2026-10-02;AtlasIntel;Grassi|Democrata;0.9;C
+2026-10-02;AtlasIntel;Lula|PT;47.0;C
+2026-10-02;AtlasIntel;Outros|?;0.9;N
+2026-10-02;AtlasIntel;Pimenta|PCO;0.9;C
+2026-10-02;AtlasIntel;Renan Santos|MISSÃO;4.6;C
+2026-10-02;AtlasIntel;Romeu Zema|NOVO;0.9;C
+2026-10-02;AtlasIntel;Ronaldo Caiado|PSD;1.4;C
+2026-10-02;AtlasIntel;Samara|UP;0.9;C
+2026-10-02;Gerp;Clariana|DC;0.0;C
+2026-10-02;Gerp;Costa|PCB;0.0;C
+2026-10-02;Gerp;Cury (Avante)|Avante;4.0;C
+2026-10-02;Gerp;Dias|PSTU;0.0;C
+2026-10-02;Gerp;Flávio Bolsonaro|PL;43.0;C
+2026-10-02;Gerp;Grassi|Democrata;0.0;C
+2026-10-02;Gerp;Indecisos e Absentos|?;7.0;N
+2026-10-02;Gerp;Lula|PT;41.0;C
+2026-10-02;Gerp;Outros|?;0.0;N
+2026-10-02;Gerp;Pimenta|PCO;0.0;C
+2026-10-02;Gerp;Renan Santos|MISSÃO;2.0;C
+2026-10-02;Gerp;Romeu Zema|NOVO;0.0;C
+2026-10-02;Gerp;Ronaldo Caiado|PSD;3.0;C
+2026-10-02;Gerp;Samara|UP;0.0;C
+2026-10-02;PoderData/Aya;Clariana|DC;0.0;C
+2026-10-02;PoderData/Aya;Costa|PCB;0.0;C
+2026-10-02;PoderData/Aya;Cury (Avante)|Avante;3.0;C
+2026-10-02;PoderData/Aya;Dias|PSTU;0.0;C
+2026-10-02;PoderData/Aya;Flávio Bolsonaro|PL;41.0;C
+2026-10-02;PoderData/Aya;Grassi|Democrata;0.0;C
+2026-10-02;PoderData/Aya;Indecisos e Absentos|?;6.0;N
+2026-10-02;PoderData/Aya;Lula|PT;42.0;C
+2026-10-02;PoderData/Aya;Outros|?;0.0;N
+2026-10-02;PoderData/Aya;Pimenta|PCO;1.0;C
+2026-10-02;PoderData/Aya;Renan Santos|MISSÃO;3.0;C
+2026-10-02;PoderData/Aya;Romeu Zema|NOVO;1.0;C
+2026-10-02;PoderData/Aya;Ronaldo Caiado|PSD;2.0;C
+2026-10-02;PoderData/Aya;Samara|UP;0.0;C
+2026-10-03;Datafolha;Clariana|DC;0.0;C
+2026-10-03;Datafolha;Costa|PCB;0.0;C
+2026-10-03;Datafolha;Cury (Avante)|Avante;3.0;C
+2026-10-03;Datafolha;Dias|PSTU;0.0;C
+2026-10-03;Datafolha;Flávio Bolsonaro|PL;40.0;C
+2026-10-03;Datafolha;Grassi|Democrata;0.0;C
+2026-10-03;Datafolha;Indecisos e Absentos|?;7.0;N
+2026-10-03;Datafolha;Lula|PT;42.0;C
+2026-10-03;Datafolha;Pimenta|PCO;0.0;C
+2026-10-03;Datafolha;Renan Santos|MISSÃO;3.0;C
+2026-10-03;Datafolha;Romeu Zema|NOVO;0.5;C
+2026-10-03;Datafolha;Ronaldo Caiado|PSD;4.0;C
+2026-10-03;Datafolha;Samara|UP;0.0;C
+2026-10-03;Futura;Clariana|DC;0.1;C
+2026-10-03;Futura;Costa|PCB;0.2;C
+2026-10-03;Futura;Cury (Avante)|Avante;4.1;C
+2026-10-03;Futura;Dias|PSTU;0.1;C
+2026-10-03;Futura;Flávio Bolsonaro|PL;44.8;C
+2026-10-03;Futura;Grassi|Democrata;0.1;C
+2026-10-03;Futura;Lula|PT;42.6;C
+2026-10-03;Futura;Pimenta|PCO;0.1;C
+2026-10-03;Futura;Renan Santos|MISSÃO;2.8;C
+2026-10-03;Futura;Romeu Zema|NOVO;0.8;C
+2026-10-03;Futura;Ronaldo Caiado|PSD;3.9;C
+2026-10-03;Futura;Samara|UP;0.4;C`;
 const RAW_D2T = `2026-01-11;Genial/Quaest;Lula;43.0;Ratinho Júnior;36.0;2.00;21.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004;2026-01-08
 2026-01-11;Genial/Quaest;Lula;44.0;Ronaldo Caiado;33.0;2.00;23.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004;2026-01-08
 2026-01-11;Genial/Quaest;Lula;44.0;Tarcísio de Freitas;39.0;2.00;17.0;BR008352026;95;C;QUAEST PESQUISAS, CONSULTORIA E PROJETOS LTDA.;2004;2026-01-08
@@ -2379,59 +2502,80 @@ const RAW_D2T = `2026-01-11;Genial/Quaest;Lula;43.0;Ratinho Júnior;36.0;2.00;21
 2026-09-30;Real Time Big Data;Lula;45.0;Cury (Avante);44.0;2.00;11.0;BR095032026;95;P;REAL TIME MIDIA LTDA;2000;2026-09-26
 2026-09-30;Real Time Big Data;Lula;45.0;Renan Santos;38.0;2.00;17.0;BR095032026;95;P;REAL TIME MIDIA LTDA;2000;2026-09-26
 2026-09-30;Real Time Big Data;Lula;45.0;Romeu Zema;40.0;2.00;15.0;BR095032026;95;P;REAL TIME MIDIA LTDA;2000;2026-09-26
-2026-09-30;Real Time Big Data;Lula;45.0;Ronaldo Caiado;43.0;2.00;12.0;BR095032026;95;P;REAL TIME MIDIA LTDA;2000;2026-09-26`;
-const RAW_INST = `VERITA;464;53404458.20;894930;225;400;41;2026-03-12;2026-09-27
-REAL TIME BIG DATA;233;8693000.00;394400;116;187;0;2026-01-29;2026-09-27
+2026-09-30;Real Time Big Data;Lula;45.0;Ronaldo Caiado;43.0;2.00;12.0;BR095032026;95;P;REAL TIME MIDIA LTDA;2000;2026-09-26
+2026-10-01;Datafolha;Lula;47.0;Cury (Avante);42.0;2.00;11.0;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2506;2026-09-28
+2026-10-01;Datafolha;Lula;48.0;Flávio Bolsonaro;45.0;2.00;7.0;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002;2026-09-28
+2026-10-01;Datafolha;Lula;48.0;Renan Santos;39.0;2.00;13.0;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2506;2026-09-28
+2026-10-01;Datafolha;Lula;48.0;Ronaldo Caiado;42.0;2.00;10.0;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2506;2026-09-28
+2026-10-01;Datafolha;Lula;49.0;Romeu Zema;40.0;2.00;11.0;BR080392026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2506;2026-09-28
+2026-10-01;Palver;Flávio Bolsonaro;49.0;Lula;44.0;4.00;7.0;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000;2026-09-30
+2026-10-01;Palver;Lula;43.0;Ronaldo Caiado;42.0;4.00;14.0;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000;2026-09-30
+2026-10-01;Palver;Lula;44.0;Cury (Avante);36.0;4.00;21.0;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000;2026-09-30
+2026-10-01;Palver;Lula;44.0;Renan Santos;33.0;4.00;23.0;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000;2026-09-30
+2026-10-01;Palver;Lula;44.0;Romeu Zema;42.0;4.00;13.0;BR001982026;95;P;PALVER CONSULTORIA E DESENVOLVIMENTO TECNOLOGICO LTDA.;5000;2026-09-30
+2026-10-01;Vox Brasil;Flávio Bolsonaro;48.2;Lula;45.2;2.15;6.6;BR001482026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100;2026-09-29
+2026-10-01;Vox Brasil;Lula;46.3;Ronaldo Caiado;42.1;2.15;11.6;BR001482026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100;2026-09-29
+2026-10-01;Vox Brasil;Lula;46.8;Cury (Avante);33.1;2.15;20.1;BR001482026;95;P;INSTITUTO VOX BRASIL OPINIAO E PESQUISAS LTDA;2100;2026-09-29
+2026-10-02;AtlasIntel;Lula;50.1;Flávio Bolsonaro;49.9;1.00;;BR009992026;95;P;ATLASINTEL TECNOLOGIA DE DADOS LTDA;5000;2026-09-27
+2026-10-02;CNT/MDA;Lula;47.3;Flávio Bolsonaro;43.1;2.20;9.8;BR047562026;95;C;MDA-PESQUISA DE OPINIAO PUBLICA E CONSULT. ESTATIST. LTDA - EPP;2007;2026-09-30
+2026-10-02;Gerp;Flávio Bolsonaro;49.0;Lula;44.0;2.04;7.0;BR005092026;95;P;GERP MERCADOLOGIA LTDA;2400;2026-09-30
+2026-10-02;PoderData/Aya;Lula;46.0;Flávio Bolsonaro;46.0;1.50;8.0;BR035192026;95;P;PODERDATA PESQUISA, JORNALISMO E COMUNICACAO LTDA;4000;2026-09-30
+2026-10-02;Veritá;Flávio Bolsonaro;47.0;Lula;45.0;1.00;;BR045222026;95;P;INSTITUTO VERITA LTDA;40500;2026-09-26
+2026-10-03;Datafolha;Lula;46.0;Flávio Bolsonaro;44.0;2.00;10.0;BR017082026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;2002;2026-10-01
+2026-10-03;Datafolha;Lula;47.0;Flávio Bolsonaro;46.0;2.00;7.0;BR017082026;95;C;DATAFOLHA INSTITUTO DE PESQUISAS LTDA.;4006;2026-10-03
+2026-10-03;Futura;Flávio Bolsonaro;48.0;Lula;45.1;2.20;6.9;BR024312026;95;C;100% CIDADES PARTICIPACOES LTDA;2000;2026-09-29`;
+const RAW_INST = `VERITA;463;53207448.20;893710;225;398;41;2026-03-12;2026-09-27
+REAL TIME BIG DATA;230;8633000.00;389600;114;187;0;2026-01-29;2026-09-27
 Quaest Pesquisas, Consultoria E Projetos Ltda.;214;39930280.04;267288;101;0;0;2026-01-08;2026-09-27
-ATLASINTEL;179;12985000.00;310600;97;139;0;2026-01-15;2026-09-27
-Instituto Parana De Pesquisas E Analise De Consumidor Ltda;110;7346480.00;159514;28;42;0;2026-01-16;2026-09-27
-Datafolha Instituto De Pesquisas Ltda.;93;16363942.94;132349;53;0;0;2026-01-30;2026-09-27
+ATLASINTEL;180;13060000.00;315600;98;140;0;2026-01-15;2026-10-03
+Instituto Parana De Pesquisas E Analise De Consumidor Ltda;109;7301480.00;158210;28;42;0;2026-01-16;2026-09-27
+Datafolha Instituto De Pesquisas Ltda.;104;18213685.38;147133;59;0;0;2026-01-30;2026-10-02
+IGAPE- INSTITUTO GAZETA DE PEQUISAS;86;699500.00;117100;11;0;3;2026-02-04;2026-10-03
 IPSENSUS PESQUISAS;84;528812.00;43764;4;2;0;2026-05-05;2026-09-27
-IGAPE- INSTITUTO GAZETA DE PEQUISAS;83;681500.00;113500;11;0;3;2026-02-04;2026-09-26
-DATATRENDS;64;1188000.00;80000;36;62;0;2026-02-20;2026-09-27
 100 CIDADES;57;5946400.00;76000;38;0;0;2026-01-16;2026-09-27
 DIRECT PESQUISAS;57;488000.00;47150;0;13;0;2026-01-13;2026-09-28
 INSTITUTO SETA DE PESQUISA;55;661500.00;64650;23;46;0;2026-01-27;2026-09-26
-Instituto Vox Brasil Opiniao E Pesquisas Ltda;45;1520000.00;70000;18;41;0;2026-04-20;2026-09-27
+DATATRENDS;54;1038000.00;68000;28;52;0;2026-02-20;2026-09-27
+Instituto Vox Brasil Opiniao E Pesquisas Ltda;45;1560000.00;71100;19;41;0;2026-04-20;2026-10-03
 INSTITUTO FRANCA DE PESQUISA PESQUISA E ASSESSORIA;44;1112043.94;59766;19;39;0;2026-02-06;2026-09-27
 DOXA;41;1620000.00;71728;14;28;0;2026-01-27;2026-09-27
 NEOKEMP PESQUISAS;38;1080000.00;40320;19;0;0;2026-03-17;2026-09-27
 AMOSTRAGEM OPINIAO E MERCADO;37;1212000.00;27544;18;0;0;2026-03-23;2026-09-21
 INSTITUTO CREDIBILIDADE;35;200500.00;14065;0;0;1;2026-01-15;2026-09-27
 RANKING BRASIL INTELIGENCIA;34;640000.00;62000;16;0;0;2026-02-02;2026-09-27
+BADRA COMUNICACAO;33;534000.00;58162;15;33;2;2026-01-31;2026-10-01
 IPPI - PESQUISAS E CONSULTORIAS;33;769000.00;26404;0;3;0;2026-05-08;2026-09-27
-BADRA COMUNICACAO;32;516000.00;56662;15;32;2;2026-01-31;2026-09-26
-INSTITUTO DE PESQUISA PODIUM;28;174853.90;16482;0;28;0;2026-02-04;2026-09-27
+INSTITUTO DE PESQUISA PODIUM;29;194853.90;18482;0;29;0;2026-02-04;2026-09-27
 EXATA.GO;26;424500.00;61512;0;15;0;2026-02-06;2026-09-27
 GRUPO GERP GERP MERCADO GERP OPINIAO GERPAUDIT;26;449899.00;46800;15;22;5;2026-01-29;2026-09-26
 INSTITUTO PHOENIX & ASSOCIADOS;24;230300.00;26354;8;0;3;2026-01-14;2026-09-27
-INSTITUTO RANKING PESQUISA;23;360000.00;30095;0;7;1;2026-01-15;2026-09-27
+INSTITUTO RANKING PESQUISA;24;375000.00;31295;0;7;1;2026-01-15;2026-09-27
 BOAS IDEIAS, ESTRATEGIA E INTELIGENCIA DIGITAL.;22;839903.84;30600;16;0;0;2026-01-07;2026-09-27
 DATA MAX;22;522000.00;15901;1;0;1;2026-01-22;2026-09-26
 DELTA AGENCIA DE PESQUISA;22;612000.00;21662;11;0;0;2026-03-16;2026-09-27
 ECM-PESQUISAS;22;402000.00;29000;10;15;2;2026-03-13;2026-09-23
 PERCENT PESQUISA DE MERCADO E OPINIAO;22;575750.00;25400;10;11;2;2026-02-15;2026-09-24
-INDICE INTELIGENCIA;21;357000.00;32086;0;8;1;2026-03-23;2026-09-27
 ITEM PESQUISAS TECNICAS;20;255000.00;22300;10;2;1;2026-05-23;2026-09-26
 Instituto De Pesquisas Perfil Ltda;20;608000.00;27008;10;6;0;2026-04-11;2026-09-26
 NEXUS;20;2998222.24;36800;18;0;0;2026-03-24;2026-09-22
 VETOR TECNOLOGIA E PESQUISAS;20;657000.00;29396;8;0;0;2026-04-08;2026-09-28
+INDICE INTELIGENCIA;19;327000.00;29686;0;7;1;2026-03-23;2026-09-27
 CENSUS;18;115500.00;5906;0;0;0;2026-02-26;2026-07-25
 INSTITUTO DE PESQUISA MULTIPLA;17;285000.00;13360;5;11;0;2026-02-06;2026-09-26
-EXATUS CONSULTORIA E PESQUISA;16;480000.00;24036;8;0;0;2026-04-22;2026-09-25
 MEDIA - INTELIGENCIA EM PESQUISA;16;253000.00;22920;5;1;1;2026-03-23;2026-09-26
+TDL PESQUISA;16;625000.00;20800;0;2;0;2026-01-22;2026-09-27
 Vetor Arrow Instituto De Pesquisa E Opiniao Ltda;16;2102160.00;181958;3;15;12;2026-02-27;2026-06-30
 DATA CONTROL INSTITUTO DE PESQUISA;15;425000.00;18769;7;6;2;2026-02-02;2026-09-24
+EXATUS CONSULTORIA E PESQUISA;15;450000.00;22536;8;0;0;2026-04-22;2026-09-25
 F5 ATUALIZA DADOS;15;141500.00;12946;5;0;1;2026-02-26;2026-09-23
-TDL PESQUISA;15;595000.00;18800;0;2;0;2026-01-22;2026-09-27
 METADATA;14;620000.00;20488;7;10;0;2026-03-26;2026-09-26
 NOVO IBRAPE;14;358000.00;14000;7;0;0;2026-03-24;2026-09-27
-AMERICAN ANALYTICS;13;395000.00;16100;6;0;0;2026-06-10;2026-09-26
+PODERDATA;14;1396210.00;35800;13;12;0;2026-05-23;2026-10-02
 DATA CAPITAL PESQUISAS E CONSULTORIA;13;213000.00;24050;5;0;0;2026-06-25;2026-09-25
 Instituto Data Census Potiguar Ltda;13;120000.00;23000;6;0;0;2026-04-16;2026-09-21
-PODERDATA;13;1292495.00;32800;12;11;0;2026-05-23;2026-09-27
 QUALITTA EMPREENDIMENTOS;13;238000.00;14100;4;11;0;2026-03-21;2026-09-27
 AFFARE INSTITUTE;12;234000.00;16107;6;0;0;2026-01-16;2026-09-25
+AMERICAN ANALYTICS;12;365000.00;15100;6;0;0;2026-06-10;2026-09-26
 ANOVA INSTITUTO DE PESQUISA;12;222000.00;24000;6;0;0;2026-01-22;2026-09-26
 BRASMARKET;12;420000.00;14400;5;0;0;2026-04-16;2026-09-15
 PERFIL PESQUISAS TECNICAS;12;164000.00;18200;6;0;0;2026-07-23;2026-09-25
@@ -2443,12 +2587,12 @@ INSTITUTO DE PESQUISA RESULTADO IPR;11;137500.00;8622;5;0;0;2026-03-05;2026-09-2
 OPINAR PESQUISAS;11;725525.00;15000;0;0;0;2026-04-29;2026-09-26
 PERFIL PESQUISAS;11;470000.00;15356;5;8;0;2026-04-22;2026-09-09
 POSITIVA PESQUISAS;11;197000.00;11800;0;0;0;2026-03-13;2026-09-26
+ALFA INTELIGENCIA;10;961600.00;15000;4;2;0;2026-03-06;2026-09-27
 Data Tempo Limitada;10;795520.00;12000;5;0;0;2026-03-13;2026-09-23
 Exata Op - Pesquisa De Opiniao Publica Ltda;10;258400.00;34000;0;10;4;2026-02-18;2026-09-26
 INOP PREVISAO PESQUISAS SERVICOS E PUBLICIDADES;10;437000.00;25909;0;0;1;2026-01-20;2026-09-26
 PARLA MENTORS CONSULTORIA;10;152000.00;10600;5;2;0;2026-04-16;2026-08-27
 VERITATE;10;600000.00;14200;5;0;0;2026-05-01;2026-09-27
-ALFA INTELIGENCIA;9;911600.00;13800;4;2;0;2026-03-06;2026-09-27
 CONSULT PESQUISA;9;330000.00;15300;5;0;0;2026-03-13;2026-09-25
 CTAS TECNOLOGIA;9;189000.00;11016;0;2;0;2026-03-23;2026-09-25
 E P P;9;105000.00;7955;4;0;0;2026-01-21;2026-09-26
@@ -2481,7 +2625,7 @@ SECTRAL NEGOCIOS;7;74000.00;7300;3;1;0;2026-08-25;2026-09-24
 ACADEMIA DE PESQUISA;6;71000.00;6200;3;0;0;2026-07-22;2026-09-27
 AGILI PESQUISAS;6;194500.00;6500;2;0;1;2026-06-18;2026-09-27
 BRASIL DADOS;6;65800.00;6235;0;6;0;2026-04-07;2026-09-27
-ECONOMETRICA PESQUISA;6;248000.00;10725;2;0;0;2026-01-14;2026-09-26
+ECONOMETRICA PESQUISA;6;248000.00;10725;2;0;1;2026-01-14;2026-10-01
 F5 PESQUISAS E CONSULTORIA;6;65000.00;6101;0;6;0;2026-02-09;2026-09-27
 GOIAS PESQUISAS;6;210500.00;6671;0;0;0;2026-05-27;2026-09-21
 INSTITUTO ESTIMATIVA;6;19033.74;2124;3;0;0;2026-05-18;2026-09-24
@@ -2512,7 +2656,6 @@ SIMETRIA;5;128000.00;5400;0;1;0;2026-04-08;2026-09-26
 TS2 SOLUCOES;5;219816.00;9000;2;1;0;2026-07-21;2026-09-27
 Voz E Pesquisa Tocantins Ltda;5;95000.00;6250;0;5;0;2026-07-12;2026-09-24
 AGORASEI PESQUISA;4;98900.00;6000;2;2;0;2026-05-26;2026-08-05
-AVANCY;4;29000.00;4350;0;4;0;2026-05-14;2026-09-28
 C.D.L.;4;40000.00;78000;2;4;2;2026-08-22;2026-09-18
 CLENIX COMUNICACAO;4;60000.00;4256;2;4;2;2026-09-18;2026-09-27
 DATA PLUS PESQUISA E CONSULTORIA;4;48000.00;3800;2;0;0;2026-08-24;2026-09-28
@@ -2526,7 +2669,6 @@ IPC - INSTITUTO DE PESQUISA;4;220000.00;4200;2;0;0;2026-07-08;2026-09-16
 IPEN - INSTITUTO DE PESQUISA DO NORTE;4;256000.00;4800;2;0;0;2026-05-20;2026-09-22
 Instituto Travessia Diagnostico Ltda;4;128000.00;3200;2;0;0;2026-08-04;2026-09-01
 Ipp - Instituto Pitagoras De Pesquisas Ltda;4;80000.00;4800;2;0;0;2026-09-15;2026-09-23
-NEXUS CONSULTORIA E PESQUISAS;4;28000.00;800;0;0;0;2026-07-10;2026-09-26
 PIAUI VOX;4;41000.00;2000;2;0;0;2026-08-30;2026-09-24
 PIMENTEL & CARPENTIERI CONSULTORIA DE MARKETING LTDA;4;54000.00;3600;2;4;0;2026-07-25;2026-09-26
 PORTAL E INSTITUTO STYLO;4;84000.00;4800;0;4;0;2026-08-18;2026-09-25
@@ -2547,12 +2689,14 @@ INSTITUTO PANORAMA;3;207500.00;4600;0;0;1;2026-06-16;2026-09-26
 INSTITUTO PODIUM;3;18000.00;1550;1;0;0;2026-02-24;2026-09-07
 Instituto Methodus Analise De Mercado Sociedade Simples Limitada;3;130000.00;2810;0;3;0;2026-02-20;2026-09-26
 JORNAL LIDER;3;9600.00;1532;0;3;0;2026-05-21;2026-09-26
+NEXUS CONSULTORIA E PESQUISAS;3;21000.00;600;0;0;0;2026-07-10;2026-09-23
 NEXXUS MAIS;3;28300.00;5107;0;0;0;2026-09-24;2026-09-25
 OLHAR PUBLICO PESQUISAS DE OPINIAO;3;76000.00;2840;0;0;0;2026-09-16;2026-09-21
 PUBLIVENDE ASSSSSORIA E COMUNICACAO;3;69000.00;6245;0;0;0;2026-02-18;2026-09-26
 RUMO PESQUISAS;3;150000.00;6300;1;0;0;2026-09-15;2026-09-22
 STATS - PESQUISA E GESTAO;3;30500.00;1800;1;0;0;2026-08-03;2026-09-23
 A. R. PUBLICIDADE E PESQUISA;2;24000.00;2400;1;2;0;2026-09-21;2026-09-21
+AVANCY;2;5500.00;800;0;2;0;2026-05-14;2026-09-27
 CASA BRASIL;2;2500.00;500;1;0;0;2026-09-16;2026-09-16
 CEPPHOR;2;40000.00;800;1;2;0;2026-04-02;2026-04-02
 CERRADO PESQUISAS E CONSULTORIA;2;6000.00;1412;1;2;0;2026-09-25;2026-09-25
@@ -3242,14 +3386,14 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;ACTION MARKETING E PESQUISAS;1;249034.30
 2026-09;AFFARE INSTITUTE;4;60000.00
 2026-09;AGILI PESQUISAS;4;125000.00
-2026-09;ALFA INTELIGENCIA;4;430800.00
-2026-09;AMERICAN ANALYTICS;8;245000.00
+2026-09;ALFA INTELIGENCIA;5;480800.00
+2026-09;AMERICAN ANALYTICS;7;215000.00
 2026-09;AMOSTRAGEM OPINIAO E MERCADO;2;140000.00
 2026-09;AMPLA VOX;1;50000.00
 2026-09;ANOVA INSTITUTO DE PESQUISA;6;120000.00
 2026-09;ASN PESQUISAS PUBLICAS;5;92000.00
 2026-09;ATLASINTEL;106;7610000.00
-2026-09;AVANCY;3;27000.00
+2026-09;AVANCY;1;3500.00
 2026-09;Ap Exata Inteligencia Em Tecnologia E Dados Ltda;1;56000.00
 2026-09;BADRA COMUNICACAO;14;252000.00
 2026-09;BOAS IDEIAS, ESTRATEGIA E INTELIGENCIA DIGITAL.;6;245840.00
@@ -3276,7 +3420,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;DATA POP PESQUISA;2;22500.00
 2026-09;DATA POPULI;1;20000.00
 2026-09;DATA RD;3;32540.00
-2026-09;DATATRENDS;36;628000.00
+2026-09;DATATRENDS;26;478000.00
 2026-09;DATAVERO INSTITUTO DE PESQUISAS;4;80000.00
 2026-09;DELTA AGENCIA DE PESQUISA;6;180000.00
 2026-09;DIAGNOSTICO PESQUISAS DE COMPORTAMENTO;1;10000.00
@@ -3289,12 +3433,11 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;Datapress Instituto De Pesquisa, Comunicacao E Publicidade Ltda;2;40939.40
 2026-09;E P P;8;90000.00
 2026-09;ECM-PESQUISAS;3;70000.00
-2026-09;ECONOMETRICA PESQUISA;1;48000.00
 2026-09;ECONOMIC PESQUISAS;2;13500.00
 2026-09;EFICAZ PESQUISAS & TECNOLOGIA;2;60000.00
 2026-09;EPO - ESTRATEGIA PESQUISAS DE OPINIAO;3;90000.00
 2026-09;EXATA.GO;14;206000.00
-2026-09;EXATUS CONSULTORIA E PESQUISA;8;240000.00
+2026-09;EXATUS CONSULTORIA E PESQUISA;7;210000.00
 2026-09;Enfoque Assessoria De Comunicacao Integrada Ltda - Me;2;17000.00
 2026-09;Exata Op - Pesquisa De Opiniao Publica Ltda;3;90000.00
 2026-09;F5 ATUALIZA DADOS;12;123000.00
@@ -3306,7 +3449,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;IGAPE- INSTITUTO GAZETA DE PEQUISAS;43;382000.00
 2026-09;IHPEC;2;70000.00
 2026-09;INDEXA PESQUISAS;2;328000.00
-2026-09;INDICE INTELIGENCIA;11;185000.00
+2026-09;INDICE INTELIGENCIA;9;155000.00
 2026-09;INDITEPP;2;36000.00
 2026-09;INOP PREVISAO PESQUISAS SERVICOS E PUBLICIDADES;1;48000.00
 2026-09;INPAC;3;56400.00
@@ -3320,7 +3463,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;INSTITUTO DE PESQUISA DATA AZ;2;30000.00
 2026-09;INSTITUTO DE PESQUISA GOYAZES;1;16000.00
 2026-09;INSTITUTO DE PESQUISA MULTIPLA;4;75000.00
-2026-09;INSTITUTO DE PESQUISA PODIUM;1;20000.00
+2026-09;INSTITUTO DE PESQUISA PODIUM;2;40000.00
 2026-09;INSTITUTO DE PESQUISA RESULTADO IPR;3;37500.00
 2026-09;INSTITUTO DE PESQUISA SOBERANO;2;29000.00
 2026-09;INSTITUTO DE PESQUISAS E TECNOLOGIA GLOBAL;3;53000.00
@@ -3335,7 +3478,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;INSTITUTO PHOENIX & ASSOCIADOS;7;74400.00
 2026-09;INSTITUTO PODIUM;2;12000.00
 2026-09;INSTITUTO PONTUAR;1;4000.00
-2026-09;INSTITUTO RANKING PESQUISA;9;140000.00
+2026-09;INSTITUTO RANKING PESQUISA;10;155000.00
 2026-09;INSTITUTO REVISTA TOTAL BRASIL;3;107500.00
 2026-09;INSTITUTO SETA DE PESQUISA;13;159000.00
 2026-09;INSTITUTO SONDA;1;15000.00
@@ -3353,10 +3496,10 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;Instituto Data Census Potiguar Ltda;2;20000.00
 2026-09;Instituto De Pesquisas Perfil Ltda;6;192000.00
 2026-09;Instituto Methodus Analise De Mercado Sociedade Simples Limitada;1;45000.00
-2026-09;Instituto Parana De Pesquisas E Analise De Consumidor Ltda;31;2166080.00
+2026-09;Instituto Parana De Pesquisas E Analise De Consumidor Ltda;30;2121080.00
 2026-09;Instituto Travessia Diagnostico Ltda;2;64000.00
 2026-09;Instituto Ver Pesquisa E Comunicacao Ltda;2;45000.00
-2026-09;Instituto Vox Brasil Opiniao E Pesquisas Ltda;14;325000.00
+2026-09;Instituto Vox Brasil Opiniao E Pesquisas Ltda;13;315000.00
 2026-09;Ipat - Instituto De Pesquisas A Tribuna Ltda;1;21419.55
 2026-09;Ipems Instituto De Pesquisas De Mato Grosso Do Sul Ltda;6;240000.00
 2026-09;Ipespe Inst De Pesquisas Sociais Politicas E Economicas;2;120000.00
@@ -3376,7 +3519,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;MULTIDADOS PESQUISA PROFISSIONAL AVANCADA;1;10000.00
 2026-09;Mda-pesquisa De Opiniao Publica E Consult. Estatist. Ltda - Epp;2;444906.00
 2026-09;NEOKEMP PESQUISAS;20;550000.00
-2026-09;NEXUS CONSULTORIA E PESQUISAS;3;21000.00
+2026-09;NEXUS CONSULTORIA E PESQUISAS;2;14000.00
 2026-09;NEXUS;4;659555.56
 2026-09;NEXXUS MAIS;3;28300.00
 2026-09;NOVO IBRAPE;6;174000.00
@@ -3408,7 +3551,7 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;Quaest Pesquisas, Consultoria E Projetos Ltda.;103;18814488.00
 2026-09;RADAR ESTATISTICA;2;152000.00
 2026-09;RANKING BRASIL INTELIGENCIA;12;240000.00
-2026-09;REAL TIME BIG DATA;99;2251000.00
+2026-09;REAL TIME BIG DATA;96;2191000.00
 2026-09;RUMO PESQUISAS;3;150000.00
 2026-09;Resultado Pesquisa E Assessoria Ltda - Me;8;138000.00
 2026-09;SCANY PESQUISA;2;20000.00
@@ -3421,10 +3564,10 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;STATS - PESQUISA E GESTAO;2;22000.00
 2026-09;STUDIO PESQUISAS;4;200000.00
 2026-09;TABLOIDE MATO GROSSO;1;30000.00
-2026-09;TDL PESQUISA;7;258000.00
+2026-09;TDL PESQUISA;8;288000.00
 2026-09;TS2 SOLUCOES;3;127408.00
 2026-09;TWS POLITICA;7;71000.00
-2026-09;VERITA;218;22029843.20
+2026-09;VERITA;217;21832833.20
 2026-09;VERITATE;4;240000.00
 2026-09;VETOR TECNOLOGIA E PESQUISAS;8;199000.00
 2026-09;VOX BRASIL PUBLICIDADE MARKETING;4;30500.00
@@ -3432,7 +3575,14 @@ const RAW_INSTMES = `2026-01;100 CIDADES;5;480000.00
 2026-09;Viavox Consultoria Administrativa E Pesquisas De Opiniao Ltda;2;14000.00
 2026-09;Voz E Pesquisa Tocantins Ltda;2;38000.00
 2026-09;W1 WEBTV;4;80000.00
-2026-09;YES!;1;9000.00`;
+2026-09;YES!;1;9000.00
+2026-10;ATLASINTEL;1;75000.00
+2026-10;BADRA COMUNICACAO;1;18000.00
+2026-10;Datafolha Instituto De Pesquisas Ltda.;11;1849742.44
+2026-10;ECONOMETRICA PESQUISA;1;48000.00
+2026-10;IGAPE- INSTITUTO GAZETA DE PEQUISAS;3;18000.00
+2026-10;Instituto Vox Brasil Opiniao E Pesquisas Ltda;1;50000.00
+2026-10;PODERDATA;1;103715.00`;
 // ================================================================ DADOS: FIM
 
 // Fotos de registro de candidatura (DivulgaCand/TSE), recortadas em 88px e embutidas
@@ -3480,7 +3630,10 @@ const FOTO = {"Renan Santos":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD
 // nada de avaliação de qualidade ou de acerto, só o que a empresa é e como coleta.
 // "k" são trechos de nome usados para casar tanto a grafia da Wikipédia quanto a
 // razão social que aparece no registro do TSE.
-const PROP = {"temas":["Economia/Impostos","Trabalho/Renda","Saúde","Educação","Segurança pública","Infraestrutura/Energia","Meio ambiente","Gestão pública","Justiça/Instituições","Previdência/Direitos"],"cands":[{"n":"Lula","pt":"PT","pg":47,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017016005","tse":true,"obs":"“Programa de Governo — Diretrizes para o Programa de Transformação do Brasil”. A capa não traz o nome; a identificação vem do corpo do texto e do registro no TSE.","i":[{"t":"Economia/Impostos","x":"Consolidar a reforma tributária, substituindo PIS, Cofins, IPI, ICMS e ISS por dois tributos, a CBS e o IBS."},{"t":"Saúde","x":"Ampliar o programa Agora Tem Especialistas para reduzir filas de consultas, exames e cirurgias no SUS."},{"t":"Educação","x":"Expandir o Compromisso Nacional Criança Alfabetizada, a rede de institutos federais e as matrículas em tempo integral."},{"t":"Segurança pública","x":"Aplicar a Lei Antifacção e o programa Brasil Contra o Crime Organizado, com R$ 10 bilhões a estados e municípios."},{"t":"Infraestrutura/Energia","x":"Dar continuidade ao Novo PAC, com investimento em metrôs, trens, VLTs e corredores de BRT."},{"t":"Meio ambiente","x":"Manter a redução do desmatamento, ampliar o Plano de Transformação Ecológica e homologar novas terras indígenas."},{"t":"Trabalho/Renda","x":"Manter o Bolsa Família com benefícios especiais para crianças e adolescentes e políticas de elevação da renda real do trabalho."},{"t":"Gestão pública","x":"Ampliar a plataforma Brasil Participativo e executar o Plano de Integridade e Combate à Corrupção 2025-2027."}]},{"n":"Flávio Bolsonaro","pt":"PL","pg":74,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017104726","tse":true,"obs":"“Diretrizes de Governo 2027-2030”. O nome do candidato não aparece no texto do PDF: o vínculo vem do registro no TSE e do nome do arquivo.","i":[{"t":"Economia/Impostos","x":"Revisar e redimensionar a reforma tributária em curso, reduzindo a carga sobre produção e consumo e a alíquota do IVA."},{"t":"Saúde","x":"Criar prontuário eletrônico único vinculado ao CPF e integrado ao Gov.br, com histórico de consultas, exames e vacinas."},{"t":"Educação","x":"Priorizar o método fônico na alfabetização e oferecer voucher educacional onde faltar vaga na rede pública."},{"t":"Segurança pública","x":"Declarar PCC, CV e milícias organizações narcoterroristas e erguer 5 presídios de segurança máxima no complexo TREVA."},{"t":"Infraestrutura/Energia","x":"Criar Corredores Logísticos Inteligentes para reduzir custo de transporte e reduzir gradualmente a CDE na conta de luz."},{"t":"Meio ambiente","x":"Apoiar a produção nacional de fertilizantes com potássio e fosfato e regular mercado de carbono e serviços ambientais."},{"t":"Trabalho/Renda","x":"Reduzir o custo do trabalho e criar programa de primeiro emprego integrado a um banco nacional de vagas."},{"t":"Gestão pública","x":"Digitalizar 100% dos serviços públicos federais passíveis de digitalização e profissionalizar a gestão do INSS."}]},{"n":"Cury (Avante)","pt":"AVANTE","pg":186,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017125643","tse":true,"obs":"“O Brasil dos Nossos Sonhos”. Há duas versões protocoladas; esta é a mais recente.","i":[{"t":"Economia/Impostos","x":"Buscar déficit público próximo de zero durante o mandato, com simplificação tributária e redução gradual da dívida."},{"t":"Saúde","x":"Implantar telemedicina nacional com meta de 80% das consultas básicas e criar Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Dar prioridade à educação básica, expandir o ensino técnico e implantar a gestão da emoção nas escolas."},{"t":"Segurança pública","x":"Recriar o Ministério da Segurança Pública e criar o programa FATO, Força de Alerta Total, integrando as polícias."},{"t":"Infraestrutura/Energia","x":"Criar cinco Corredores Estratégicos de Exportação com portos, ferrovias e armazenagem, e o plano PENER-BR de renováveis."},{"t":"Meio ambiente","x":"Implantar os programas Floresta Viva-BR e Brasil Oásis no semiárido e fixar prazos legais máximos no licenciamento."},{"t":"Trabalho/Renda","x":"Criar 10 mil Escolas de Empreendedorismo, com meta de 10 milhões de novos empreendedores, e um Banco do Empreendedor."},{"t":"Gestão pública","x":"Reforma administrativa com redução de ministérios, metas anuais públicas e uso de IA contra desperdício e fraude."}]},{"n":"Renan Santos","pt":"MISSÃO","pg":50,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017002789","tse":true,"obs":"“Livro Amarelo — Missão 2026”, resumo do programa do partido.","i":[{"t":"Economia/Impostos","x":"Aprovar a PEC do Equilíbrio Fiscal, com desindexação de benefícios e economia projetada de R$ 1,1 trilhão até 2031."},{"t":"Saúde","x":"Criar o prontuário eletrônico nacional PRONTO e o sistema ENER, trocando fila cronológica por prioridade de risco."},{"t":"Educação","x":"Adotar o sistema fônico de alfabetização e substituir cotas por bolsas de mérito, realocando recursos para STEM."},{"t":"Segurança pública","x":"Declarar Guerra ao Crime, aprovar Lei Antifacção com inversão do ônus da prova no confisco e criar superpresídios."},{"t":"Infraestrutura/Energia","x":"Programa Missão Rondon: elevar investimento em infraestrutura de 2% para ao menos 4% do PIB e malha férrea de 40 mil km."},{"t":"Meio ambiente","x":"Aplicar a Lei Geral do Licenciamento Ambiental com Licença Ambiental Especial e padrões de mineração de baixo carbono."},{"t":"Trabalho/Renda","x":"Substituir o Bolsa Família pelas Frentes Cidadãs, com contrapartida de trabalho, e flexibilizar relações trabalhistas."},{"t":"Gestão pública","x":"Criar o Comissariado Federal de Gestão Pública e a Grande Consolidação Municipal, de 5.570 para cerca de 1.656 municípios."}]},{"n":"Ronaldo Caiado","pt":"PSD","pg":100,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017106566","tse":true,"obs":"“Plano de Governo Ronaldo Caiado Presidente 2027-2030”, com 26 áreas de política pública.","i":[{"t":"Economia/Impostos","x":"Rever subsídios, subvenções e benefícios tributários com prazo e avaliação independente, desacelerando as despesas obrigatórias."},{"t":"Saúde","x":"Reorganizar o SUS com fila transparente, prontuário interoperável e remuneração por qualidade e resultado."},{"t":"Educação","x":"Alfabetizar toda criança na idade certa, com acompanhamento individual da aprendizagem e conexão entre ensino técnico e trabalho."},{"t":"Segurança pública","x":"Criar Ministério da Segurança Pública com comando integrado e institucionalizar a Lei do Terrorismo Doméstico para facções."},{"t":"Infraestrutura/Energia","x":"Priorizar Ferrogrão, Ferrovia Norte-Sul e hidrovias do Centro-Oeste, com plano decenal de bioenergia."},{"t":"Meio ambiente","x":"Combater desmatamento, grilagem e mineração ilegal, remunerar quem conserva e estruturar mercado de carbono."},{"t":"Trabalho/Renda","x":"Combinar benefícios sociais com qualificação, cuidado infantil e inclusão produtiva, e simplificar a formalização de pequenas empresas."},{"t":"Gestão pública","x":"Abolir a reeleição consecutiva no Executivo e adotar metas públicas com painel de indicadores para cada programa."}]},{"n":"Pablo Marçal","pt":"PRTB","pg":28,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017134368","tse":true,"obs":"Protocolado em 18/08/2026, estruturado em 7 missões e mais de 230 itens.","i":[{"t":"Economia/Impostos","x":"Reduzir progressivamente a carga tributária sobre produção, investimento e emprego, e criar um Ministério da Empresarização."},{"t":"Economia/Impostos","x":"Abertura automática de empresa pelo CPF em até 24 horas e renegociação de dívidas para pessoas com nome negativado."},{"t":"Saúde","x":"Reduzir filas com telemedicina nacional integrada ao SUS, IA aplicada ao SUS e Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Garantir a alfabetização plena até o 2º ano, criar a Universidade Federal Digital e bolsas para exatas e TIC."},{"t":"Segurança pública","x":"Plano Nacional de Combate às Facções, fronteiras monitoradas por drones e satélites e presídios como centros de ressocialização."},{"t":"Infraestrutura/Energia","x":"Plano Nacional de Infraestrutura Integrada, com integração ferroviária, segurança energética de longo prazo e 5G em todos os municípios."},{"t":"Meio ambiente","x":"Programa Nacional de Bioeconomia, regulamentação do mercado de carbono e remuneração por serviços ambientais."},{"t":"Trabalho/Renda","x":"Salário mínimo entre os maiores da América do Sul, manutenção do Bolsa Família e isenção progressiva para microempreendedores."}]},{"n":"Romeu Zema","pt":"NOVO","pg":79,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016919931","tse":true,"obs":"","i":[{"t":"Economia/Impostos","x":"Reduzir o imposto de renda das empresas ao nível de países desenvolvidos e fixar metas progressivas de redução da carga tributária."},{"t":"Segurança pública","x":"Classificar facções como organizações terroristas, construir presídios de segurança máxima e reduzir a maioridade penal para 16 anos."},{"t":"Educação","x":"Recuperar a alfabetização, recompor a aprendizagem defasada e ampliar a educação profissional conectada ao mercado."},{"t":"Infraestrutura/Energia","x":"Reestruturar a formação do preço da energia, reduzir encargos da tarifa elétrica e modernizar a malha ferroviária."},{"t":"Trabalho/Renda","x":"Oferecer regime de contratação alternativo à CLT, zerar encargos sobre o equivalente a um salário mínimo e encerrar o monopólio sindical."},{"t":"Meio ambiente","x":"Combater grilagem e desmatamento ilegal e simplificar regras para indústrias ligadas à biodiversidade."},{"t":"Gestão pública","x":"Privatizar todas as empresas estatais e ampliar parcerias público-privadas, inclusive em saúde e educação."},{"t":"Justiça/Instituições","x":"Limitar o foro privilegiado ao Presidente, proibir que um único ministro suspenda leis e criar corregedoria independente para o STF."}]},{"n":"Samara","pt":"UP","pg":1,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016998025","tse":true,"obs":"Programa de uma página, “Unidade Popular e Samara Martins 80”.","i":[{"t":"Trabalho/Renda","x":"Reajuste de 100% do salário mínimo e redução da jornada para 36 horas semanais, com fim da escala 6x1."},{"t":"Economia/Impostos","x":"Taxação das grandes fortunas, fim dos subsídios fiscais aos monopólios e suspensão do pagamento da dívida pública com auditoria."},{"t":"Saúde","x":"Nacionalização dos planos de saúde e aumento do orçamento para o funcionamento pleno do SUS."},{"t":"Educação","x":"Destinar 10% do PIB à educação, com livre acesso à universidade e fim do vestibular."},{"t":"Segurança pública","x":"Desmilitarização das polícias, prisão de agressores e assassinos de mulheres e punição dos torturadores da ditadura."},{"t":"Infraestrutura/Energia","x":"Estatização do transporte público, com passe livre para estudantes e trabalhadores."},{"t":"Meio ambiente","x":"Defesa do meio ambiente e da Amazônia, com fim da exploração estrangeira."},{"t":"Previdência/Direitos","x":"Revogação das reformas trabalhista e previdenciária e criação de frentes emergenciais de trabalho."}]},{"n":"Pimenta","pt":"PCO","pg":5,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113417","tse":true,"obs":"O anexo é o programa partidário “Programa de Luta · Eleições 2026”; não cita o nome do candidato internamente.","i":[{"t":"Trabalho/Renda","x":"Reposição integral das perdas salariais, aumento emergencial de 50% e jornada máxima de 7 horas por dia, 5 dias por semana."},{"t":"Economia/Impostos","x":"Estatização do sistema financeiro, cancelamento das dívidas externa e interna e imposto sobre grandes fortunas."},{"t":"Saúde","x":"Mais verbas para a saúde pública, sem limite de gastos, e abertura de centros de medicina de livre acesso."},{"t":"Educação","x":"Fim dos vestibulares com livre ingresso nas universidades e piso salarial de R$ 8.500 para professores."},{"t":"Segurança pública","x":"Dissolução da polícia militar e de todo o aparato repressivo, com formação de comitês de autodefesa comunitária."},{"t":"Infraestrutura/Energia","x":"Redução imediata de 50% no preço dos combustíveis e uso da riqueza do petróleo em saúde, educação e moradia."},{"t":"Meio ambiente","x":"Rejeição à internacionalização da Amazônia e controle estatal sobre minerais e petróleo."}]},{"n":"Dias","pt":"PSTU","pg":32,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016998007","tse":true,"obs":"Chapa Hertz Dias (presidente) e Vanessa Portugal (vice).","i":[{"t":"Economia/Impostos","x":"Tributação progressiva sobre lucros, imposto sobre fortunas acima de R$ 1 bilhão e suspensão do pagamento da dívida pública."},{"t":"Saúde","x":"SUS público, universal, gratuito e 100% estatal, com fim das OSs e PPPs e produção pública de medicamentos."},{"t":"Educação","x":"Revogação da BNCC e do Novo Ensino Médio, fim de verba pública para empresas de educação e não à militarização das escolas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias em uma instituição civil, fim da Justiça Militar e descriminalização das drogas."},{"t":"Infraestrutura/Energia","x":"Estatização de setores estratégicos, Petrobras 100% estatal e tarifa zero no transporte público."},{"t":"Meio ambiente","x":"Fim dos créditos públicos ao agronegócio, demarcação de terras indígenas e quilombolas e não à exploração da Margem Equatorial."},{"t":"Trabalho/Renda","x":"Fim da escala 6x1, jornada de 36 horas semanais, aumento de 100% no salário mínimo e vínculo para trabalhadores de aplicativos."},{"t":"Gestão pública","x":"Controle dos trabalhadores sobre as empresas estatais e infraestrutura digital pública sob soberania nacional."}]},{"n":"Clariana","pt":"DC","pg":15,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113380","tse":true,"obs":"“Proteger Hoje, Transformar o Amanhã”; o documento não cita nome, partido ou cargo no texto.","i":[{"t":"Economia/Impostos","x":"Simplificação regulatória, digitalização e abertura rápida de empresas, com crédito produtivo e garantias para pequenos negócios."},{"t":"Saúde","x":"Atenção primária resolutiva com equipes completas e acesso territorial, foco em diagnóstico precoce e telemedicina integrada."},{"t":"Educação","x":"Alfabetização na idade adequada, formação técnica ligada a vocações regionais e uso de tecnologia e IA nas escolas."},{"t":"Segurança pública","x":"Fronteiras inteligentes com sensores e drones, policiamento baseado em evidências e combate ao narcotráfico e à lavagem de dinheiro."},{"t":"Infraestrutura/Energia","x":"Rodovias com manutenção baseada em desempenho, investimento em ferrovias, hidrovias e portos e expansão da conectividade."},{"t":"Trabalho/Renda","x":"Autonomia econômica das mulheres por qualificação e reinserção profissional e apoio ao empreendedorismo com acesso a crédito."},{"t":"Gestão pública","x":"Governo digital e simples, gestão por metas com indicadores públicos e federalismo de resultados."}]},{"n":"Costa","pt":"PCB","pg":21,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017107286","tse":true,"obs":"“Programa Político do PCB — Eleições 2026”, chapa de Edmilson Costa.","i":[{"t":"Economia/Impostos","x":"Reforma tributária progressiva, com isenção de imposto de renda até um salário mínimo e reestruturação da dívida pública."},{"t":"Saúde","x":"SUS totalmente público e gratuito, com reversão das privatizações e investimento de 10% do PIB na saúde pública."},{"t":"Educação","x":"Educação 100% pública e gratuita da creche à pós-graduação, fim do vestibular nas federais e ampliação das cotas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias, descriminalização do uso de drogas com legalização da maconha e revogação da lei antiterrorismo."},{"t":"Infraestrutura/Energia","x":"Transporte 100% público com tarifa zero, reestatização da Eletrobras e Petrobras 100% estatal."},{"t":"Meio ambiente","x":"Combate ao desmatamento em todos os ecossistemas, demarcação de terras indígenas e quilombolas e investimento em renováveis."},{"t":"Trabalho/Renda","x":"Jornada de 30 horas semanais sem redução salarial, fim da escala 6x1 e salário mínimo calculado pelo Dieese."},{"t":"Gestão pública","x":"Orçamento popular deliberativo, conselhos populares eleitos em locais de trabalho e moradia e mandatos revogáveis."}]},{"n":"Grassi","pt":"DEMOCRATA","pg":56,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017075366","tse":true,"obs":"“Brasil em Primeiro Lugar”, chapa Wilson Grassi e Suêd Haidar.","i":[{"t":"Economia/Impostos","x":"Imposto Único Federal de 2% sobre movimentação financeira substituindo nove tributos federais e isenção de IRPF até 5 salários mínimos."},{"t":"Trabalho/Renda","x":"Desoneração total da folha de pagamento e envio único das obrigações trabalhistas, com deferimento automático quando o prazo estourar."},{"t":"Saúde","x":"Política de Saúde Única integrando saúde humana, animal e ambiental, e fila cirúrgica nacional única e pública por procedimento."},{"t":"Educação","x":"Alfabetização até o fim do 2º ano com resultados publicados e PEC da Pesquisa para transformar bolsistas em servidores com carreira."},{"t":"Segurança pública","x":"Expansão de presídios federais de segurança máxima, bloqueio de sinal de telefonia nas unidades e plebiscito sobre o modelo penitenciário."},{"t":"Infraestrutura/Energia","x":"Programa Brasil nos Trilhos, com corredores ferroviários de carga com cronograma publicado e integração planejada ferrovia-porto."},{"t":"Meio ambiente","x":"Licenciamento ambiental com prazo definido e responsável nomeado e combate ao desmatamento ilegal com rastreabilidade."},{"t":"Gestão pública","x":"Interoperabilidade obrigatória das bases pelo CPF, painel público de metas e transparência em tempo real do orçamento."}]},{"n":"Avalanche","pt":"PRTB","pg":48,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017142413","tse":true,"obs":"“Plano de Governo — Chapa Brasil Próspero”, com 19 propostas. Registro de candidatura ainda pendente de julgamento no TSE.","i":[{"t":"Economia/Impostos","x":"Substituir ICMS, ISS, PIS, Cofins, IPI, INSS e Imposto de Renda por um imposto único de 3,5% sobre tudo."},{"t":"Saúde","x":"Zerar a fila do SUS com mutirões nacionais, uso de hospitais privados ociosos, telemedicina na triagem e controle de estoque de remédios em tempo real."},{"t":"Educação","x":"Usar inteligência artificial para personalizar o ensino e levar educação financeira, tecnologia e empreendedorismo à escola pública desde o ensino fundamental."},{"t":"Segurança pública","x":"Ampliar câmeras e reconhecimento facial, abrir concursos para a polícia com salário digno e endurecer as penas para crimes violentos e organizados."},{"t":"Infraestrutura/Energia","x":"Ampliar a malha ferroviária operada pelo setor privado e investir em portos, terminais e dragagem de hidrovias, com IPVA zero para o caminhoneiro."},{"t":"Trabalho/Renda","x":"Financiar integralmente, sem imposto, o carro do motorista de aplicativo e negociar com as plataformas taxa de 3,5% sobre as corridas."},{"t":"Justiça/Instituições","x":"Mutirão nacional contra processos parados, meta de redução do tempo de julgamento e regras econômicas e contratuais estáveis."},{"t":"Previdência/Direitos","x":"Criar a rede nacional Abraço Azul de apoio às mães de autistas e exigir profissional com formação certificada para crianças autistas nas escolas."}]}]};
+// Conferência automática dos planos no TSE (workflow verificar_propostas.yml): candidato
+// cujo plano protocolado não é mais o que o resumo abaixo leu aparece em "alteracoes".
+const PROP_TSE = {"alteracoes": [], "atualizado": "2026-10-02T02:48:31Z", "candidatos": 14, "fora_da_lista": [], "sem_plano_no_painel": []};
+const PROP = {"temas":["Economia/Impostos","Trabalho/Renda","Saúde","Educação","Segurança pública","Infraestrutura/Energia","Meio ambiente","Gestão pública","Justiça/Instituições","Previdência/Direitos"],"cands":[{"n":"Lula","pt":"PT","pg":47,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017016005","tse":true,"obs":"“Programa de Governo — Diretrizes para o Programa de Transformação do Brasil”. A capa não traz o nome; a identificação vem do corpo do texto e do registro no TSE.","i":[{"t":"Economia/Impostos","x":"Consolidar a reforma tributária, substituindo PIS, Cofins, IPI, ICMS e ISS por dois tributos, a CBS e o IBS."},{"t":"Saúde","x":"Ampliar o programa Agora Tem Especialistas para reduzir filas de consultas, exames e cirurgias no SUS."},{"t":"Educação","x":"Expandir o Compromisso Nacional Criança Alfabetizada, a rede de institutos federais e as matrículas em tempo integral."},{"t":"Segurança pública","x":"Aplicar a Lei Antifacção e o programa Brasil Contra o Crime Organizado, com R$ 10 bilhões a estados e municípios."},{"t":"Infraestrutura/Energia","x":"Dar continuidade ao Novo PAC, com investimento em metrôs, trens, VLTs e corredores de BRT."},{"t":"Meio ambiente","x":"Manter a redução do desmatamento, ampliar o Plano de Transformação Ecológica e homologar novas terras indígenas."},{"t":"Trabalho/Renda","x":"Manter o Bolsa Família com benefícios especiais para crianças e adolescentes e políticas de elevação da renda real do trabalho."},{"t":"Gestão pública","x":"Ampliar a plataforma Brasil Participativo e executar o Plano de Integridade e Combate à Corrupção 2025-2027."}],"cid":"280002542548"},{"n":"Flávio Bolsonaro","pt":"PL","pg":74,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017104726","tse":true,"obs":"“Diretrizes de Governo 2027-2030”. O nome do candidato não aparece no texto do PDF: o vínculo vem do registro no TSE e do nome do arquivo.","i":[{"t":"Economia/Impostos","x":"Revisar e redimensionar a reforma tributária em curso, reduzindo a carga sobre produção e consumo e a alíquota do IVA."},{"t":"Saúde","x":"Criar prontuário eletrônico único vinculado ao CPF e integrado ao Gov.br, com histórico de consultas, exames e vacinas."},{"t":"Educação","x":"Priorizar o método fônico na alfabetização e oferecer voucher educacional onde faltar vaga na rede pública."},{"t":"Segurança pública","x":"Declarar PCC, CV e milícias organizações narcoterroristas e erguer 5 presídios de segurança máxima no complexo TREVA."},{"t":"Infraestrutura/Energia","x":"Criar Corredores Logísticos Inteligentes para reduzir custo de transporte e reduzir gradualmente a CDE na conta de luz."},{"t":"Meio ambiente","x":"Apoiar a produção nacional de fertilizantes com potássio e fosfato e regular mercado de carbono e serviços ambientais."},{"t":"Trabalho/Renda","x":"Reduzir o custo do trabalho e criar programa de primeiro emprego integrado a um banco nacional de vagas."},{"t":"Gestão pública","x":"Digitalizar 100% dos serviços públicos federais passíveis de digitalização e profissionalizar a gestão do INSS."}],"cid":"280002551544"},{"n":"Cury (Avante)","pt":"AVANTE","pg":186,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017125643","tse":true,"obs":"“O Brasil dos Nossos Sonhos”. Há duas versões protocoladas; esta é a mais recente.","i":[{"t":"Economia/Impostos","x":"Buscar déficit público próximo de zero durante o mandato, com simplificação tributária e redução gradual da dívida."},{"t":"Saúde","x":"Implantar telemedicina nacional com meta de 80% das consultas básicas e criar Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Dar prioridade à educação básica, expandir o ensino técnico e implantar a gestão da emoção nas escolas."},{"t":"Segurança pública","x":"Recriar o Ministério da Segurança Pública e criar o programa FATO, Força de Alerta Total, integrando as polícias."},{"t":"Infraestrutura/Energia","x":"Criar cinco Corredores Estratégicos de Exportação com portos, ferrovias e armazenagem, e o plano PENER-BR de renováveis."},{"t":"Meio ambiente","x":"Implantar os programas Floresta Viva-BR e Brasil Oásis no semiárido e fixar prazos legais máximos no licenciamento."},{"t":"Trabalho/Renda","x":"Criar 10 mil Escolas de Empreendedorismo, com meta de 10 milhões de novos empreendedores, e um Banco do Empreendedor."},{"t":"Gestão pública","x":"Reforma administrativa com redução de ministérios, metas anuais públicas e uso de IA contra desperdício e fraude."}],"cid":"280002551547"},{"n":"Renan Santos","pt":"MISSÃO","pg":50,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017002789","tse":true,"obs":"“Livro Amarelo — Missão 2026”, resumo do programa do partido.","i":[{"t":"Economia/Impostos","x":"Aprovar a PEC do Equilíbrio Fiscal, com desindexação de benefícios e economia projetada de R$ 1,1 trilhão até 2031."},{"t":"Saúde","x":"Criar o prontuário eletrônico nacional PRONTO e o sistema ENER, trocando fila cronológica por prioridade de risco."},{"t":"Educação","x":"Adotar o sistema fônico de alfabetização e substituir cotas por bolsas de mérito, realocando recursos para STEM."},{"t":"Segurança pública","x":"Declarar Guerra ao Crime, aprovar Lei Antifacção com inversão do ônus da prova no confisco e criar superpresídios."},{"t":"Infraestrutura/Energia","x":"Programa Missão Rondon: elevar investimento em infraestrutura de 2% para ao menos 4% do PIB e malha férrea de 40 mil km."},{"t":"Meio ambiente","x":"Aplicar a Lei Geral do Licenciamento Ambiental com Licença Ambiental Especial e padrões de mineração de baixo carbono."},{"t":"Trabalho/Renda","x":"Substituir o Bolsa Família pelas Frentes Cidadãs, com contrapartida de trabalho, e flexibilizar relações trabalhistas."},{"t":"Gestão pública","x":"Criar o Comissariado Federal de Gestão Pública e a Grande Consolidação Municipal, de 5.570 para cerca de 1.656 municípios."}],"cid":"280002540694"},{"n":"Ronaldo Caiado","pt":"PSD","pg":100,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017106566","tse":true,"obs":"“Plano de Governo Ronaldo Caiado Presidente 2027-2030”, com 26 áreas de política pública.","i":[{"t":"Economia/Impostos","x":"Rever subsídios, subvenções e benefícios tributários com prazo e avaliação independente, desacelerando as despesas obrigatórias."},{"t":"Saúde","x":"Reorganizar o SUS com fila transparente, prontuário interoperável e remuneração por qualidade e resultado."},{"t":"Educação","x":"Alfabetizar toda criança na idade certa, com acompanhamento individual da aprendizagem e conexão entre ensino técnico e trabalho."},{"t":"Segurança pública","x":"Criar Ministério da Segurança Pública com comando integrado e institucionalizar a Lei do Terrorismo Doméstico para facções."},{"t":"Infraestrutura/Energia","x":"Priorizar Ferrogrão, Ferrovia Norte-Sul e hidrovias do Centro-Oeste, com plano decenal de bioenergia."},{"t":"Meio ambiente","x":"Combater desmatamento, grilagem e mineração ilegal, remunerar quem conserva e estruturar mercado de carbono."},{"t":"Trabalho/Renda","x":"Combinar benefícios sociais com qualificação, cuidado infantil e inclusão produtiva, e simplificar a formalização de pequenas empresas."},{"t":"Gestão pública","x":"Abolir a reeleição consecutiva no Executivo e adotar metas públicas com painel de indicadores para cada programa."}],"cid":"280002551932"},{"n":"Pablo Marçal","pt":"PRTB","pg":28,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017134368","tse":true,"obs":"Protocolado em 18/08/2026, estruturado em 7 missões e mais de 230 itens.","i":[{"t":"Economia/Impostos","x":"Reduzir progressivamente a carga tributária sobre produção, investimento e emprego, e criar um Ministério da Empresarização."},{"t":"Economia/Impostos","x":"Abertura automática de empresa pelo CPF em até 24 horas e renegociação de dívidas para pessoas com nome negativado."},{"t":"Saúde","x":"Reduzir filas com telemedicina nacional integrada ao SUS, IA aplicada ao SUS e Programa Nacional de Saúde Mental."},{"t":"Educação","x":"Garantir a alfabetização plena até o 2º ano, criar a Universidade Federal Digital e bolsas para exatas e TIC."},{"t":"Segurança pública","x":"Plano Nacional de Combate às Facções, fronteiras monitoradas por drones e satélites e presídios como centros de ressocialização."},{"t":"Infraestrutura/Energia","x":"Plano Nacional de Infraestrutura Integrada, com integração ferroviária, segurança energética de longo prazo e 5G em todos os municípios."},{"t":"Meio ambiente","x":"Programa Nacional de Bioeconomia, regulamentação do mercado de carbono e remuneração por serviços ambientais."},{"t":"Trabalho/Renda","x":"Salário mínimo entre os maiores da América do Sul, manutenção do Bolsa Família e isenção progressiva para microempreendedores."}],"cid":"280002553884"},{"n":"Romeu Zema","pt":"NOVO","pg":79,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016919931","tse":true,"obs":"","i":[{"t":"Economia/Impostos","x":"Reduzir o imposto de renda das empresas ao nível de países desenvolvidos e fixar metas progressivas de redução da carga tributária."},{"t":"Segurança pública","x":"Classificar facções como organizações terroristas, construir presídios de segurança máxima e reduzir a maioridade penal para 16 anos."},{"t":"Educação","x":"Recuperar a alfabetização, recompor a aprendizagem defasada e ampliar a educação profissional conectada ao mercado."},{"t":"Infraestrutura/Energia","x":"Reestruturar a formação do preço da energia, reduzir encargos da tarifa elétrica e modernizar a malha ferroviária."},{"t":"Trabalho/Renda","x":"Oferecer regime de contratação alternativo à CLT, zerar encargos sobre o equivalente a um salário mínimo e encerrar o monopólio sindical."},{"t":"Meio ambiente","x":"Combater grilagem e desmatamento ilegal e simplificar regras para indústrias ligadas à biodiversidade."},{"t":"Gestão pública","x":"Privatizar todas as empresas estatais e ampliar parcerias público-privadas, inclusive em saúde e educação."},{"t":"Justiça/Instituições","x":"Limitar o foro privilegiado ao Presidente, proibir que um único ministro suspenda leis e criar corregedoria independente para o STF."}],"cid":"280002539826"},{"n":"Samara","pt":"UP","pg":67,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017119534","tse":true,"obs":"“Programa da Unidade Popular pelo Socialismo — Programa de Governo”, com 67 páginas. Substituiu no registro da candidatura o programa de uma página entregue antes.","i":[{"t":"Trabalho/Renda","x":"Aumento de 100% do salário mínimo, rumo ao valor calculado pelo Dieese, e fim da escala 6x1 com jornada de 30 horas sem redução salarial."},{"t":"Economia/Impostos","x":"Suspensão imediata do pagamento e auditoria cidadã da dívida pública, com nacionalização dos bancos e estatização do sistema financeiro."},{"t":"Saúde","x":"SUS 100% estatal, com fim da gestão hospitalar por OSs e fundações privadas, e produção nacional de remédios em laboratórios oficiais."},{"t":"Educação","x":"Destinar ao menos 10% do PIB à educação pública, revogar o Novo Ensino Médio e suspender o envio de verbas públicas ao ensino privado."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias numa estrutura civil e fim da “guerra às drogas”, tratada como saúde pública."},{"t":"Infraestrutura/Energia","x":"Reestatização da Eletrobras, da Petrobras (100% estatal), da Vale e das ferrovias, e passe livre no transporte coletivo."},{"t":"Meio ambiente","x":"Combater desmatamento ilegal, garimpo e grilagem e proibir agrotóxicos que já são banidos no exterior."},{"t":"Previdência/Direitos","x":"Revogação das reformas que retiraram direitos e fim do arcabouço fiscal, com reajuste dos benefícios de aposentadoria e assistência social."}],"cid":"280002538811"},{"n":"Pimenta","pt":"PCO","pg":5,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113417","tse":true,"obs":"O anexo é o programa partidário “Programa de Luta · Eleições 2026”; não cita o nome do candidato internamente.","i":[{"t":"Trabalho/Renda","x":"Reposição integral das perdas salariais, aumento emergencial de 50% e jornada máxima de 7 horas por dia, 5 dias por semana."},{"t":"Economia/Impostos","x":"Estatização do sistema financeiro, cancelamento das dívidas externa e interna e imposto sobre grandes fortunas."},{"t":"Saúde","x":"Mais verbas para a saúde pública, sem limite de gastos, e abertura de centros de medicina de livre acesso."},{"t":"Educação","x":"Fim dos vestibulares com livre ingresso nas universidades e piso salarial de R$ 8.500 para professores."},{"t":"Segurança pública","x":"Dissolução da polícia militar e de todo o aparato repressivo, com formação de comitês de autodefesa comunitária."},{"t":"Infraestrutura/Energia","x":"Redução imediata de 50% no preço dos combustíveis e uso da riqueza do petróleo em saúde, educação e moradia."},{"t":"Meio ambiente","x":"Rejeição à internacionalização da Amazônia e controle estatal sobre minerais e petróleo."}],"cid":"280002552487"},{"n":"Dias","pt":"PSTU","pg":32,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280016998007","tse":true,"obs":"Chapa Hertz Dias (presidente) e Vanessa Portugal (vice).","i":[{"t":"Economia/Impostos","x":"Tributação progressiva sobre lucros, imposto sobre fortunas acima de R$ 1 bilhão e suspensão do pagamento da dívida pública."},{"t":"Saúde","x":"SUS público, universal, gratuito e 100% estatal, com fim das OSs e PPPs e produção pública de medicamentos."},{"t":"Educação","x":"Revogação da BNCC e do Novo Ensino Médio, fim de verba pública para empresas de educação e não à militarização das escolas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias em uma instituição civil, fim da Justiça Militar e descriminalização das drogas."},{"t":"Infraestrutura/Energia","x":"Estatização de setores estratégicos, Petrobras 100% estatal e tarifa zero no transporte público."},{"t":"Meio ambiente","x":"Fim dos créditos públicos ao agronegócio, demarcação de terras indígenas e quilombolas e não à exploração da Margem Equatorial."},{"t":"Trabalho/Renda","x":"Fim da escala 6x1, jornada de 36 horas semanais, aumento de 100% no salário mínimo e vínculo para trabalhadores de aplicativos."},{"t":"Gestão pública","x":"Controle dos trabalhadores sobre as empresas estatais e infraestrutura digital pública sob soberania nacional."}],"cid":"280002541457"},{"n":"Clariana","pt":"DC","pg":15,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017113380","tse":true,"obs":"“Proteger Hoje, Transformar o Amanhã”; o documento não cita nome, partido ou cargo no texto.","i":[{"t":"Economia/Impostos","x":"Simplificação regulatória, digitalização e abertura rápida de empresas, com crédito produtivo e garantias para pequenos negócios."},{"t":"Saúde","x":"Atenção primária resolutiva com equipes completas e acesso territorial, foco em diagnóstico precoce e telemedicina integrada."},{"t":"Educação","x":"Alfabetização na idade adequada, formação técnica ligada a vocações regionais e uso de tecnologia e IA nas escolas."},{"t":"Segurança pública","x":"Fronteiras inteligentes com sensores e drones, policiamento baseado em evidências e combate ao narcotráfico e à lavagem de dinheiro."},{"t":"Infraestrutura/Energia","x":"Rodovias com manutenção baseada em desempenho, investimento em ferrovias, hidrovias e portos e expansão da conectividade."},{"t":"Trabalho/Renda","x":"Autonomia econômica das mulheres por qualificação e reinserção profissional e apoio ao empreendedorismo com acesso a crédito."},{"t":"Gestão pública","x":"Governo digital e simples, gestão por metas com indicadores públicos e federalismo de resultados."}],"cid":"280002552484"},{"n":"Costa","pt":"PCB","pg":21,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017107286","tse":true,"obs":"“Programa Político do PCB — Eleições 2026”, chapa de Edmilson Costa.","i":[{"t":"Economia/Impostos","x":"Reforma tributária progressiva, com isenção de imposto de renda até um salário mínimo e reestruturação da dívida pública."},{"t":"Saúde","x":"SUS totalmente público e gratuito, com reversão das privatizações e investimento de 10% do PIB na saúde pública."},{"t":"Educação","x":"Educação 100% pública e gratuita da creche à pós-graduação, fim do vestibular nas federais e ampliação das cotas."},{"t":"Segurança pública","x":"Desmilitarização e unificação das polícias, descriminalização do uso de drogas com legalização da maconha e revogação da lei antiterrorismo."},{"t":"Infraestrutura/Energia","x":"Transporte 100% público com tarifa zero, reestatização da Eletrobras e Petrobras 100% estatal."},{"t":"Meio ambiente","x":"Combate ao desmatamento em todos os ecossistemas, demarcação de terras indígenas e quilombolas e investimento em renováveis."},{"t":"Trabalho/Renda","x":"Jornada de 30 horas semanais sem redução salarial, fim da escala 6x1 e salário mínimo calculado pelo Dieese."},{"t":"Gestão pública","x":"Orçamento popular deliberativo, conselhos populares eleitos em locais de trabalho e moradia e mandatos revogáveis."}],"cid":"280002551975"},{"n":"Grassi","pt":"DEMOCRATA","pg":56,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017075366","tse":true,"obs":"“Brasil em Primeiro Lugar”, chapa Wilson Grassi e Suêd Haidar.","i":[{"t":"Economia/Impostos","x":"Imposto Único Federal de 2% sobre movimentação financeira substituindo nove tributos federais e isenção de IRPF até 5 salários mínimos."},{"t":"Trabalho/Renda","x":"Desoneração total da folha de pagamento e envio único das obrigações trabalhistas, com deferimento automático quando o prazo estourar."},{"t":"Saúde","x":"Política de Saúde Única integrando saúde humana, animal e ambiental, e fila cirúrgica nacional única e pública por procedimento."},{"t":"Educação","x":"Alfabetização até o fim do 2º ano com resultados publicados e PEC da Pesquisa para transformar bolsistas em servidores com carreira."},{"t":"Segurança pública","x":"Expansão de presídios federais de segurança máxima, bloqueio de sinal de telefonia nas unidades e plebiscito sobre o modelo penitenciário."},{"t":"Infraestrutura/Energia","x":"Programa Brasil nos Trilhos, com corredores ferroviários de carga com cronograma publicado e integração planejada ferrovia-porto."},{"t":"Meio ambiente","x":"Licenciamento ambiental com prazo definido e responsável nomeado e combate ao desmatamento ilegal com rastreabilidade."},{"t":"Gestão pública","x":"Interoperabilidade obrigatória das bases pelo CPF, painel público de metas e transparência em tempo real do orçamento."}],"cid":"280002548139"},{"n":"Avalanche","pt":"PRTB","pg":48,"u":"https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017142413","tse":true,"obs":"“Plano de Governo — Chapa Brasil Próspero”, com 19 propostas. Registro de candidatura ainda pendente de julgamento no TSE.","i":[{"t":"Economia/Impostos","x":"Substituir ICMS, ISS, PIS, Cofins, IPI, INSS e Imposto de Renda por um imposto único de 3,5% sobre tudo."},{"t":"Saúde","x":"Zerar a fila do SUS com mutirões nacionais, uso de hospitais privados ociosos, telemedicina na triagem e controle de estoque de remédios em tempo real."},{"t":"Educação","x":"Usar inteligência artificial para personalizar o ensino e levar educação financeira, tecnologia e empreendedorismo à escola pública desde o ensino fundamental."},{"t":"Segurança pública","x":"Ampliar câmeras e reconhecimento facial, abrir concursos para a polícia com salário digno e endurecer as penas para crimes violentos e organizados."},{"t":"Infraestrutura/Energia","x":"Ampliar a malha ferroviária operada pelo setor privado e investir em portos, terminais e dragagem de hidrovias, com IPVA zero para o caminhoneiro."},{"t":"Trabalho/Renda","x":"Financiar integralmente, sem imposto, o carro do motorista de aplicativo e negociar com as plataformas taxa de 3,5% sobre as corridas."},{"t":"Justiça/Instituições","x":"Mutirão nacional contra processos parados, meta de redução do tempo de julgamento e regras econômicas e contratuais estáveis."},{"t":"Previdência/Direitos","x":"Criar a rede nacional Abraço Azul de apoio às mães de autistas e exigir profissional com formação certificada para crianças autistas nas escolas."}],"cid":"280002554479"}]};
 
 const INFO_INST = [{"n": "AtlasIntel", "k": ["atlasintel"], "d": "Fundada em 2017 por Andrei Roman e Thiago Costa. Coleta online, com entrevistados recrutados por anúncios na internet.", "f": "projetodraft.com"}, {"n": "Genial/Quaest", "k": ["quaest"], "d": "A Quaest (Belo Horizonte, 2016, de Felipe Nunes e Renata Salvo) faz o campo presencial; o Banco Genial contrata e divulga.", "f": "infomoney.com.br"}, {"n": "Datafolha", "k": ["datafolha"], "d": "Instituto do Grupo Folha, criado em 1983 e autônomo desde 1990. Dirigido por Luciana Chong. Publica na Folha de S.Paulo.", "f": "wikipedia.org"}, {"n": "Gerp", "k": ["gerp"], "d": "Instituto eleitoral e de opinião sediado no Rio de Janeiro; informa atuar desde 1983. As pesquisas nacionais de 2026 são custeadas por ele mesmo.", "f": "gerp.com.br"}, {"n": "Apex/Futura", "k": ["apex"], "d": "A Futura Inteligência, ligada à Apex Partners (ES), faz o campo por telefone (CATI); os dois divulgam juntos.", "f": "exame.com"}, {"n": "Futura Inteligência", "k": ["futura"], "d": "Instituto ligado à Apex Partners (ES), fundado pelo economista José Luiz Orrico. Entrevistas por telefone (CATI).", "f": "jornaldocomercio.com.br"}, {"n": "Nexus/BTG Pactual", "k": ["nexus"], "d": "O Nexus, do grupo FSB (criado em 2024, sucedendo o Instituto FSB Pesquisa de 2008), faz o campo; o BTG Pactual contrata e divulga.", "f": "nexus.fsb.com.br"}, {"n": "CNT/MDA", "k": ["mda", "cnt"], "d": "O Instituto MDA faz o campo presencial nos 27 estados; a Confederação Nacional do Transporte contrata e divulga a série.", "f": "conexaoto.com.br"}, {"n": "Paraná Pesquisas", "k": ["parana pesquisas", "instituto parana"], "d": "Fundado em 1990 em Curitiba, codirigido por Murilo Hidalgo. Combina entrevistas presenciais, telefônicas (CATI), online e em pontos de fluxo.", "f": "correiodoestado.com.br"}, {"n": "PoderData/Aya", "k": ["poderdata"], "d": "O PoderData, braço de pesquisas do Poder360 desde 2017, entrevista por telefone com URA; a Aya Bancah divulga as pesquisas de 2026.", "f": "poder360.com.br"}, {"n": "Meio/Ideia", "k": ["ideia", "meio"], "d": "O Instituto Ideia, do economista Maurício Moura, faz o campo; o Canal Meio contrata e divulga.", "f": "gazetadopovo.com.br"}, {"n": "Real Time Big Data", "k": ["real time big data"], "d": "Empresa de coleta e análise de dados e opinião. Questionário por telefone e online, com entrevistadores e recursos de IA. Divulga com a CNN Brasil.", "f": "infomoney.com.br"}, {"n": "Veritá", "k": ["verita"], "d": "Instituto de pesquisa de mercado, governamental e eleitoral fundado em 1995, com sede em Uberlândia (MG).", "f": "wikipedia.org"}, {"n": "Palver", "k": ["palver"], "d": "Empresa de tecnologia e inteligência fundada em 2022. A pesquisa eleitoral é online, com amostra não probabilística recrutada em redes sociais.", "f": "palver.com.br"}, {"n": "Indexa", "k": ["indexa"], "d": "Criado em 2007 em Curitiba por Arilton Freres e Brisa Anciutti como Opinião Pesquisas; hoje opera principalmente de São Paulo.", "f": "indexapesquisas.com.br"}, {"n": "Indexa/Broadcast", "k": ["indexa broadcast", "broadcast"], "d": "O Indexa faz o campo; a Agência Estado contrata, e a divulgação sai no Broadcast, serviço de notícias do Estadão.", "f": "gazetadopovo.com.br"}, {"n": "Alfa Inteligência", "k": ["alfa"], "d": "Instituto de pesquisa e consultoria para campanhas; informa 19 anos de atuação. Em 2026 divulgou levantamentos nacionais e no Paraná.", "f": "poder360.com.br"}, {"n": "DataTrends", "k": ["datatrends"], "d": "Instituto com atuação no Nordeste; divulgou a primeira pesquisa nacional em setembro de 2026. Entrevistas por telefone automatizado, com custeio próprio.", "f": "correiobraziliense.com.br"}, {"n": "Vox Brasil", "k": ["vox brasil"], "d": "Instituto sediado em Barretos (SP). Abordagem presencial domiciliar com amostra estratificada; custeia os próprios levantamentos.", "f": "poder360.com.br"}, {"n": "Neokemp", "k": ["neokemp"], "d": "Empresa de pesquisa e inteligência de dados sediada em Itapema (SC), registrada como Neobe Gestão e Serviços. Usa CATI, URA e grupos focais.", "f": "neokemp.com.br"}, {"n": "American Analytics", "k": ["american analytics"], "d": "Consultoria política e de pesquisa sediada em Washington (EUA), dirigida por Ricardo Regorão. No Brasil divulga com a Times Brasil | CNBC.", "f": "timesbrasil.com.br"}, {"n": "Vetor/Arrow", "k": ["vetor arrow"], "d": "Apesar da barra no nome, é uma empresa só: Vetor Arrow Instituto de Pesquisa e Opinião, que registrou pesquisas no Rio de Janeiro em 2026.", "f": "agenciasertao.com"}, {"n": "Ipespe", "k": ["ipespe"], "d": "Instituto de Pesquisas Sociais, Políticas e Econômicas, fundado em 1986, sediado no Recife. Faz pesquisas presenciais, por telefone, online e qualitativas.", "f": "ipespe.org.br"}, {"n": "Ipec", "k": ["ipec"], "d": "Inteligência em Pesquisa e Consultoria, criada em 2021 em São Paulo por Márcia Cavallari e ex-profissionais do Ibope, sucedendo o Ibope Inteligência.", "f": "wikipedia.org"}, {"n": "100 Cidades", "k": ["100 cidades"], "d": "Instituto '100% Cidades'. Faz o campo de pesquisas contratadas pela Futura Pesquisas e divulgadas junto com a Futura Inteligência.", "f": "gazetadopovo.com.br"}, {"n": "Doxa", "k": ["doxa"], "d": "Instituto fundado em 1996, com sede em Belo Horizonte e atuação nacional em pesquisas eleitorais, de opinião e de mercado.", "f": "doxapesquisa.com.br"}, {"n": "Seta", "k": ["seta"], "d": "Instituto fundado em 2009, sediado em Parnamirim (RN) e dirigido por Daniel Menezes, professor da UFRN. Concentra pesquisas no Rio Grande do Norte.", "f": "saibamais.jor.br"}];
 const chaveInst = t => semAcento(String(t)).toLowerCase().replace(/[^a-z0-9]+/g, ' ');
@@ -4571,6 +4724,15 @@ function painelProp() {
   const ordem = c => SLOT[c.n] ?? 99;
   const cands = PROP.cands.slice().sort((a, b) => ordem(a) - ordem(b));
   const total = cands.reduce((a, c) => a + c.i.length, 0);
+  // plano trocado no TSE: o link vai para a versão nova e o resumo fica marcado como em revisão
+  const NOVO = {}; ((PROP_TSE && PROP_TSE.alteracoes) || []).forEach(a => { if (a.n && a.novo && a.novo.length) NOVO[a.n] = a; });
+  const urlDoc = id => 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/' + id;
+  const linkDe = c => NOVO[c.n] ? urlDoc(NOVO[c.n].novo[0].id) : c.u;
+  const avisosNovo = Object.values(NOVO).map(a =>
+    `<div class="aviso alerta"><span><b>${nx(a.n)}</b> protocolou uma nova versão do plano de governo no TSE
+     (percebida em ${dBR(pd(a.desde))}). O resumo abaixo ainda é da versão anterior e está em revisão.</span>
+     <a href="${urlDoc(a.novo[0].id)}" target="_blank" rel="noopener">Abrir a versão nova ↗</a></div>`).join('');
+  const verif = PROP_TSE && PROP_TSE.atualizado ? ` Planos conferidos no TSE a cada 3 horas; última mudança registrada em ${dBR(pd(PROP_TSE.atualizado.slice(0, 10)))}.` : '';
 
   $('painel').innerHTML = `
     <div class="tiles anim-sobe">
@@ -4583,12 +4745,13 @@ function painelProp() {
     <section class="card">
       <div class="card-topo">
         <div><h2>O que cada candidatura propõe</h2>
-          <p class="sub">Trechos do plano de governo que cada candidatura protocolou no TSE. Clique em qualquer candidato (↗) para abrir o plano de governo completo dele, com todas as propostas, no site do TSE.</p></div>
+          <p class="sub">Trechos do plano de governo que cada candidatura protocolou no TSE. Clique em qualquer candidato (↗) para abrir o plano de governo completo dele, com todas as propostas, no site do TSE.${verif}</p></div>
         <div class="card-acoes"><div class="seg" role="group" aria-label="Organizar por">
           <button type="button" id="pv-tema" aria-pressed="true">Por tema</button>
           <button type="button" id="pv-cand" aria-pressed="false">Por candidato</button>
         </div></div>
       </div>
+      ${avisosNovo}
       <div id="prop-corpo"></div>
       <p class="nota">Texto descritivo do que o documento propõe, sem juízo de valor e sem avaliação de viabilidade. Um plano pode ser substituído durante a campanha; quando há mais de uma versão protocolada, vale a mais recente.</p>
     </section>
@@ -4611,7 +4774,7 @@ function painelProp() {
   const chip = c => { const fora = foraDaUrna(c.n);
     const tit = fora ? `${nx(c.n)} — ${motivoFora(c.n)}. ${c.pg} páginas: abrir o PDF no TSE`
                      : `${c.pg} páginas — abrir o PDF no TSE`;
-    return `<a class="pchip${fora ? ' fora-chip' : ''}" href="${c.u}" target="_blank" rel="noopener" title="${escapaHTML(tit)}">
+    return `<a class="pchip${fora ? ' fora-chip' : ''}" href="${linkDe(c)}" target="_blank" rel="noopener" title="${escapaHTML(NOVO[c.n] ? 'Plano novo no TSE; resumo em revisão. ' + tit : tit)}">
       ${FOTO[c.n] ? `<img class="cand-av" src="${FOTO[c.n]}" alt="" style="--anel:${corDe(c.n)}">`
                   : `<span class="cand-av" style="background:${corDe(c.n)}"></span>`}
       <span class="nm">${fora ? '⚠ ' : ''}${nx(c.n)}</span><span class="pt">${MAI(c.pt)}</span><span class="ir" aria-hidden="true">↗</span></a>`; };
@@ -4629,7 +4792,7 @@ function painelProp() {
   function porCandidato() {
     $('prop-corpo').innerHTML = cands.map((c, k) => `
       <section class="tema surge" style="animation-delay:${Math.min(k,8)*30}ms">
-        <h3>${chip(c)}<a class="plano" href="${c.u}" target="_blank" rel="noopener">Ver plano completo · ${c.pg} pág. ↗</a></h3>
+        <h3>${chip(c)}<a class="plano" href="${linkDe(c)}" target="_blank" rel="noopener">${NOVO[c.n] ? 'Ver plano novo ↗' : `Ver plano completo · ${c.pg} pág. ↗`}</a></h3>
         ${c.obs ? `<p class="nota" style="margin:0 0 var(--e3)">${c.obs}</p>` : ''}
         ${c.i.map(x => `<div class="pitem"><span class="ptema">${MAI(x.t)}</span><p>${x.x}</p></div>`).join('')}
       </section>`).join('');
