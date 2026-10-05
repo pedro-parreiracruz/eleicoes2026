@@ -135,6 +135,11 @@ resumo ser refeito.
 
 ## Limitações conhecidas
 
+- Desde 01/10/2026 o warehouse parado às vezes não liga sozinho quando chega uma consulta
+  ("Cannot create the resource"), embora ligue pelo botão Start. Por isso cada job que usa o
+  Databricks começa por `ingestion/ligar_warehouse.py`, que faz o mesmo que o botão e espera o
+  estado RUNNING.
+
 - **Só entram pesquisas registradas no TSE** (Lei 9.504/97, art. 33). A Wikipédia não traz o
   número de registro, então `painel_registro_tse` casa cada pesquisa com o PesqEle por instituto
   (seed `instituto_registro_tse`), período de campo (±3 dias) e amostra; o painel lista o

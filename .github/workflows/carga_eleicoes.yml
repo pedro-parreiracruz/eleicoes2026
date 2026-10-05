@@ -116,6 +116,13 @@ jobs:
       - name: Instalar dependências
         run: pip install -r ingestion/requirements.txt
 
+      - name: Ligar o warehouse
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: python ingestion/ligar_warehouse.py
+
       - name: Carregar TSE
         env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
@@ -145,6 +152,13 @@ jobs:
 
       - name: Instalar dependências
         run: pip install -r ingestion/requirements.txt
+
+      - name: Ligar o warehouse
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: python ingestion/ligar_warehouse.py
 
       - name: Carregar Wikipedia
         env:
@@ -206,6 +220,13 @@ jobs:
 
       - name: dbt deps
         run: dbt deps
+
+      - name: Ligar o warehouse
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_WAREHOUSE_ID: ${{ vars.DATABRICKS_WAREHOUSE_ID }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: python ingestion/ligar_warehouse.py
 
       - name: dbt debug
         run: dbt debug --target prod 2>&1 | tee saida.log
