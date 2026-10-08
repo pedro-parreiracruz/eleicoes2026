@@ -41,7 +41,7 @@ artifact ("Arquitetura do eleicoes2026").
   jobs que falam com o Databricks.
   - Secret `DATABRICKS_TOKEN` — token pessoal do Databricks (começa com `dapi`).
   - Variable `DATABRICKS_HOST` — `dbc-xxxxxxxx-xxxx.cloud.databricks.com` (sem `https://`).
-  - Variable `DATABRICKS_WAREHOUSE_ID` — id do SQL warehouse (`76f19a62eddd3ef2`).
+  - Variable `DATABRICKS_WAREHOUSE_ID` — id do SQL warehouse (`<id>`, o trecho final do HTTP path).
   - Opcionais: `DATABRICKS_CATALOG` (padrão `workspace`), `DATABRICKS_SCHEMA` (padrão
     `raw_eleicoes`), `CONTADOR_URL` (contador de acessos), `PAINEL_FONTE` (`consulta` = rollback).
 - **Settings → Pages**: fonte "Deploy from a branch", branch `main`, pasta `/docs`.
@@ -79,7 +79,7 @@ de produção.
   (`dbt-core>=1.12,<1.13` e `dbt-databricks>=1.12,<1.13`). Usa `ci/profiles.yml`, que lê host,
   http_path e token de variáveis de ambiente — nenhum segredo no arquivo.
 - Para rodar local: copiar `profiles.yml.exemplo` para `~/.dbt/profiles.yml` e preencher.
-- **dbt Platform** (nuvem): projeto id `70506183167046`, conectado ao mesmo warehouse com o token
+- **dbt Platform** (nuvem): projeto `<id do projeto>`, conectado ao mesmo warehouse com o token
   do Databricks. Serve para explorar o projeto e para o Claude consultar o Databricks (MCP). Não
   roda a carga. O ambiente de produção está como "Latest"; um job criado lá falhou na compilação
   em versão Fusion e foi abandonado.
