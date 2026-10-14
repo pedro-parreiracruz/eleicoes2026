@@ -723,7 +723,7 @@ const CAPA_LINKS = [
 // Bloco substituído pela atualização automática. Origem: workspace.marts (Databricks) via dbt.
 const CARGA_UTC = '2026-10-14T13:43:38Z';
 // última checagem que confirmou que a fonte não tinha pesquisa nova (vazio = nenhuma)
-const CONFERIDO_UTC = '';
+const CONFERIDO_UTC = '2026-10-14T14:29:45Z';
 const CAMPO_MAIS_RECENTE = '2026-10-12';
 const CAMPO_INICIO = '2026-10-10';      // início de campo da pesquisa mais recente
 const CADENCIA_DIAS = 1;        // mediana de dias entre inícios de campo
@@ -4930,7 +4930,14 @@ function desenha(soRedesenho) {
   // instituto: opções conforme a aba
   const sel = $('sel-inst');
   const fonte = t2 ? [...new Set(D2.map(r => r.i))] : st.aba === 'inst' ? INST.map(x => x.nm) : [...new Set(V1.map(r => r.i))];
-  const opcoes = fonte.sort((a,b) => a.localeCompare(b,'pt-BR'));
+  // ordem: divulgação mais recente primeiro (data de divulgação do registro no TSE;
+  // sem ela, o fim de campo); empate em ordem alfabética
+  const divu = new Map();
+  const guardaD = (i, d) => { if (d && (!divu.has(i) || d > divu.get(i))) divu.set(i, d); };
+  if (t2) D2.forEach(r => guardaD(r.i, r.divu || r.ds));
+  else if (st.aba === 'inst') INST.forEach(x => guardaD(x.nm, x.d2));
+  else { P1.forEach(r => guardaD(r.i, r.divu || r.ds)); V1.forEach(r => guardaD(r.i, r.ds)); }
+  const opcoes = fonte.sort((a,b) => (divu.get(b) || '').localeCompare(divu.get(a) || '') || a.localeCompare(b,'pt-BR'));
   if (sel.dataset.aba !== st.aba) {
     bInst.opcoes = opcoes;
     // último dia de campo (1º e 2º turno) ou último registro no TSE (aba Institutos)
@@ -4939,7 +4946,7 @@ function desenha(soRedesenho) {
     if (t2) D2.forEach(r => guarda(r.i, r.ds));
     else if (st.aba === 'inst') INST.forEach(x => guarda(x.nm, x.d2));
     else V1.forEach(r => guarda(r.i, r.ds));
-    bInst.ult = ult;
+    bInst.ult = st.aba === 'inst' ? ult : divu;   // nos turnos, mostra a data de divulgação
     sel.dataset.aba = st.aba;
     // instituto que não pesquisou nesta aba não pode continuar filtrando
     if (st.inst && !opcoes.includes(st.inst)) st.inst = '';
