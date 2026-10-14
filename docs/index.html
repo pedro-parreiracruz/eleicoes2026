@@ -4946,7 +4946,7 @@ function desenha(soRedesenho) {
     if (t2) D2.forEach(r => guarda(r.i, r.ds));
     else if (st.aba === 'inst') INST.forEach(x => guarda(x.nm, x.d2));
     else V1.forEach(r => guarda(r.i, r.ds));
-    bInst.ult = st.aba === 'inst' ? ult : divu;   // nos turnos, mostra a data de divulgação
+    bInst.ult = ult;   // mostra o fim de campo (mesma data do gráfico); a ordem segue a divulgação
     sel.dataset.aba = st.aba;
     // instituto que não pesquisou nesta aba não pode continuar filtrando
     if (st.inst && !opcoes.includes(st.inst)) st.inst = '';
