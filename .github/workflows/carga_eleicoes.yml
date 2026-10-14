@@ -44,6 +44,8 @@ jobs:
   # nada mudou. O cache vence em 7 dias sem uso; ai a checagem seguinte so recarrega uma vez.
   verificar:
     name: Wikipedia mudou?
+    permissions:
+      contents: write
     if: ${{ github.event_name == 'schedule' || github.event.inputs.rodar_wikipedia == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -95,6 +97,18 @@ jobs:
           else
             echo "::notice title=Novidade::Tabela da Wikipedia mudou (${{ steps.impressao.outputs.linhas }} linhas)"
           fi
+
+      # Sem novidade e cota ok: registra que o painel foi conferido e continua em dia. O site
+      # le docs/status.json e deixa de marcar "desatualizado" enquanto a fonte nao mudar.
+      - name: Registrar conferencia
+        if: ${{ github.event_name == 'schedule' && steps.cache.outputs.cache-hit == 'true' && steps.cota.outputs.cache-hit != 'true' }}
+        run: |
+          printf '{"conferido_utc": "%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > docs/status.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/status.json
+          git commit -q -m "painel: conferido sem pesquisa nova"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
 
   # Carga do TSE. O CDN (cdn.tse.jus.br) tem anti-bot: a carga usa curl_cffi (assinatura Chrome).
   carga_tse:

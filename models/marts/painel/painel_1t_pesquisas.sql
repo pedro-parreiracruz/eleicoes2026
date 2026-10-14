@@ -13,6 +13,7 @@ with base as (
         max(pc_nivel_confianca) as pc_nivel_confianca,
         case when max(tp_contratacao) = 'Própria' then 'P' else 'C' end as tp_contratacao,
         replace(max(nm_empresa_registro), ';', ',') as nm_empresa_registro,
+        date_format(max(dt_divulgacao), 'yyyy-MM-dd') as dt_divulgacao,
         date_format(min(dt_inicio_campo), 'yyyy-MM-dd') as dt_inicio_campo
     from {{ ref('painel_votos') }}
     where qt_candidatos_cenario >= 7 and qt_fora_da_urna_cenario = 0 and dt_fim_campo is not null
@@ -22,7 +23,8 @@ l as (
     select *,
            concat_ws(';', dt_fim_campo, nm_instituto, coalesce(cast(qt_amostra as string), ''), coalesce(cast(pc_margem_erro as string), ''),
                      nr_protocolo_registro, coalesce(cast(pc_nivel_confianca as string), ''),
-                     tp_contratacao, nm_empresa_registro, coalesce(dt_inicio_campo, '')) as linha
+                     tp_contratacao, nm_empresa_registro, coalesce(dt_inicio_campo, ''),
+                     coalesce(dt_divulgacao, '')) as linha
     from base
 )
 select *, row_number() over (order by linha) as nr_ordem

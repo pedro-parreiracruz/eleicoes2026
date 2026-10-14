@@ -22,6 +22,7 @@ duelo as (
         date_format(min(dt_inicio_campo), 'yyyy-MM-dd') as dt_inicio_campo,
         case when max(tp_contratacao) = 'Própria' then 'P' else 'C' end as tp_contratacao,
         replace(max(nm_empresa_registro), ';', ',') as nm_empresa_registro,
+        date_format(max(dt_divulgacao), 'yyyy-MM-dd') as dt_divulgacao,
         max(struct(cast(pc_intencao_voto as double) as v, nm_candidato as nm)) as hi,
         min(struct(cast(pc_intencao_voto as double) as v, nm_candidato as nm)) as lo
     from {{ ref('painel_votos') }}
@@ -35,12 +36,13 @@ l as (
         d.lo.nm as nm_candidato_atras,  d.lo.v as pc_atras,
         d.pc_margem_erro,
         round(n.pc_indecisos, 2) as pc_indecisos,
-        d.nr_protocolo_registro, d.pc_nivel_confianca, d.tp_contratacao, d.nm_empresa_registro, d.qt_amostra, d.dt_inicio_campo,
+        d.nr_protocolo_registro, d.pc_nivel_confianca, d.tp_contratacao, d.nm_empresa_registro, d.qt_amostra, d.dt_inicio_campo, d.dt_divulgacao,
         concat_ws(';', d.dt_fim_campo, d.nm_instituto, d.hi.nm, cast(d.hi.v as string), d.lo.nm,
                   cast(d.lo.v as string), coalesce(cast(d.pc_margem_erro as string), ''),
                   coalesce(cast(round(n.pc_indecisos, 2) as string), ''), d.nr_protocolo_registro,
                   coalesce(cast(d.pc_nivel_confianca as string), ''), d.tp_contratacao, d.nm_empresa_registro,
-                  coalesce(cast(d.qt_amostra as string), ''), coalesce(d.dt_inicio_campo, '')) as linha
+                  coalesce(cast(d.qt_amostra as string), ''), coalesce(d.dt_inicio_campo, ''),
+                  coalesce(d.dt_divulgacao, '')) as linha
     from duelo d
     left join nao_resposta n using (id_cenario)
 )

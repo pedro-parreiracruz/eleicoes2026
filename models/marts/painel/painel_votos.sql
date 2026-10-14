@@ -5,6 +5,7 @@ select v.*,
        r.nr_protocolo_registro,
        r.nm_empresa_registro,
        r.tp_contratacao,
+       r.dt_divulgacao,
        r.pc_nivel_confianca
 from {{ ref('painel_votos_todos') }} v
 join {{ ref('painel_registro_tse') }} r using (id_pesquisa)

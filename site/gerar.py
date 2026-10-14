@@ -122,7 +122,8 @@ duelo as (
          case when max(f.tp_contratacao) = 'Própria' then 'P' else 'C' end as ct,
          replace(max(f.nm_empresa_registro), ';', ',') as emp,
          coalesce(cast(max(f.qt_amostra) as string), '') as qt,
-         coalesce(date_format(min(f.dt_inicio_campo),'yyyy-MM-dd'), '') as ini
+         coalesce(date_format(min(f.dt_inicio_campo),'yyyy-MM-dd'), '') as ini,
+         coalesce(date_format(max(f.dt_divulgacao),'yyyy-MM-dd'), '') as divu
   from f join c using (id_cenario) left join nr2 on nr2.id_cenario = f.id_cenario
   where c.n = 2 and f.tp_resposta='Candidato' and f.dt_fim_campo is not null
   group by f.id_cenario, date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok
@@ -144,7 +145,8 @@ select
               coalesce(cast(max(f.pc_nivel_confianca) as string), ''),
               case when max(f.tp_contratacao) = 'Própria' then 'P' else 'C' end,
               replace(max(f.nm_empresa_registro), ';', ','),
-              coalesce(date_format(min(f.dt_inicio_campo),'yyyy-MM-dd'), '')) as l
+              coalesce(date_format(min(f.dt_inicio_campo),'yyyy-MM-dd'), ''),
+              coalesce(date_format(max(f.dt_divulgacao),'yyyy-MM-dd'), '')) as l
      from f join c using (id_cenario)
      where c.n >= 7 and c.n_fora = 0 and f.dt_fim_campo is not null
      group by date_format(f.dt_fim_campo,'yyyy-MM-dd'), f.inst_ok order by 1)) as b_p1t,
@@ -160,7 +162,7 @@ select
      order by 1)) as b_v1t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', d, inst_ok, hi.nm, cast(hi.v as string), lo.nm, cast(lo.v as string),
-              coalesce(cast(margem as string), ''), coalesce(cast(round(ind,2) as string), ''), reg, conf, ct, emp, qt, ini) as l
+              coalesce(cast(margem as string), ''), coalesce(cast(round(ind,2) as string), ''), reg, conf, ct, emp, qt, ini, divu) as l
      from duelo order by d, inst_ok, hi.nm)) as b_d2t,
   (select array_join(collect_list(l), '\n') from (
      select concat_ws(';', nm_instituto, cast(count(*) as string), cast(round(sum(vr_pesquisa),2) as string),
@@ -339,6 +341,12 @@ def montar(dados, contador_url):
     prop_tse = pathlib.Path(__file__).with_name("propostas_tse.json")
     troca["__PROPTSE__"] = (json.dumps(json.loads(prop_tse.read_text(encoding="utf-8")), ensure_ascii=False)
                             .replace("</", "<\\/") if prop_tse.exists() else '{"alteracoes":[]}')
+    # ultima conferencia sem novidade (checagem a cada 3 h grava docs/status.json)
+    status = pathlib.Path(__file__).resolve().parent.parent / "docs" / "status.json"
+    try:
+        troca["__CONFERIDO__"] = str(json.loads(status.read_text(encoding="utf-8")).get("conferido_utc", ""))
+    except (OSError, ValueError):
+        troca["__CONFERIDO__"] = ""
     troca["__CONTADOR_TOTAL__"] = "0"
     troca["__CONTADOR_DATA__"] = ""
     for marcador, valor in troca.items():

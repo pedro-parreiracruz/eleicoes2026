@@ -46,7 +46,7 @@ registros as (
 
 candidatos as (
     select c.id_pesquisa, r.nr_protocolo_registro, r.nm_empresa, r.tp_contratacao,
-           r.dt_registro, r.qt_entrevistados, r.texto_plano,
+           r.dt_registro, r.dt_divulgacao, r.qt_entrevistados, r.texto_plano,
            abs(datediff(c.dt_inicio_campo, r.dt_inicio_campo)) + abs(datediff(c.dt_fim_campo, r.dt_fim_campo))
              + case when abs(c.qt_amostra - r.qt_entrevistados) <= greatest(50, 0.05 * r.qt_entrevistados)
                     then 0 else 4 end as nr_distancia
@@ -72,6 +72,7 @@ select
     nm_empresa as nm_empresa_registro,
     tp_contratacao,
     dt_registro,
+    dt_divulgacao,
     qt_entrevistados as qt_entrevistados_registro,
     nr_distancia,
     -- nivel de confianca declarado no plano amostral ("... nivel de confianca de 95%")
